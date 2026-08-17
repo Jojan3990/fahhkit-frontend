@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { postForm, ApiError } from "../api/client";
 import { COUNTRIES_SORTED } from "../constants/countries";
+import Navbar from "../components/Navbar";
 import "./RegisterPage.css";
 
 const INITIAL_FORM = {
@@ -67,7 +69,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="register-wrap">
+    <>
+      <Navbar />
+      <div className="register-wrap">
       <header className="register-header">
         <div className="register-logo">🏃</div>
         <h1>Join FahhKit Run Club</h1>
@@ -218,6 +222,11 @@ export default function RegisterPage() {
           {submitting ? "Registering..." : "Register"}
         </button>
       </form>
-    </div>
+
+      <p className="register-footer">
+        Already have an account? <Link to="/login">Sign in</Link>
+      </p>
+      </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 :root {
   --brand: #e8590c;
   --brand-dark: #c94a08;
+  --brand-light: #fff1e8;
   --bg: #f6f5f3;
   --card: #ffffff;
   --text: #23201d;
@@ -10,10 +11,19 @@
   --error-bg: #fdecea;
   --success: #2e7d32;
   --success-bg: #eaf6ea;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgba(35, 32, 29, 0.06);
+  --shadow-md: 0 12px 28px rgba(35, 32, 29, 0.1);
+  --header-h: 64px;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -21,4 +31,33 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+.banner {
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.banner.error {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+}
+
+.banner.success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(46, 125, 50, 0.25);
 }

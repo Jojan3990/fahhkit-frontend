@@ -1,0 +1,77 @@
+/* eslint-disable react/prop-types -- no prop-types dependency in this project */
+import { useCallback, useEffect, useRef, useState } from "react";
+import "./Carousel.css";
+
+export default function Carousel({ slides, intervalMs = 5000 }) {
+  const [index, setIndex] = useState(0);
+  const timerRef = useRef(null);
+
+  const goTo = useCallback(
+    (i) => {
+      setIndex(((i % slides.length) + slides.length) % slides.length);
+    },
+    [slides.length]
+  );
+
+  const restartTimer = useCallback(() => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, intervalMs);
+  }, [slides.length, intervalMs]);
+
+  useEffect(() => {
+    restartTimer();
+    return () => clearInterval(timerRef.current);
+  }, [restartTimer]);
+
+  function next() {
+    goTo(index + 1);
+    restartTimer();
+  }
+
+  function prev() {
+    goTo(index - 1);
+    restartTimer();
+  }
+
+  function select(i) {
+    goTo(i);
+    restartTimer();
+  }
+
+  return (
+    <div className="carousel" onMouseEnter={() => clearInterval(timerRef.current)} onMouseLeave={restartTimer}>
+      <div className="carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
+        {slides.map((slide, i) => (
+          <div className="carousel-slide" style={{ background: slide.gradient }} key={i}>
+            <div className="carousel-content">
+              <span className="carousel-emoji">{slide.emoji}</span>
+              <h2>{slide.title}</h2>
+              <p>{slide.subtitle}</p>
+              {slide.cta}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="carousel-arrow prev" aria-label="Previous slide" onClick={prev}>
+        ‹
+      </button>
+      <button className="carousel-arrow next" aria-label="Next slide" onClick={next}>
+        ›
+      </button>
+
+      <div className="carousel-dots">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            className={`carousel-dot ${i === index ? "active" : ""}`}
+            aria-label={`Go to slide ${i + 1}`}
+            onClick={() => select(i)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

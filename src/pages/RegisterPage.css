@@ -145,21 +145,19 @@
   cursor: not-allowed;
 }
 
-.banner {
-  border-radius: 8px;
-  padding: 12px 14px;
-  font-size: 14px;
-  margin-bottom: 20px;
+.register-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 18px 0 0;
 }
 
-.banner.error {
-  background: var(--error-bg);
-  color: var(--error);
-  border: 1px solid rgba(192, 57, 43, 0.25);
+.register-footer a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.banner.success {
-  background: var(--success-bg);
-  color: var(--success);
-  border: 1px solid rgba(46, 125, 50, 0.25);
+.register-footer a:hover {
+  text-decoration: underline;
 }
