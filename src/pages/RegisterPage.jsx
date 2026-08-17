@@ -55,7 +55,7 @@ export default function RegisterPage() {
 
     setSubmitting(true);
     try {
-      const data = await postForm("/v1/athlete/register", formData);
+      const data = await postForm("/v1/athlete/signup", formData);
       setBanner({ kind: "success", message: `Welcome to FahhKit, ${data?.fullName || "athlete"}! Your registration is complete.` });
       setForm(INITIAL_FORM);
       setFiles({ citizenshipFrontImage: null, citizenshipBackImage: null });
