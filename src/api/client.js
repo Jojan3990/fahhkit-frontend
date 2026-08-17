@@ -1,6 +1,38 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+const PRIMARY_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+const FALLBACK_API_BASE_URL = import.meta.env.VITE_API_FALLBACK_URL || "";
 const TOKEN_KEY = "fahhkit_token";
 const USER_KEY = "fahhkit_user";
+const ACTIVE_BASE_URL_KEY = "fahhkit_active_api_base_url";
+
+function getCandidateBaseUrls() {
+  const candidates = [PRIMARY_API_BASE_URL, FALLBACK_API_BASE_URL].filter(
+    (url, index, arr) => url && arr.indexOf(url) === index
+  );
+  const cached = sessionStorage.getItem(ACTIVE_BASE_URL_KEY);
+  if (cached && candidates.includes(cached)) {
+    return [cached, ...candidates.filter((url) => url !== cached)];
+  }
+  return candidates;
+}
+
+// Tries each configured API server in turn, falling back to the next one
+// only on a network-level failure (server unreachable), not on HTTP error
+// responses. Remembers whichever one last worked so subsequent calls don't
+// re-probe a dead server every time.
+async function fetchWithFallback(path, options) {
+  const candidates = getCandidateBaseUrls();
+  let lastError;
+  for (const baseUrl of candidates) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, options);
+      sessionStorage.setItem(ACTIVE_BASE_URL_KEY, baseUrl);
+      return response;
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}
 
 export class ApiError extends Error {
   constructor(message, status) {
@@ -50,7 +82,7 @@ async function parseResponse(response) {
 export async function postForm(path, formData) {
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetchWithFallback(path, {
       method: "POST",
       headers: { ...authHeaders() },
       body: formData,
@@ -64,7 +96,7 @@ export async function postForm(path, formData) {
 export async function postJson(path, payload) {
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetchWithFallback(path, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify(payload),
@@ -78,7 +110,7 @@ export async function postJson(path, payload) {
 export async function getJson(path) {
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetchWithFallback(path, {
       headers: { ...authHeaders() },
     });
   } catch {
