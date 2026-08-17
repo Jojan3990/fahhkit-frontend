@@ -59,6 +59,13 @@
   color: var(--brand);
 }
 
+.navbar-username {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

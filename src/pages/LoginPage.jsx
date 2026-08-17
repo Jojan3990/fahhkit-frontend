@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { postJson, setToken, ApiError } from "../api/client";
+import { postJson, getJson, setToken, setUser, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
 import "./LoginPage.css";
 
@@ -26,6 +26,8 @@ export default function LoginPage() {
     try {
       const data = await postJson("/v1/authenticate", form);
       setToken(data.tokenId);
+      const user = await getJson("/v1/user/find/logged-in");
+      setUser(user);
       navigate("/");
     } catch (err) {
       const message = err instanceof ApiError ? err.message : "Sign in failed. Please try again.";

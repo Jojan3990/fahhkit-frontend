@@ -1,5 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 const TOKEN_KEY = "fahhkit_token";
+const USER_KEY = "fahhkit_user";
 
 export class ApiError extends Error {
   constructor(message, status) {
@@ -18,6 +19,19 @@ export function setToken(token) {
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+}
+
+export function getUser() {
+  const raw = localStorage.getItem(USER_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+export function setUser(user) {
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+export function clearUser() {
+  localStorage.removeItem(USER_KEY);
 }
 
 function authHeaders() {

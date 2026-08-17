@@ -1,12 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { clearToken, getToken } from "../api/client";
+import { clearToken, clearUser, getJson, getToken, getUser, setUser } from "../api/client";
 import "./Navbar.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [user, setLocalUser] = useState(getUser());
   const navigate = useNavigate();
   const isAuthed = Boolean(getToken());
+
+  useEffect(() => {
+    if (isAuthed && !user) {
+      getJson("/v1/user/find/logged-in")
+        .then((data) => {
+          setUser(data);
+          setLocalUser(data);
+        })
+        .catch(() => {});
+    }
+  }, [isAuthed, user]);
 
   function close() {
     setOpen(false);
@@ -14,6 +26,7 @@ export default function Navbar() {
 
   function handleSignOut() {
     clearToken();
+    clearUser();
     close();
     navigate("/");
   }
@@ -45,9 +58,12 @@ export default function Navbar() {
             Events
           </a>
           {isAuthed ? (
-            <button className="btn btn-outline" onClick={handleSignOut}>
-              Sign Out
-            </button>
+            <>
+              {user?.fullName && <span className="navbar-username">Hi, {user.fullName}</span>}
+              <button className="btn btn-outline" onClick={handleSignOut}>
+                Sign Out
+              </button>
+            </>
           ) : (
             <>
               <Link to="/login" className="btn btn-outline" onClick={close}>
