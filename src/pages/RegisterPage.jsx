@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { postForm, ApiError } from "../api/client";
 import { COUNTRIES_SORTED } from "../constants/countries";
 import Navbar from "../components/Navbar";
@@ -28,6 +28,7 @@ export default function RegisterPage() {
   const [files, setFiles] = useState({ citizenshipFrontImage: null, citizenshipBackImage: null });
   const [submitting, setSubmitting] = useState(false);
   const [banner, setBanner] = useState(null); // { kind: "success" | "error", message }
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -56,10 +57,12 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       const data = await postForm("/v1/athlete/signup", formData);
-      setBanner({ kind: "success", message: `Welcome to FahhKit, ${data?.fullName || "athlete"}! Your registration is complete.` });
       setForm(INITIAL_FORM);
       setFiles({ citizenshipFrontImage: null, citizenshipBackImage: null });
       e.target.reset();
+      navigate("/login", {
+        state: { message: `Welcome to FahhKit, ${data?.fullName || "athlete"}! Your registration is complete — please sign in.` },
+      });
     } catch (err) {
       const message = err instanceof ApiError ? err.message : "Registration failed. Please try again.";
       setBanner({ kind: "error", message });
@@ -73,7 +76,7 @@ export default function RegisterPage() {
       <Navbar />
       <div className="register-wrap">
       <header className="register-header">
-        <div className="register-logo">🏃</div>
+        <img src="/logo.png" alt="FahhKit" className="register-logo" />
         <h1>Join FahhKit Run Club</h1>
         <p>Fill out the form below to register as an athlete</p>
       </header>
@@ -115,10 +118,8 @@ export default function RegisterPage() {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="birthDate">
-                Date of Birth <span className="opt">(optional)</span>
-              </label>
-              <input id="birthDate" name="birthDate" type="date" value={form.birthDate} onChange={handleChange} />
+              <label htmlFor="birthDate">Date of Birth</label>
+              <input id="birthDate" name="birthDate" type="date" value={form.birthDate} onChange={handleChange} required />
             </div>
             <div className="field full">
               <label htmlFor="address">

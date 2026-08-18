@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { postJson, getJson, setToken, setUser, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
 import "./LoginPage.css";
@@ -9,7 +9,8 @@ const INITIAL_FORM = { mobileNumber: "", password: "" };
 export default function LoginPage() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
-  const [banner, setBanner] = useState(null);
+  const location = useLocation();
+  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -43,24 +44,22 @@ export default function LoginPage() {
       <div className="login-wrap">
         <div className="login-card">
           <header className="login-header">
-            <div className="login-logo">🏃</div>
+            <img src="/logo.png" alt="FahhKit" className="login-logo" />
             <h1>Welcome Back</h1>
-            <p>Sign in with your mobile number to continue</p>
+            <p>Sign in with your mobile number or email to continue</p>
           </header>
 
           {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="field">
-              <label htmlFor="mobileNumber">Mobile Number</label>
+              <label htmlFor="mobileNumber">Mobile Number or Email</label>
               <input
                 id="mobileNumber"
                 name="mobileNumber"
-                type="tel"
-                inputMode="numeric"
-                placeholder="98XXXXXXXX"
-                pattern="9\d{9}"
-                title="Enter a 10-digit mobile number starting with 9"
+                type="text"
+                autoComplete="username"
+                placeholder="98XXXXXXXX or you@example.com"
                 value={form.mobileNumber}
                 onChange={handleChange}
                 required

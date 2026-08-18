@@ -1,51 +1,39 @@
-.register-wrap {
+.create-event-wrap {
   max-width: 720px;
   margin: 0 auto;
   padding: 32px 16px 64px;
 }
 
-.register-header {
+.create-event-header {
   text-align: center;
   margin-bottom: 28px;
 }
 
-.register-logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-
-.register-header h1 {
+.create-event-header h1 {
   margin: 0 0 6px;
   font-size: 24px;
 }
 
-.register-header p {
+.create-event-header p {
   margin: 0;
   color: var(--muted);
   font-size: 14px;
 }
 
-.register-wrap form {
+.create-event-wrap form {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 28px;
 }
 
-.register-wrap fieldset {
+.create-event-wrap fieldset {
   border: none;
   padding: 0;
-  margin: 0 0 24px;
+  margin: 8px 0 24px;
 }
 
-.register-wrap fieldset:last-of-type {
-  margin-bottom: 0;
-}
-
-.register-wrap legend {
+.create-event-wrap legend {
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
@@ -57,40 +45,41 @@
   width: 100%;
 }
 
-.register-wrap .grid {
+.create-event-wrap .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
 @media (max-width: 560px) {
-  .register-wrap .grid {
+  .create-event-wrap .grid {
     grid-template-columns: 1fr;
   }
 }
 
-.register-wrap .field {
+.create-event-wrap .field {
   margin-bottom: 16px;
 }
 
-.register-wrap .field.full {
+.create-event-wrap .field.full {
   grid-column: 1 / -1;
 }
 
-.register-wrap label {
+.create-event-wrap label {
   display: block;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
 }
 
-.register-wrap label .opt {
+.create-event-wrap label .opt {
   font-weight: 400;
   color: var(--muted);
 }
 
-.register-wrap input,
-.register-wrap select {
+.create-event-wrap input,
+.create-event-wrap select,
+.create-event-wrap textarea {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -101,24 +90,23 @@
   font-family: inherit;
 }
 
-.register-wrap input:focus,
-.register-wrap select:focus {
+.create-event-wrap textarea {
+  resize: vertical;
+}
+
+.create-event-wrap input:focus,
+.create-event-wrap select:focus,
+.create-event-wrap textarea:focus {
   outline: none;
   border-color: var(--brand);
   box-shadow: 0 0 0 3px rgba(232, 89, 12, 0.15);
 }
 
-.register-wrap input[type="file"] {
+.create-event-wrap input[type="file"] {
   padding: 8px;
 }
 
-.register-wrap .hint {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-.register-wrap button[type="submit"] {
+.create-event-wrap button[type="submit"] {
   width: 100%;
   padding: 13px;
   background: var(--brand);
@@ -131,28 +119,11 @@
   transition: background 0.15s ease;
 }
 
-.register-wrap button[type="submit"]:hover {
+.create-event-wrap button[type="submit"]:hover {
   background: var(--brand-dark);
 }
 
-.register-wrap button[type="submit"]:disabled {
+.create-event-wrap button[type="submit"]:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.register-footer {
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-  margin: 18px 0 0;
-}
-
-.register-footer a {
-  color: var(--brand);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.register-footer a:hover {
-  text-decoration: underline;
 }

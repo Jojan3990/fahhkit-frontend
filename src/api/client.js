@@ -66,6 +66,10 @@ export function clearUser() {
   localStorage.removeItem(USER_KEY);
 }
 
+export function canManageEvents(user) {
+  return user?.userType === "ADMIN" || user?.userType === "MODERATOR";
+}
+
 function authHeaders() {
   const token = getToken();
   return token ? { Authorization: `Bearer ${token}` } : {};

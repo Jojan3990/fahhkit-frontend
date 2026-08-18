@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
           <header className="forgot-header">
             <div className="forgot-logo">🔑</div>
             <h1>Forgot Password</h1>
-            <p>Verify your identity to receive a new password by email</p>
+            <p>Verify your identity with your mobile number or email to receive a new password</p>
           </header>
 
           {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
@@ -54,15 +54,13 @@ export default function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               <div className="field">
-                <label htmlFor="mobileNumber">Mobile Number</label>
+                <label htmlFor="mobileNumber">Mobile Number or Email</label>
                 <input
                   id="mobileNumber"
                   name="mobileNumber"
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder="98XXXXXXXX"
-                  pattern="9\d{9}"
-                  title="Enter a 10-digit mobile number starting with 9"
+                  type="text"
+                  autoComplete="username"
+                  placeholder="98XXXXXXXX or you@example.com"
                   value={form.mobileNumber}
                   onChange={handleChange}
                   required

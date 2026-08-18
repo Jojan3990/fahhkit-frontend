@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { clearToken, clearUser, getJson, getToken, getUser, setUser } from "../api/client";
+import { canManageEvents, clearToken, clearUser, getJson, getToken, getUser, setUser } from "../api/client";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -35,7 +35,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand" onClick={close}>
-          <span className="navbar-logo">🏃</span>
+          <img src="/logo.png" alt="FahhKit" className="navbar-logo" />
           FahhKit Run Club
         </Link>
 
@@ -54,11 +54,16 @@ export default function Navbar() {
           <a href="/#about" onClick={close}>
             About
           </a>
-          <a href="/#events" onClick={close}>
+          <Link to="/events" onClick={close}>
             Events
-          </a>
+          </Link>
           {isAuthed ? (
             <>
+              {canManageEvents(user) && (
+                <Link to="/events/create" className="btn btn-outline" onClick={close}>
+                  Create Event
+                </Link>
+              )}
               {user?.fullName && <span className="navbar-username">Hi, {user.fullName}</span>}
               <button className="btn btn-outline" onClick={handleSignOut}>
                 Sign Out
