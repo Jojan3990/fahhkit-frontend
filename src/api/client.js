@@ -82,15 +82,31 @@ function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function parseResponse(response) {
+// A 401/403 on a request that carried a token means the session itself is
+// dead (expired/revoked), not just "this action is forbidden". Clear the
+// stale session and send the user to sign in again, rather than leaving the
+// navbar showing a cached user while every page silently fails.
+function handleAuthFailure(status, hadToken) {
+  if (hadToken && (status === 401 || status === 403)) {
+    clearToken();
+    clearUser();
+    if (!window.location.pathname.startsWith("/login")) {
+      window.location.href = "/login";
+    }
+  }
+}
+
+async function parseResponse(response, hadToken) {
   const body = await response.json().catch(() => null);
   if (!response.ok) {
+    handleAuthFailure(response.status, hadToken);
     throw new ApiError(body?.errorMessage || "Something went wrong. Please try again.", response.status);
   }
   return body?.data;
 }
 
 export async function postForm(path, formData) {
+  const hadToken = Boolean(getToken());
   let response;
   try {
     response = await fetchWithFallback(path, {
@@ -101,10 +117,11 @@ export async function postForm(path, formData) {
   } catch {
     throw new ApiError("Could not reach the server. Please try again in a moment.", 0);
   }
-  return parseResponse(response);
+  return parseResponse(response, hadToken);
 }
 
 export async function postJson(path, payload) {
+  const hadToken = Boolean(getToken());
   let response;
   try {
     response = await fetchWithFallback(path, {
@@ -115,10 +132,11 @@ export async function postJson(path, payload) {
   } catch {
     throw new ApiError("Could not reach the server. Please try again in a moment.", 0);
   }
-  return parseResponse(response);
+  return parseResponse(response, hadToken);
 }
 
 export async function getJson(path) {
+  const hadToken = Boolean(getToken());
   let response;
   try {
     response = await fetchWithFallback(path, {
@@ -127,5 +145,5 @@ export async function getJson(path) {
   } catch {
     throw new ApiError("Could not reach the server. Please try again in a moment.", 0);
   }
-  return parseResponse(response);
+  return parseResponse(response, hadToken);
 }

@@ -151,16 +151,24 @@ export default function LandingPage() {
         <span className="blob cta-blob-b" aria-hidden="true" />
         <div className="section-inner cta-inner" data-aos="zoom-in">
           <div>
-            <h2>Ready to run with us?</h2>
-            <p>Registration takes less than two minutes.</p>
+            <h2>{isAuthed ? "Ready for your next run?" : "Ready to run with us?"}</h2>
+            <p>{isAuthed ? "See what's on the calendar and get signed up." : "Registration takes less than two minutes."}</p>
           </div>
           <div className="cta-actions">
-            <Link to="/register" className="btn btn-primary btn-lg">
-              Sign Up
-            </Link>
-            <Link to="/login" className="btn btn-outline btn-lg">
-              Sign In
-            </Link>
+            {isAuthed ? (
+              <Link to="/events" className="btn btn-primary btn-lg">
+                View Events
+              </Link>
+            ) : (
+              <>
+                <Link to="/register" className="btn btn-primary btn-lg">
+                  Sign Up
+                </Link>
+                <Link to="/login" className="btn btn-outline btn-lg">
+                  Sign In
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
