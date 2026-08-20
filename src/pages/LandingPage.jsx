@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
+import { getJson, resolveFileUrl } from "../api/client";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./LandingPage.css";
+import "./EventsPage.css";
 
 const SLIDES = [
   {
@@ -58,6 +63,19 @@ const FEATURES = [
 ];
 
 export default function LandingPage() {
+  const { isAuthed } = useCurrentUser();
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    if (!isAuthed) {
+      setEvents([]);
+      return;
+    }
+    getJson("/v1/event/upcoming")
+      .then((data) => setEvents((data || []).slice(0, 3)))
+      .catch(() => {});
+  }, [isAuthed]);
+
   return (
     <div className="landing">
       <Navbar />
@@ -80,7 +98,46 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="events" className="cta-band">
+      {events.length > 0 && (
+        <section id="events" className="landing-events">
+          <div className="section-inner">
+            <h2>Upcoming Events</h2>
+            <p className="section-sub">Published races and community events on the calendar.</p>
+            <div className="events-grid">
+              {events.map((event) => (
+                <div className="event-card" key={event.id}>
+                  {event.eventImageUrl1 && (
+                    <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                  )}
+                  <div className="event-card-body">
+                    <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
+                    <h3>{event.name}</h3>
+                    <dl className="event-card-meta">
+                      <div>
+                        <dt>Date</dt>
+                        <dd>{formatDate(event.date)}</dd>
+                      </div>
+                      {event.venue && (
+                        <div>
+                          <dt>Venue</dt>
+                          <dd>{event.venue}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="landing-events-more">
+              <Link to="/events" className="btn btn-outline">
+                View All Events
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="cta-band">
         <div className="section-inner cta-inner">
           <div>
             <h2>Ready to run with us?</h2>

@@ -1,34 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ApiError, canManageEvents, getJson, getToken, getUser } from "../api/client";
+import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
+import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./EventsPage.css";
 
-const EVENT_TYPE_LABELS = {
-  ENDURANCE: "Endurance",
-  STRENGTH: "Strength",
-  HYBRID: "Hybrid",
-  GYMNASTICS: "Gymnastics",
-  COMBAT: "Combat",
-  TEAM: "Team",
-  RACKET: "Racket",
-  OUTDOOR: "Outdoor",
-  FLEXIBILITY: "Flexibility",
-  PHYSIQUE: "Physique",
-  RECREATIONAL: "Recreational",
-};
-
-function formatDate(value) {
-  if (!value) return "TBA";
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
-
 export default function EventsPage() {
-  const isAuthed = Boolean(getToken());
-  const user = getUser();
+  const { user, isAuthed } = useCurrentUser();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,7 +58,9 @@ export default function EventsPage() {
         <div className="events-grid">
           {events.map((event) => (
             <div className="event-card" key={event.id}>
-              {event.eventImageUrl1 && <img src={event.eventImageUrl1} alt={event.name} className="event-card-image" />}
+              {event.eventImageUrl1 && (
+                <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+              )}
               <div className="event-card-body">
                 <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
                 <h3>{event.name}</h3>

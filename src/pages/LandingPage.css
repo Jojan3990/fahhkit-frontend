@@ -64,6 +64,27 @@
   line-height: 1.5;
 }
 
+.landing-events {
+  padding: 72px 0;
+  text-align: center;
+  background: var(--card);
+}
+
+.landing-events h2 {
+  font-size: clamp(24px, 4vw, 34px);
+  margin: 0 0 10px;
+}
+
+.landing-events .events-grid {
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.landing-events-more {
+  display: flex;
+  justify-content: center;
+}
+
 .cta-band {
   background: var(--brand-light);
   padding: 56px 0;

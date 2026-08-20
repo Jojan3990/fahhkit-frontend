@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { ApiError, canManageEvents, getUser, postForm } from "../api/client";
+import { ApiError, canManageEvents, postForm } from "../api/client";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
 import "./CreateEventPage.css";
 
@@ -33,12 +34,23 @@ const INITIAL_FORM = {
 };
 
 export default function CreateEventPage() {
-  const user = getUser();
+  const { user, loading: userLoading } = useCurrentUser();
   const [form, setForm] = useState(INITIAL_FORM);
   const [images, setImages] = useState({ eventImage1: null, eventImage2: null, eventImage3: null });
   const [submitting, setSubmitting] = useState(false);
   const [banner, setBanner] = useState(null);
   const navigate = useNavigate();
+
+  if (userLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="create-event-wrap">
+          <p>Loading...</p>
+        </div>
+      </>
+    );
+  }
 
   if (!canManageEvents(user)) {
     return <Navigate to="/events" replace />;

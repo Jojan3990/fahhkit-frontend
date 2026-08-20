@@ -34,6 +34,13 @@ async function fetchWithFallback(path, options) {
   throw lastError;
 }
 
+export function resolveFileUrl(path) {
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return path;
+  const [baseUrl] = getCandidateBaseUrls();
+  return `${baseUrl}/${path.replace(/^\/+/, "")}`;
+}
+
 export class ApiError extends Error {
   constructor(message, status) {
     super(message);

@@ -1,24 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { canManageEvents, clearToken, clearUser, getJson, getToken, getUser, setUser } from "../api/client";
+import { canManageEvents, clearToken, clearUser } from "../api/client";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import "./Navbar.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [user, setLocalUser] = useState(getUser());
+  const { user, isAuthed } = useCurrentUser();
   const navigate = useNavigate();
-  const isAuthed = Boolean(getToken());
-
-  useEffect(() => {
-    if (isAuthed && !user) {
-      getJson("/v1/user/find/logged-in")
-        .then((data) => {
-          setUser(data);
-          setLocalUser(data);
-        })
-        .catch(() => {});
-    }
-  }, [isAuthed, user]);
 
   function close() {
     setOpen(false);
