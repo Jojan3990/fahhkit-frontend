@@ -6,15 +6,16 @@ import SectionTitle from "../components/SectionTitle";
 import { getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
+import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
+import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
 import "./LandingPage.css";
 import "./EventsPage.css";
 
 const SLIDES = [
   {
-    emoji: "🏃‍♂️",
-    title: "Run With Purpose",
-    subtitle: "Join a community of runners training for their next personal best.",
-    gradient: "linear-gradient(135deg, #e8590c 0%, #ff8a3d 100%)",
+    image: bannerImage,
+    title: "Fahhkit Fitness Club",
+    subtitle: "Say fk it and get it done!",
     cta: (
       <Link to="/register" className="btn btn-white btn-lg">
         Join the Club
@@ -22,35 +23,12 @@ const SLIDES = [
     ),
   },
   {
-    emoji: "🏆",
-    title: "Race Together",
-    subtitle: "From 5Ks to marathons — we train, race, and celebrate as one team.",
-    gradient: "linear-gradient(135deg, #c94a08 0%, #e8590c 100%)",
+    image: sundayRundayImage,
+    title: "Sunday Runday",
+    subtitle: "Happens every Sunday at 5pm, Cafe Bizarre",
     cta: (
-      <Link to="/register" className="btn btn-white btn-lg">
-        Sign Up Free
-      </Link>
-    ),
-  },
-  {
-    emoji: "🌄",
-    title: "Every Route, Every Sunrise",
-    subtitle: "Weekly group runs across the city's best trails and streets.",
-    gradient: "linear-gradient(135deg, #23201d 0%, #756f68 100%)",
-    cta: (
-      <Link to="/register" className="btn btn-white btn-lg">
-        Get Started
-      </Link>
-    ),
-  },
-  {
-    emoji: "💪",
-    title: "Train Smarter",
-    subtitle: "Structured plans and coaching support to help you go the distance.",
-    gradient: "linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%)",
-    cta: (
-      <Link to="/register" className="btn btn-white btn-lg">
-        Start Training
+      <Link to="/events" className="btn btn-white btn-lg">
+        View Events
       </Link>
     ),
   },
@@ -175,7 +153,7 @@ export default function LandingPage() {
 
       <footer className="footer">
         <div className="section-inner footer-inner">
-          <span>🏃 FahhKit Run Club</span>
+          <span>🏃 FahhKit</span>
           <span className="footer-muted">© {new Date().getFullYear()} FahhKit. All rights reserved.</span>
         </div>
       </footer>

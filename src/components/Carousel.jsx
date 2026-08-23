@@ -45,11 +45,19 @@ export default function Carousel({ slides, intervalMs = 5000 }) {
     <div className="carousel" onMouseEnter={() => clearInterval(timerRef.current)} onMouseLeave={restartTimer}>
       <div className="carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
         {slides.map((slide, i) => (
-          <div className="carousel-slide" style={{ background: slide.gradient }} key={i}>
+          <div
+            className="carousel-slide"
+            style={{
+              background: slide.image
+                ? `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(${slide.image}) center/cover no-repeat`
+                : slide.gradient,
+            }}
+            key={i}
+          >
             <span className="carousel-blob carousel-blob-a" aria-hidden="true" />
             <span className="carousel-blob carousel-blob-b" aria-hidden="true" />
             <div className="carousel-content" key={i === index ? `active-${index}` : `idle-${i}`}>
-              <span className="carousel-emoji">{slide.emoji}</span>
+              {slide.emoji && <span className="carousel-emoji">{slide.emoji}</span>}
               <h2>{slide.title}</h2>
               <p>{slide.subtitle}</p>
               {slide.cta}
