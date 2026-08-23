@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
+import { FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { canManageEvents, clearToken, clearUser } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import ThemeToggle from "./ThemeToggle";
@@ -9,8 +9,10 @@ import "./Navbar.css";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user, isAuthed } = useCurrentUser();
   const navigate = useNavigate();
+  const userMenuRef = useRef(null);
 
   useEffect(() => {
     function onScroll() {
@@ -21,8 +23,20 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    function onClickOutside(e) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [userMenuOpen]);
+
   function close() {
     setOpen(false);
+    setUserMenuOpen(false);
   }
 
   function handleSignOut() {
@@ -61,22 +75,31 @@ export default function Navbar() {
             Events
           </Link>
           {isAuthed ? (
-            <>
-              {canManageEvents(user) && (
-                <Link to="/events/create" className="btn btn-outline" onClick={close}>
-                  Create Event
-                </Link>
-              )}
-              {user?.fullName && (
-                <span className="navbar-user">
-                  <FaUserCircle className="navbar-user-icon" />
-                  {user.fullName}
-                </span>
-              )}
-              <button className="btn btn-outline" onClick={handleSignOut}>
-                Sign Out
+            <div className="navbar-user-menu" ref={userMenuRef}>
+              <button
+                type="button"
+                className="navbar-user-trigger"
+                onClick={() => setUserMenuOpen((v) => !v)}
+                aria-haspopup="true"
+                aria-expanded={userMenuOpen}
+              >
+                <FaUserCircle className="navbar-user-icon" />
+                {user?.fullName}
+                <FaChevronDown className="navbar-user-caret" />
               </button>
-            </>
+              {userMenuOpen && (
+                <div className="navbar-user-dropdown">
+                  {canManageEvents(user) && (
+                    <Link to="/events/create" onClick={close}>
+                      Create Event
+                    </Link>
+                  )}
+                  <button type="button" onClick={handleSignOut}>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <Link to="/login" className="btn btn-outline" onClick={close}>
