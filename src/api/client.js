@@ -1,5 +1,6 @@
 const PRIMARY_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 const FALLBACK_API_BASE_URL = import.meta.env.VITE_API_FALLBACK_URL || "";
+const FILE_BASE_URL = import.meta.env.VITE_FILE_BASE_URL || PRIMARY_API_BASE_URL;
 const TOKEN_KEY = "fahhkit_token";
 const USER_KEY = "fahhkit_user";
 const ACTIVE_BASE_URL_KEY = "fahhkit_active_api_base_url";
@@ -37,8 +38,7 @@ async function fetchWithFallback(path, options) {
 export function resolveFileUrl(path) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return path;
-  const [baseUrl] = getCandidateBaseUrls();
-  return `${baseUrl}/${path.replace(/^\/+/, "")}`;
+  return `${FILE_BASE_URL.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
 }
 
 export class ApiError extends Error {

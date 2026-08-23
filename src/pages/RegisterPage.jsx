@@ -9,7 +9,6 @@ const INITIAL_FORM = {
   fullName: "",
   email: "",
   mobileNumber: "",
-  password: "",
   gender: "",
   birthDate: "",
   address: "",
@@ -25,7 +24,6 @@ const INITIAL_FORM = {
 
 export default function RegisterPage() {
   const [form, setForm] = useState(INITIAL_FORM);
-  const [files, setFiles] = useState({ citizenshipFrontImage: null, citizenshipBackImage: null });
   const [submitting, setSubmitting] = useState(false);
   const [banner, setBanner] = useState(null); // { kind: "success" | "error", message }
   const navigate = useNavigate();
@@ -33,11 +31,6 @@ export default function RegisterPage() {
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleFileChange(e) {
-    const { name, files: fileList } = e.target;
-    setFiles((prev) => ({ ...prev, [name]: fileList[0] || null }));
   }
 
   async function handleSubmit(e) {
@@ -50,18 +43,17 @@ export default function RegisterPage() {
     Object.entries(form).forEach(([key, value]) => {
       if (value.trim() !== "") formData.append(key, value);
     });
-    Object.entries(files).forEach(([key, file]) => {
-      if (file) formData.append(key, file);
-    });
 
     setSubmitting(true);
     try {
       const data = await postForm("/v1/athlete/signup", formData);
       setForm(INITIAL_FORM);
-      setFiles({ citizenshipFrontImage: null, citizenshipBackImage: null });
       e.target.reset();
-      navigate("/login", {
-        state: { message: `Welcome to FahhKit, ${data?.fullName || "athlete"}! Your registration is complete — please sign in.` },
+      navigate("/update-password", {
+        state: {
+          mobileNumber: data?.mobileNumber || "",
+          message: `Welcome to FahhKit, ${data?.fullName || "athlete"}! We've emailed you a password — enter it below to set your own.`,
+        },
       });
     } catch (err) {
       const message = err instanceof ApiError ? err.message : "Registration failed. Please try again.";
@@ -100,13 +92,6 @@ export default function RegisterPage() {
             <div className="field">
               <label htmlFor="mobileNumber">Mobile Number</label>
               <input id="mobileNumber" name="mobileNumber" type="tel" value={form.mobileNumber} onChange={handleChange} required />
-            </div>
-            <div className="field">
-              <label htmlFor="password">
-                Password <span className="opt">(optional)</span>
-              </label>
-              <input id="password" name="password" type="password" autoComplete="new-password" value={form.password} onChange={handleChange} />
-              <div className="hint">Leave blank and one will be generated for you.</div>
             </div>
             <div className="field">
               <label htmlFor="gender">
@@ -201,22 +186,6 @@ export default function RegisterPage() {
                 Contact Phone <span className="opt">(optional)</span>
               </label>
               <input id="emergencyContactPhone" name="emergencyContactPhone" type="tel" value={form.emergencyContactPhone} onChange={handleChange} />
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>
-            Citizenship Documents <span className="opt">(optional)</span>
-          </legend>
-          <div className="grid">
-            <div className="field">
-              <label htmlFor="citizenshipFrontImage">Front Image</label>
-              <input id="citizenshipFrontImage" name="citizenshipFrontImage" type="file" accept="image/*" onChange={handleFileChange} />
-            </div>
-            <div className="field">
-              <label htmlFor="citizenshipBackImage">Back Image</label>
-              <input id="citizenshipBackImage" name="citizenshipBackImage" type="file" accept="image/*" onChange={handleFileChange} />
             </div>
           </div>
         </fieldset>
