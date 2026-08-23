@@ -1,0 +1,15 @@
+.history-page-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.history-page-wrap h1 {
+  margin: 0 0 24px;
+  font-size: 26px;
+}
+
+.history-page-muted {
+  color: var(--muted);
+  font-size: 14px;
+}

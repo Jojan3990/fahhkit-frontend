@@ -58,3 +58,5 @@ export const COUNTRIES_SORTED = (() => {
   const rest = COUNTRIES.filter(([code]) => code !== "NEPAL");
   return nepal ? [nepal, ...rest] : COUNTRIES;
 })();
+
+export const COUNTRY_LABELS = Object.fromEntries(COUNTRIES);

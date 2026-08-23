@@ -94,6 +94,19 @@ export default function Navbar() {
                       Create Event
                     </Link>
                   )}
+                  {canManageEvents(user) && (
+                    <Link to="/athletes" onClick={close}>
+                      Search Athletes
+                    </Link>
+                  )}
+                  {user?.userType === "ATHLETE" && (
+                    <Link to="/history" onClick={close}>
+                      History
+                    </Link>
+                  )}
+                  <Link to="/profile/edit" onClick={close}>
+                    Edit Profile
+                  </Link>
                   <button type="button" onClick={handleSignOut}>
                     Sign Out
                   </button>

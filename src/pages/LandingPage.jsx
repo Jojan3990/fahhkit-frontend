@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
 import SectionTitle from "../components/SectionTitle";
+import NextEventBanner from "../components/NextEventBanner";
+import SponsorCarousel from "../components/SponsorCarousel";
+import Footer from "../components/Footer";
 import { getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
@@ -59,6 +62,8 @@ export default function LandingPage() {
     <div className="landing">
       <Navbar />
 
+      <NextEventBanner event={events[0]} />
+
       <Carousel slides={SLIDES} />
 
       <section id="about" className="features">
@@ -79,6 +84,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <SponsorCarousel />
 
       {events.length > 0 && (
         <section id="events" className="landing-events">
@@ -151,12 +158,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="section-inner footer-inner">
-          <span>🏃 FahhKit</span>
-          <span className="footer-muted">© {new Date().getFullYear()} FahhKit. All rights reserved.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

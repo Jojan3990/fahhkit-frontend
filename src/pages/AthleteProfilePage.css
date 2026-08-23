@@ -1,0 +1,108 @@
+.athlete-profile-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+.athlete-profile-back {
+  margin: 0 0 16px;
+}
+
+.athlete-profile-back a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.athlete-profile-back a:hover {
+  color: var(--brand);
+}
+
+.athlete-profile-muted {
+  color: var(--muted);
+}
+
+.athlete-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.athlete-profile-avatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--brand-light);
+  color: var(--brand-dark);
+  font-weight: 700;
+  font-size: 26px;
+  overflow: hidden;
+}
+
+.athlete-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.athlete-profile-header h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.athlete-profile-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.athlete-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.athlete-profile-section {
+  padding: 20px;
+}
+
+.athlete-profile-section h2 {
+  margin: 0 0 14px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--brand-dark);
+}
+
+.athlete-profile-section dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.athlete-profile-section dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  margin: 0 0 2px;
+}
+
+.athlete-profile-section dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.athlete-profile-history h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
