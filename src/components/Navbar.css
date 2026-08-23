@@ -118,11 +118,19 @@
   width: 100%;
 }
 
-.navbar-username {
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
   white-space: nowrap;
+}
+
+.navbar-user-icon {
+  font-size: 20px;
+  color: var(--brand);
 }
 
 .navbar-toggle {

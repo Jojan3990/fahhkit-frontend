@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 import { canManageEvents, clearToken, clearUser } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import ThemeToggle from "./ThemeToggle";
@@ -40,8 +41,6 @@ export default function Navbar() {
         </Link>
 
         <div className="navbar-actions">
-          <ThemeToggle />
-
           <button
             className={`navbar-toggle ${open ? "open" : ""}`}
             aria-label="Toggle menu"
@@ -68,7 +67,12 @@ export default function Navbar() {
                   Create Event
                 </Link>
               )}
-              {user?.fullName && <span className="navbar-username">Hi, {user.fullName}</span>}
+              {user?.fullName && (
+                <span className="navbar-user">
+                  <FaUserCircle className="navbar-user-icon" />
+                  {user.fullName}
+                </span>
+              )}
               <button className="btn btn-outline" onClick={handleSignOut}>
                 Sign Out
               </button>
@@ -83,6 +87,7 @@ export default function Navbar() {
               </Link>
             </>
           )}
+          <ThemeToggle />
         </nav>
       </div>
     </header>
