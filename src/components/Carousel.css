@@ -11,17 +11,47 @@
 }
 
 .carousel-slide {
+  position: relative;
   flex: 0 0 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 32px;
+  overflow: hidden;
+}
+
+.carousel-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  mix-blend-mode: overlay;
+  background: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+  animation: floatBlob 12s ease-in-out infinite;
+}
+
+.carousel-blob-a {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  left: -40px;
+}
+
+.carousel-blob-b {
+  width: 180px;
+  height: 180px;
+  bottom: -50px;
+  right: -30px;
+  animation-delay: -6s;
 }
 
 .carousel-content {
+  position: relative;
+  z-index: 1;
   max-width: 640px;
   text-align: center;
   color: #fff;
+  animation: fadeSlideUp 0.7s ease both;
 }
 
 .carousel-emoji {

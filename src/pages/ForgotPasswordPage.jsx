@@ -38,7 +38,9 @@ export default function ForgotPasswordPage() {
     <>
       <Navbar />
       <div className="forgot-wrap">
-        <div className="forgot-card">
+        <span className="blob auth-blob-a" aria-hidden="true" />
+        <span className="blob auth-blob-b" aria-hidden="true" />
+        <div className="forgot-card glass-card" data-aos="fade-up">
           <header className="forgot-header">
             <div className="forgot-logo">🔑</div>
             <h1>Forgot Password</h1>
@@ -78,7 +80,7 @@ export default function ForgotPasswordPage() {
                 />
               </div>
 
-              <button type="submit" disabled={submitting}>
+              <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
                 {submitting ? "Sending..." : "Send New Password"}
               </button>
             </form>

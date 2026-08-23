@@ -75,7 +75,9 @@ export default function RegisterPage() {
     <>
       <Navbar />
       <div className="register-wrap">
-      <header className="register-header">
+      <span className="blob auth-blob-a" aria-hidden="true" />
+      <span className="blob auth-blob-b" aria-hidden="true" />
+      <header className="register-header" data-aos="fade-down">
         <img src="/logo.png" alt="FahhKit" className="register-logo" />
         <h1>Join FahhKit Run Club</h1>
         <p>Fill out the form below to register as an athlete</p>
@@ -83,7 +85,7 @@ export default function RegisterPage() {
 
       {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form className="glass-card" onSubmit={handleSubmit} noValidate data-aos="fade-up">
         <fieldset>
           <legend>Personal Details</legend>
           <div className="grid">
@@ -219,7 +221,7 @@ export default function RegisterPage() {
           </div>
         </fieldset>
 
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
           {submitting ? "Registering..." : "Register"}
         </button>
       </form>

@@ -29,7 +29,7 @@ export default function EventsPage() {
     <>
       <Navbar />
       <div className="events-wrap">
-        <header className="events-header">
+        <header className="events-header" data-aos="fade-down">
           <div>
             <h1>Upcoming Events</h1>
             <p>Club races and community events on the calendar.</p>
@@ -56,10 +56,12 @@ export default function EventsPage() {
         )}
 
         <div className="events-grid">
-          {events.map((event) => (
-            <div className="event-card" key={event.id}>
+          {events.map((event, i) => (
+            <div className="event-card" key={event.id} data-aos="fade-up" data-aos-delay={(i % 3) * 100}>
               {event.eventImageUrl1 && (
-                <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                <div className="event-card-image-wrap">
+                  <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                </div>
               )}
               <div className="event-card-body">
                 <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>

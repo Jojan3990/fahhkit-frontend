@@ -95,14 +95,16 @@ export default function CreateEventPage() {
     <>
       <Navbar />
       <div className="create-event-wrap">
-        <header className="create-event-header">
+        <span className="blob auth-blob-a" aria-hidden="true" />
+        <span className="blob auth-blob-b" aria-hidden="true" />
+        <header className="create-event-header" data-aos="fade-down">
           <h1>Create Event</h1>
           <p>Set up a new club event or race.</p>
         </header>
 
         {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
 
-        <form onSubmit={handleSubmit} noValidate>
+        <form className="glass-card" onSubmit={handleSubmit} noValidate data-aos="fade-up">
           <div className="grid">
             <div className="field full">
               <label htmlFor="name">Event Name</label>
@@ -192,7 +194,7 @@ export default function CreateEventPage() {
             </div>
           </fieldset>
 
-          <button type="submit" disabled={submitting}>
+          <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
             {submitting ? "Creating..." : "Create Event"}
           </button>
         </form>

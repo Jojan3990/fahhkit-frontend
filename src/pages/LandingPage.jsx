@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
+import SectionTitle from "../components/SectionTitle";
 import { getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
@@ -84,11 +85,14 @@ export default function LandingPage() {
 
       <section id="about" className="features">
         <div className="section-inner">
-          <h2>Why Runners Choose FahhKit</h2>
-          <p className="section-sub">Everything you need to lace up and show up, together.</p>
+          <SectionTitle
+            eyebrow="What We Offer"
+            title="Why Runners Choose FahhKit"
+            subtitle="Everything you need to lace up and show up, together."
+          />
           <div className="features-grid">
-            {FEATURES.map((f) => (
-              <div className="feature-card" key={f.title}>
+            {FEATURES.map((f, i) => (
+              <div className="feature-card" key={f.title} data-aos="fade-up" data-aos-delay={i * 100}>
                 <div className="feature-icon">{f.icon}</div>
                 <h3>{f.title}</h3>
                 <p>{f.text}</p>
@@ -101,13 +105,18 @@ export default function LandingPage() {
       {events.length > 0 && (
         <section id="events" className="landing-events">
           <div className="section-inner">
-            <h2>Upcoming Events</h2>
-            <p className="section-sub">Published races and community events on the calendar.</p>
+            <SectionTitle
+              eyebrow="Don't Miss Out"
+              title="Upcoming Events"
+              subtitle="Published races and community events on the calendar."
+            />
             <div className="events-grid">
-              {events.map((event) => (
-                <div className="event-card" key={event.id}>
+              {events.map((event, i) => (
+                <div className="event-card" key={event.id} data-aos="fade-up" data-aos-delay={i * 100}>
                   {event.eventImageUrl1 && (
-                    <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                    <div className="event-card-image-wrap">
+                      <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                    </div>
                   )}
                   <div className="event-card-body">
                     <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
@@ -138,7 +147,9 @@ export default function LandingPage() {
       )}
 
       <section className="cta-band">
-        <div className="section-inner cta-inner">
+        <span className="blob cta-blob-a" aria-hidden="true" />
+        <span className="blob cta-blob-b" aria-hidden="true" />
+        <div className="section-inner cta-inner" data-aos="zoom-in">
           <div>
             <h2>Ready to run with us?</h2>
             <p>Registration takes less than two minutes.</p>

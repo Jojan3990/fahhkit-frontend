@@ -1,19 +1,39 @@
 .login-wrap {
+  position: relative;
+  overflow: hidden;
   min-height: calc(100vh - var(--header-h));
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: linear-gradient(160deg, var(--bg) 0%, #fdece0 100%);
+  background: linear-gradient(160deg, var(--bg) 0%, var(--brand-light) 100%);
+}
+
+.auth-blob-a,
+.auth-blob-b {
+  background: var(--gradient-brand);
+}
+
+.auth-blob-a {
+  width: 240px;
+  height: 240px;
+  top: -60px;
+  right: 8%;
+}
+
+.auth-blob-b {
+  width: 180px;
+  height: 180px;
+  bottom: -40px;
+  left: 6%;
+  animation-delay: -8s;
 }
 
 .login-card {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 400px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
   padding: 32px 28px;
 }
 
@@ -59,37 +79,20 @@
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  background: #fff;
+  background: var(--card);
   color: var(--text);
 }
 
 .login-card input:focus {
   outline: none;
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(232, 89, 12, 0.15);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-.login-card button[type="submit"] {
-  width: 100%;
-  padding: 13px;
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+.login-card .btn-block {
   font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 13px;
   margin-top: 4px;
-  transition: background 0.15s ease;
-}
-
-.login-card button[type="submit"]:hover {
-  background: var(--brand-dark);
-}
-
-.login-card button[type="submit"]:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .login-forgot {

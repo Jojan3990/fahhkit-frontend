@@ -42,7 +42,9 @@ export default function LoginPage() {
     <>
       <Navbar />
       <div className="login-wrap">
-        <div className="login-card">
+        <span className="blob auth-blob-a" aria-hidden="true" />
+        <span className="blob auth-blob-b" aria-hidden="true" />
+        <div className="login-card glass-card" data-aos="fade-up">
           <header className="login-header">
             <img src="/logo.png" alt="FahhKit" className="login-logo" />
             <h1>Welcome Back</h1>
@@ -82,7 +84,7 @@ export default function LoginPage() {
               <Link to="/forgot-password">Forgot password?</Link>
             </p>
 
-            <button type="submit" disabled={submitting}>
+            <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
               {submitting ? "Signing in..." : "Sign In"}
             </button>
           </form>
