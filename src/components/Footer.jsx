@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="section-inner footer-grid">
-        <div className="footer-brand">
+        <div className="footer-brand mb-5">
           <span className="footer-logo">
             <img src="/logo.png" alt="FahhKit" className="footer-logo-img" />
             FahhKit
