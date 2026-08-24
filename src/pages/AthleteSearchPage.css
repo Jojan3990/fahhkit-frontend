@@ -1,3 +1,9 @@
+.athlete-search-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .athlete-search-wrap {
   max-width: 800px;
   margin: 0 auto;

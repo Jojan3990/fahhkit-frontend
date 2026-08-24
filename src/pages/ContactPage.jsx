@@ -9,14 +9,14 @@ import "./ContactPage.css";
 const INITIAL_FORM = { name: "", email: "", message: "" };
 
 // TODO: replace with the real WhatsApp community invite link
-const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/REPLACE_ME";
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
 
 // TODO: replace with real details when available
 const CONTACT_DETAILS = [
-  { icon: FaMapMarkerAlt, label: "Address", value: "Kathmandu, Nepal" },
-  { icon: FaPhoneAlt, label: "Phone", value: "+977-98XXXXXXXX" },
-  { icon: FaEnvelope, label: "Email", value: "hello@fahhkit.com" },
-  { icon: FaClock, label: "Hours", value: "Mon - Sat, 9am - 6pm" },
+  { icon: FaMapMarkerAlt, label: "Address", value: "Naxal, Kathmandu, Nepal" },
+  { icon: FaPhoneAlt, label: "Phone", value: "+977-9813121465" },
+  { icon: FaEnvelope, label: "Email", value: "admin@cafebizarre.com.np" },
+  { icon: FaClock, label: "Hours", value: "Mon - Friday, 9am - 6pm" },
 ];
 
 export default function ContactPage() {
@@ -48,7 +48,7 @@ export default function ContactPage() {
   }
 
   return (
-    <>
+    <div className="contact-page">
       <Navbar />
       <div className="contact-wrap">
         <div className="section-inner">
@@ -147,6 +147,6 @@ export default function ContactPage() {
         </section>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

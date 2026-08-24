@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <>
+    <div className="forgot-page">
       <Navbar />
       <div className="forgot-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
@@ -93,6 +93,6 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

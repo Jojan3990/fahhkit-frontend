@@ -40,7 +40,7 @@ export default function LoginPage() {
   }
 
   return (
-    <>
+    <div className="login-page">
       <Navbar />
       <div className="login-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
@@ -96,6 +96,6 @@ export default function LoginPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

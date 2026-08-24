@@ -37,7 +37,7 @@ export default function AthleteSearchPage() {
 
   if (!userLoading && !allowed) {
     return (
-      <>
+      <div className="athlete-search-page">
         <Navbar />
         <div className="athlete-search-wrap">
           <div className="banner error">
@@ -49,12 +49,12 @@ export default function AthleteSearchPage() {
           </div>
         </div>
         <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="athlete-search-page">
       <Navbar />
       <div className="athlete-search-wrap">
         <header className="athlete-search-header" data-aos="fade-down">
@@ -89,6 +89,6 @@ export default function AthleteSearchPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

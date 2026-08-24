@@ -14,17 +14,13 @@ export default function EventsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!isAuthed) {
-      setLoading(false);
-      return;
-    }
     getJson("/v1/event/upcoming")
       .then((data) => setEvents(data || []))
       .catch((err) => {
         setError(err instanceof ApiError ? err.message : "Could not load events. Please try again.");
       })
       .finally(() => setLoading(false));
-  }, [isAuthed]);
+  }, []);
 
   return (
     <div className="events-page">
@@ -42,17 +38,11 @@ export default function EventsPage() {
           )}
         </header>
 
-        {!isAuthed && (
-          <div className="banner error">
-            <Link to="/login">Sign in</Link> to view upcoming events.
-          </div>
-        )}
+        {error && <div className="banner error">{error}</div>}
 
-        {isAuthed && error && <div className="banner error">{error}</div>}
+        {loading && <p className="events-muted">Loading events...</p>}
 
-        {isAuthed && loading && <p className="events-muted">Loading events...</p>}
-
-        {isAuthed && !loading && !error && events.length === 0 && (
+        {!loading && !error && events.length === 0 && (
           <p className="events-muted">No upcoming events yet — check back soon.</p>
         )}
 

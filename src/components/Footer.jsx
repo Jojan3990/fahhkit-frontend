@@ -6,11 +6,11 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="section-inner footer-grid">
-        <div className="footer-brand mb-5">
-          <span className="footer-logo">
+        <div className="footer-brand">
+          <Link to="/" className="footer-logo">
             <img src="/logo.png" alt="FahhKit" className="footer-logo-img" />
             FahhKit
-          </span>
+          </Link>
           <p>Getting it done is what we live by!</p>
         </div>
 
@@ -24,13 +24,13 @@ export default function Footer() {
         <div className="footer-col footer-contact">
           <h4>Contact</h4>
           <span>
-            <FaMapMarkerAlt /> Kathmandu, Nepal
+            <FaMapMarkerAlt /> Naxal, Kathmandu, Nepal
           </span>
           <span>
-            <FaPhoneAlt /> +977-98XXXXXXXX
+            <FaPhoneAlt /> +977-9813121465
           </span>
           <span>
-            <FaEnvelope /> hello@fahhkit.com
+            <FaEnvelope /> admin@cafebizarre.com.np
           </span>
         </div>
       </div>

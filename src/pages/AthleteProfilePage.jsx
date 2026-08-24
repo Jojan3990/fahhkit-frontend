@@ -36,7 +36,7 @@ export default function AthleteProfilePage() {
 
   if (!userLoading && !allowed) {
     return (
-      <>
+      <div className="athlete-profile-page">
         <Navbar />
         <div className="athlete-profile-wrap">
           <div className="banner error">
@@ -48,12 +48,12 @@ export default function AthleteProfilePage() {
           </div>
         </div>
         <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="athlete-profile-page">
       <Navbar />
       <div className="athlete-profile-wrap">
         <p className="athlete-profile-back">
@@ -156,6 +156,6 @@ export default function AthleteProfilePage() {
         )}
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

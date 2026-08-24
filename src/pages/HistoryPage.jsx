@@ -27,7 +27,7 @@ export default function HistoryPage() {
   }, [userLoading, isAuthed, user?.id]);
 
   return (
-    <>
+    <div className="history-page">
       <Navbar />
       <div className="history-page-wrap">
         <h1>History</h1>
@@ -50,6 +50,6 @@ export default function HistoryPage() {
         )}
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

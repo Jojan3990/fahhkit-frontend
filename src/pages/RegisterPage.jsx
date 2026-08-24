@@ -65,7 +65,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <>
+    <div className="register-page">
       <Navbar />
       <div className="register-wrap">
       <span className="blob auth-blob-a" aria-hidden="true" />
@@ -203,6 +203,6 @@ export default function RegisterPage() {
       </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
