@@ -68,9 +68,6 @@ export default function Navbar() {
         </div>
 
         <nav className={`navbar-links ${open ? "open" : ""}`}>
-          <a href="/#about" onClick={close}>
-            About
-          </a>
           <Link to="/events" onClick={close}>
             Events
           </Link>

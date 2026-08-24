@@ -5,9 +5,11 @@ import Carousel from "../components/Carousel";
 import SectionTitle from "../components/SectionTitle";
 import { eventToSlide } from "../components/NextEventBanner";
 import SponsorCarousel from "../components/SponsorCarousel";
+import TeamCarousel from "../components/TeamCarousel";
 import Footer from "../components/Footer";
 import { getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useRegisteredEventIds } from "../hooks/useRegisteredEvents";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
 import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
@@ -75,6 +77,7 @@ const TEAM = [
 
 export default function LandingPage() {
   const { isAuthed } = useCurrentUser();
+  const registeredIds = useRegisteredEventIds();
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -151,6 +154,18 @@ export default function LandingPage() {
                         </div>
                       )}
                     </dl>
+                    <div className="event-card-actions">
+                      {registeredIds.has(event.id) ? (
+                        <span className="event-card-registered">&#10003; Registered</span>
+                      ) : (
+                        <Link to={isAuthed ? `/events/${event.id}` : "/register"} className="btn btn-primary">
+                          Register
+                        </Link>
+                      )}
+                      <Link to={`/events/${event.id}`} className="btn btn-outline">
+                        View More
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -171,19 +186,8 @@ export default function LandingPage() {
             title="Meet Our Team"
             subtitle="The crew who show up every week to keep the community running."
           />
-          <div className="team-grid">
-            {TEAM.map((member, i) => (
-              <div className="team-card" key={member.name} data-aos="fade-up" data-aos-delay={(i % 4) * 100}>
-                <div className="team-card-photo">
-                  <img src={member.photo} alt={member.name} />
-                </div>
-                <div className="team-card-body">
-                  <h3>{member.name}</h3>
-                  <span className="team-card-role">{member.role}</span>
-                  <p>{member.bio}</p>
-                </div>
-              </div>
-            ))}
+          <div data-aos="fade-up">
+            <TeamCarousel team={TEAM} />
           </div>
         </div>
       </section>

@@ -1,0 +1,90 @@
+.team-carousel {
+  position: relative;
+  padding: 0 52px;
+}
+
+.team-carousel-viewport {
+  overflow: hidden;
+}
+
+.team-carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.team-carousel-page {
+  flex: 0 0 100%;
+  display: grid;
+  gap: 28px;
+}
+
+.team-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.team-carousel-arrow:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.team-carousel-arrow.prev {
+  left: 0;
+}
+
+.team-carousel-arrow.next {
+  right: 0;
+}
+
+.team-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.team-carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.team-carousel-dot.active {
+  background: var(--brand);
+  transform: scale(1.3);
+}
+
+@media (max-width: 560px) {
+  .team-carousel {
+    padding: 0 40px;
+  }
+
+  .team-carousel-page {
+    gap: 20px;
+  }
+
+  .team-carousel-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+}

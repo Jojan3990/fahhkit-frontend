@@ -73,6 +73,18 @@
   margin-bottom: 16px;
 }
 
+.contact-form-card .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .contact-form-card .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .contact-form-card label {
   display: block;
   font-size: 13px;

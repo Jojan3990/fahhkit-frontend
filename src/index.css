@@ -174,8 +174,9 @@ button {
 }
 
 .section-eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 12px;
   font-weight: 700;

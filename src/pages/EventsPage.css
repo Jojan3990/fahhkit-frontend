@@ -122,3 +122,29 @@
   font-size: 13px;
   font-weight: 600;
 }
+
+.event-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.event-card-actions .btn {
+  flex: 1;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.event-card-registered {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+  background: var(--success-bg);
+}

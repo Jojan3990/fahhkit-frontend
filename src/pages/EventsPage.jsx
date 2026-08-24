@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useRegisteredEventIds } from "../hooks/useRegisteredEvents";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./EventsPage.css";
 
 export default function EventsPage() {
-  const { user } = useCurrentUser();
+  const { user, isAuthed } = useCurrentUser();
+  const registeredIds = useRegisteredEventIds();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,7 +59,6 @@ export default function EventsPage() {
               <div className="event-card-body">
                 <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
                 <h3>{event.name}</h3>
-                {event.description && <p className="event-card-description">{event.description}</p>}
                 <dl className="event-card-meta">
                   <div>
                     <dt>Date</dt>
@@ -80,6 +81,18 @@ export default function EventsPage() {
                     </div>
                   )}
                 </dl>
+                <div className="event-card-actions">
+                  {registeredIds.has(event.id) ? (
+                    <span className="event-card-registered">&#10003; Registered</span>
+                  ) : (
+                    <Link to={isAuthed ? `/events/${event.id}` : "/register"} className="btn btn-primary">
+                      Register
+                    </Link>
+                  )}
+                  <Link to={`/events/${event.id}`} className="btn btn-outline">
+                    View More
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import SectionTitle from "../components/SectionTitle";
 import "./ContactPage.css";
 
-const INITIAL_FORM = { name: "", email: "", message: "" };
+const INITIAL_FORM = { fullName: "", email: "", mobileNumber: "", subject: "", message: "" };
 
 // TODO: replace with the real WhatsApp community invite link
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
@@ -36,7 +36,7 @@ export default function ContactPage() {
 
     setSubmitting(true);
     try {
-      await postJson("/v1/contact", form);
+      await postJson("/v1/email/send-collaboration-mail", form);
       setForm(INITIAL_FORM);
       setBanner({ kind: "success", message: "Thanks for reaching out! We'll get back to you soon." });
     } catch (err) {
@@ -81,25 +81,54 @@ export default function ContactPage() {
 
               <form onSubmit={handleSubmit} noValidate>
                 <div className="field">
-                  <label htmlFor="name">Name</label>
+                  <label htmlFor="fullName">Full Name</label>
                   <input
-                    id="name"
-                    name="name"
+                    id="fullName"
+                    name="fullName"
                     type="text"
                     autoComplete="name"
-                    value={form.name}
+                    value={form.fullName}
                     onChange={handleChange}
                     required
                   />
                 </div>
+                <div className="field-row">
+                  <div className="field">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="mobileNumber">Mobile Number</label>
+                    <input
+                      id="mobileNumber"
+                      name="mobileNumber"
+                      type="tel"
+                      inputMode="numeric"
+                      autoComplete="tel"
+                      placeholder="98XXXXXXXX"
+                      pattern="^9\d{9}$"
+                      title="Enter a valid 10-digit mobile number starting with 9"
+                      value={form.mobileNumber}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="field">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="subject">Subject</label>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    value={form.email}
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    value={form.subject}
                     onChange={handleChange}
                     required
                   />

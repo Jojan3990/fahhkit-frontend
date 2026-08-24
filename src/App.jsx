@@ -8,6 +8,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import EventsPage from "./pages/EventsPage";
+import EventDetailPage from "./pages/EventDetailPage";
 import CreateEventPage from "./pages/CreateEventPage";
 import AthleteSearchPage from "./pages/AthleteSearchPage";
 import AthleteProfilePage from "./pages/AthleteProfilePage";
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/profile/edit" element={<EditProfilePage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/events/create" element={<CreateEventPage />} />
+      <Route path="/events/:id" element={<EventDetailPage />} />
       <Route path="/athletes" element={<AthleteSearchPage />} />
       <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
       <Route path="/history" element={<HistoryPage />} />
