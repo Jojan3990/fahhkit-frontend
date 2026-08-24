@@ -64,7 +64,7 @@
 
 .footer-bottom {
   border-top: 1px solid var(--border);
-  margin-top: 16px;
+  margin: 40px 0 32px;
   padding: 44px 0;
   font-size: 13px;
 }
