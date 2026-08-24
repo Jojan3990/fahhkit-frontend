@@ -47,7 +47,7 @@ export default function LoginPage() {
         <span className="blob auth-blob-b" aria-hidden="true" />
         <div className="login-card glass-card" data-aos="fade-up">
           <header className="login-header">
-            <img src="/logo.png" alt="FahhKit" className="login-logo" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="login-logo" />
             <h1>Welcome Back</h1>
             <p>Sign in with your mobile number or email to continue</p>
           </header>

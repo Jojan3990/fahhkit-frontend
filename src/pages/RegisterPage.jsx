@@ -72,7 +72,7 @@ export default function RegisterPage() {
       <span className="blob auth-blob-b" aria-hidden="true" />
       <div className="register-inner">
       <header className="register-header" data-aos="fade-down">
-        <img src="/logo.png" alt="FahhKit" className="register-logo" />
+        <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="register-logo" />
         <h1>Join FahhKit Run Club</h1>
         <p>Fill out the form below to register as an athlete</p>
       </header>

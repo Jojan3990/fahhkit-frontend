@@ -9,6 +9,7 @@ function getInitialTheme() {
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+// eslint-disable-next-line react/prop-types -- prop-types is not used in this project
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(getInitialTheme);
 

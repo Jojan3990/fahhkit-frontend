@@ -8,7 +8,7 @@ import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./EventsPage.css";
 
 export default function EventsPage() {
-  const { user, isAuthed } = useCurrentUser();
+  const { user } = useCurrentUser();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

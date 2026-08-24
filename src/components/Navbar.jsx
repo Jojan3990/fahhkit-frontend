@@ -50,7 +50,7 @@ export default function Navbar() {
     <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand" onClick={close}>
-          <img src="/logo.png" alt="FahhKit" className="navbar-logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="navbar-logo" />
           FahhKit
         </Link>
 

@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="section-inner footer-grid">
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
-            <img src="/logo.png" alt="FahhKit" className="footer-logo-img" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="footer-logo-img" />
             FahhKit
           </Link>
           <p>Getting it done is what we live by!</p>
