@@ -27,7 +27,7 @@ export default function EventsPage() {
   }, [isAuthed]);
 
   return (
-    <>
+    <div className="events-page">
       <Navbar />
       <div className="events-wrap">
         <header className="events-header" data-aos="fade-down">
@@ -96,6 +96,6 @@ export default function EventsPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import SectionTitle from "./SectionTitle";
 import "./SponsorCarousel.css";
 
 // Placeholder sponsors — swap these for real partner names/logos.
@@ -16,7 +17,7 @@ export default function SponsorCarousel() {
   return (
     <section className="sponsors">
       <div className="section-inner">
-        <span className="sponsors-eyebrow">Our Sponsors</span>
+        <SectionTitle eyebrow="Our Sponsors" title="Trusted by Leading Companies" />
       </div>
       <div className="sponsors-track-wrap">
         <div className="sponsors-track">
