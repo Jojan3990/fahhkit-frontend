@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { canManageEvents, clearToken, clearUser } from "../api/client";
+import { clearToken, clearUser } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
@@ -74,6 +74,9 @@ export default function Navbar() {
           <Link to="/events" onClick={close}>
             Events
           </Link>
+          <Link to="/athletes" onClick={close}>
+            Athletes
+          </Link>
           {isAuthed ? (
             <div className="navbar-user-menu" ref={userMenuRef}>
               <button
@@ -89,11 +92,6 @@ export default function Navbar() {
               </button>
               {userMenuOpen && (
                 <div className="navbar-user-dropdown">
-                  {canManageEvents(user) && (
-                    <Link to="/athletes" onClick={close}>
-                      Athlete
-                    </Link>
-                  )}
                   {user?.userType === "ATHLETE" && (
                     <Link to="/history" onClick={close}>
                       History
