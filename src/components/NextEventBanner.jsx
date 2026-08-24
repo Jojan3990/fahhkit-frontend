@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types -- no prop-types dependency in this project */
 import { Link } from "react-router-dom";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import { resolveFileUrl } from "../api/client";
@@ -9,17 +8,14 @@ function randomPhotoFor(event) {
   return `https://picsum.photos/seed/${seed}/1600/700`;
 }
 
-export default function NextEventBanner({ event }) {
-  if (!event) return null;
-
+export function eventToSlide(event, isNext) {
   const image = event.eventImageUrl1 ? resolveFileUrl(event.eventImageUrl1) : randomPhotoFor(event);
 
-  return (
-    <section className="next-event-banner" data-aos="fade-down">
-      <img src={image} alt="" className="next-event-bg" />
-      <div className="next-event-scrim" />
-      <div className="section-inner next-event-inner">
-        <span className="next-event-tag">Next Up</span>
+  return {
+    image,
+    content: (
+      <div className="next-event-inner">
+        <span className="next-event-tag">{isNext ? "Next Up" : "Upcoming"}</span>
         <span className="next-event-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
         <h2 className="next-event-title">{event.name}</h2>
         <p className="next-event-meta">
@@ -30,6 +26,6 @@ export default function NextEventBanner({ event }) {
           View Details
         </Link>
       </div>
-    </section>
-  );
+    ),
+  };
 }

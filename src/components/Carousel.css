@@ -20,6 +20,19 @@
   overflow: hidden;
 }
 
+.carousel-slide-bg {
+  position: absolute;
+  inset: 0;
+  filter: blur(4px);
+  transform: scale(1.08);
+}
+
+.carousel-slide-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
 .carousel-blob {
   position: absolute;
   border-radius: 50%;

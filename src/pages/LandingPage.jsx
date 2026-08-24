@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
 import SectionTitle from "../components/SectionTitle";
-import NextEventBanner from "../components/NextEventBanner";
+import { eventToSlide } from "../components/NextEventBanner";
 import SponsorCarousel from "../components/SponsorCarousel";
 import Footer from "../components/Footer";
 import { getJson, resolveFileUrl } from "../api/client";
@@ -58,13 +58,13 @@ export default function LandingPage() {
       .catch(() => {});
   }, [isAuthed]);
 
+  const slides = [...events.map((event, i) => eventToSlide(event, i === 0)), ...SLIDES];
+
   return (
     <div className="landing">
       <Navbar />
 
-      <NextEventBanner event={events[0]} />
-
-      <Carousel slides={SLIDES} />
+      <Carousel slides={slides} />
 
       <SponsorCarousel />
 
