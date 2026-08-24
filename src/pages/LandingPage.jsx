@@ -11,6 +11,7 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
 import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
+import foundingMembersImage from "../assets/images/founding-members.jfif";
 import "./LandingPage.css";
 import "./EventsPage.css";
 
@@ -18,7 +19,7 @@ const SLIDES = [
   {
     image: bannerImage,
     title: "Fahhkit Fitness Club",
-    subtitle: "Say fk it and get it done!",
+    subtitle: "Say f**k it and get it done!",
     cta: (
       <Link to="/register" className="btn btn-white btn-lg">
         Join the Club
@@ -44,19 +45,43 @@ const MILESTONES = [
   { number: "3", label: "Months Running Strong" },
 ];
 
+// TODO: swap in each member's real photo, name, role, and bio when available
+const TEAM = [
+  {
+    name: "Team Member Name",
+    role: "Founder & Head Coach",
+    photo: foundingMembersImage,
+    bio: "Started FahhKit with a single Sunday run and hasn't missed one since. Believes every workout should feel like showing up for your friends.",
+  },
+  {
+    name: "Team Member Name",
+    role: "Run Coach",
+    photo: foundingMembersImage,
+    bio: "Plans the routes, sets the pace, and makes sure nobody gets left behind — literally or figuratively.",
+  },
+  {
+    name: "Team Member Name",
+    role: "Community Lead",
+    photo: foundingMembersImage,
+    bio: "The friendly face who welcomes every new member and keeps the group chat alive between events.",
+  },
+  {
+    name: "Team Member Name",
+    role: "Events Coordinator",
+    photo: foundingMembersImage,
+    bio: "Turns \"say fk it\" into an actual race day — venues, logistics, and snacks all sorted.",
+  },
+];
+
 export default function LandingPage() {
   const { isAuthed } = useCurrentUser();
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    if (!isAuthed) {
-      setEvents([]);
-      return;
-    }
     getJson("/v1/event/upcoming")
       .then((data) => setEvents((data || []).slice(0, 3)))
       .catch(() => {});
-  }, [isAuthed]);
+  }, []);
 
   const slides = [...events.map((event, i) => eventToSlide(event, i === 0)), ...SLIDES];
 
@@ -90,7 +115,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="milestones-image" data-aos="fade-left">
-            <img src={sundayRundayImage} alt="FahhKit community running together" />
+            <img src={foundingMembersImage} alt="FahhKit founding members" />
           </div>
         </div>
       </section>
@@ -138,6 +163,30 @@ export default function LandingPage() {
           </div>
         </section>
       )}
+
+      <section id="team" className="team-section">
+        <div className="section-inner">
+          <SectionTitle
+            eyebrow="The People Behind FahhKit"
+            title="Meet Our Team"
+            subtitle="The crew who show up every week to keep the community running."
+          />
+          <div className="team-grid">
+            {TEAM.map((member, i) => (
+              <div className="team-card" key={member.name} data-aos="fade-up" data-aos-delay={(i % 4) * 100}>
+                <div className="team-card-photo">
+                  <img src={member.photo} alt={member.name} />
+                </div>
+                <div className="team-card-body">
+                  <h3>{member.name}</h3>
+                  <span className="team-card-role">{member.role}</span>
+                  <p>{member.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="cta-band">
         <span className="blob cta-blob-a" aria-hidden="true" />

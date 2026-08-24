@@ -15,7 +15,7 @@ export function eventToSlide(event, isNext) {
     image,
     content: (
       <div className="next-event-inner">
-        <span className="next-event-tag">{isNext ? "Next Up" : "Upcoming"}</span>
+        {!isNext && <span className="next-event-tag">Upcoming</span>}
         <span className="next-event-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
         <h2 className="next-event-title">{event.name}</h2>
         <p className="next-event-meta">
