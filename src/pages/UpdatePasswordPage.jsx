@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { postJson, setToken, clearToken, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./UpdatePasswordPage.css";
 
 export default function UpdatePasswordPage() {
@@ -125,6 +126,7 @@ export default function UpdatePasswordPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

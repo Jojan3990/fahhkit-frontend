@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { ApiError, canManageEvents, postForm } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./CreateEventPage.css";
 
 const EVENT_TYPES = [
@@ -48,6 +49,7 @@ export default function CreateEventPage() {
         <div className="create-event-wrap">
           <p>Loading...</p>
         </div>
+        <Footer />
       </>
     );
   }
@@ -199,6 +201,7 @@ export default function CreateEventPage() {
           </button>
         </form>
       </div>
+      <Footer />
     </>
   );
 }

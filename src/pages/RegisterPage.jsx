@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { postForm, ApiError } from "../api/client";
 import { COUNTRIES_SORTED } from "../constants/countries";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./RegisterPage.css";
 
 const INITIAL_FORM = {
@@ -199,6 +200,7 @@ export default function RegisterPage() {
         Already have an account? <Link to="/login">Sign in</Link>
       </p>
       </div>
+      <Footer />
     </>
   );
 }

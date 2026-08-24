@@ -4,6 +4,7 @@ import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/clien
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { COUNTRY_LABELS } from "../constants/countries";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import HistoryList from "../components/HistoryList";
 import "./AthleteProfilePage.css";
 
@@ -46,6 +47,7 @@ export default function AthleteProfilePage() {
             )}
           </div>
         </div>
+        <Footer />
       </>
     );
   }
@@ -153,6 +155,7 @@ export default function AthleteProfilePage() {
           </>
         )}
       </div>
+      <Footer />
     </>
   );
 }

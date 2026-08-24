@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./EventsPage.css";
 
@@ -94,6 +95,7 @@ export default function EventsPage() {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

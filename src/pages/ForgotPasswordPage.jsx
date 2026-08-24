@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { postJson, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./ForgotPasswordPage.css";
 
 const INITIAL_FORM = { mobileNumber: "", birthDate: "" };
@@ -91,6 +92,7 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

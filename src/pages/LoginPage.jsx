@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { postJson, getJson, setToken, setUser, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./LoginPage.css";
 
 const INITIAL_FORM = { mobileNumber: "", password: "" };
@@ -94,6 +95,7 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

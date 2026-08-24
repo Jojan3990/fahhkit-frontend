@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ApiError, getJson } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import HistoryList from "../components/HistoryList";
 import "./HistoryPage.css";
 
@@ -48,6 +49,7 @@ export default function HistoryPage() {
           <HistoryList history={history} emptyMessage="You haven't registered for any events yet." />
         )}
       </div>
+      <Footer />
     </>
   );
 }

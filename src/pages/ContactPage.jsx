@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock, FaWhatsapp } from "react-icons/fa";
 import { postJson, ApiError } from "../api/client";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import SectionTitle from "../components/SectionTitle";
 import "./ContactPage.css";
 
 const INITIAL_FORM = { name: "", email: "", message: "" };
+
+// TODO: replace with the real WhatsApp community invite link
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/REPLACE_ME";
 
 // TODO: replace with real details when available
 const CONTACT_DETAILS = [
@@ -119,7 +123,30 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        <section className="whatsapp-band">
+          <span className="blob whatsapp-blob-a" aria-hidden="true" />
+          <span className="blob whatsapp-blob-b" aria-hidden="true" />
+          <div className="section-inner whatsapp-inner" data-aos="zoom-in">
+            <div>
+              <h2>Join Our WhatsApp Community</h2>
+              <p>
+                Connect with like-minded wellness enthusiasts, get exclusive tips and stay updated with our latest
+                events
+              </p>
+            </div>
+            <a
+              href={WHATSAPP_COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-lg"
+            >
+              <FaWhatsapp /> Join Our WhatsApp Community
+            </a>
+          </div>
+        </section>
       </div>
+      <Footer />
     </>
   );
 }

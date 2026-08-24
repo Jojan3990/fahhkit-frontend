@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { ApiError, canManageEvents, getJson } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./AthleteSearchPage.css";
 
 export default function AthleteSearchPage() {
@@ -47,6 +48,7 @@ export default function AthleteSearchPage() {
             )}
           </div>
         </div>
+        <Footer />
       </>
     );
   }
@@ -86,6 +88,7 @@ export default function AthleteSearchPage() {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getJson, postJson, setUser, ApiError } from "../api/client";
 import { COUNTRIES_SORTED } from "../constants/countries";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./EditProfilePage.css";
 
 const INITIAL_FORM = {
@@ -87,6 +88,7 @@ export default function EditProfilePage() {
         <div className="edit-profile-wrap">
           <p className="edit-profile-loading">Loading your profile…</p>
         </div>
+        <Footer />
       </>
     );
   }
@@ -242,6 +244,7 @@ export default function EditProfilePage() {
           <Link to="/">Back to home</Link>
         </p>
       </div>
+      <Footer />
     </>
   );
 }

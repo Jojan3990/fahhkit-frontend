@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { clearToken, clearUser } from "../api/client";
+import { canManageEvents, clearToken, clearUser } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
@@ -74,9 +74,11 @@ export default function Navbar() {
           <Link to="/events" onClick={close}>
             Events
           </Link>
-          <Link to="/athletes" onClick={close}>
-            Athletes
-          </Link>
+          {canManageEvents(user) && (
+            <Link to="/athletes" onClick={close}>
+              Athletes
+            </Link>
+          )}
           <Link to="/contact" onClick={close}>
             Contact
           </Link>
