@@ -35,7 +35,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="section-inner footer-bottom">
+      <div className="footer-bottom">
         <span className="footer-muted">© {new Date().getFullYear()} FahhKit. All rights reserved.</span>
       </div>
     </footer>

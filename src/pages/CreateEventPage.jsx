@@ -99,6 +99,7 @@ export default function CreateEventPage() {
       <div className="create-event-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
         <span className="blob auth-blob-b" aria-hidden="true" />
+        <div className="create-event-inner">
         <header className="create-event-header" data-aos="fade-down">
           <h1>Create Event</h1>
           <p>Set up a new club event or race.</p>
@@ -200,6 +201,7 @@ export default function CreateEventPage() {
             {submitting ? "Creating..." : "Create Event"}
           </button>
         </form>
+        </div>
       </div>
       <Footer />
     </>

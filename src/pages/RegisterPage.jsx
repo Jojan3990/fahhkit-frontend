@@ -70,6 +70,7 @@ export default function RegisterPage() {
       <div className="register-wrap">
       <span className="blob auth-blob-a" aria-hidden="true" />
       <span className="blob auth-blob-b" aria-hidden="true" />
+      <div className="register-inner">
       <header className="register-header" data-aos="fade-down">
         <img src="/logo.png" alt="FahhKit" className="register-logo" />
         <h1>Join FahhKit Run Club</h1>
@@ -199,6 +200,7 @@ export default function RegisterPage() {
       <p className="register-footer">
         Already have an account? <Link to="/login">Sign in</Link>
       </p>
+      </div>
       </div>
       <Footer />
     </>

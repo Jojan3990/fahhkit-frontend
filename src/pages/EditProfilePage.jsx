@@ -99,6 +99,7 @@ export default function EditProfilePage() {
       <div className="edit-profile-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
         <span className="blob auth-blob-b" aria-hidden="true" />
+        <div className="edit-profile-inner">
         <header className="edit-profile-header" data-aos="fade-down">
           <h1>Edit Profile</h1>
           <p>Update your personal details</p>
@@ -243,6 +244,7 @@ export default function EditProfilePage() {
         <p className="edit-profile-footer">
           <Link to="/">Back to home</Link>
         </p>
+        </div>
       </div>
       <Footer />
     </>

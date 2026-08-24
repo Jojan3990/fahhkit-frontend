@@ -37,11 +37,11 @@ const SLIDES = [
   },
 ];
 
-const FEATURES = [
-  { icon: "👟", title: "Group Runs", text: "Weekly runs for every pace, from beginners to seasoned racers." },
-  { icon: "📅", title: "Events & Races", text: "Stay on top of upcoming club races and community events." },
-  { icon: "📈", title: "Training Plans", text: "Structured guidance to help you build endurance and speed." },
-  { icon: "🤝", title: "Real Community", text: "Meet runners who'll push you further and cheer you on." },
+const MILESTONES = [
+  { number: "500+", label: "Members Joined" },
+  { number: "120+", label: "Events Hosted" },
+  { number: "15K+", label: "KM Logged Together" },
+  { number: "3", label: "Years Running Strong" },
 ];
 
 export default function LandingPage() {
@@ -66,26 +66,34 @@ export default function LandingPage() {
 
       <Carousel slides={SLIDES} />
 
-      <section id="about" className="features">
-        <div className="section-inner">
-          <SectionTitle
-            eyebrow="What We Offer"
-            title="Why Runners Choose FahhKit"
-            subtitle="Everything you need to lace up and show up, together."
-          />
-          <div className="features-grid">
-            {FEATURES.map((f, i) => (
-              <div className="feature-card" key={f.title} data-aos="fade-up" data-aos-delay={i * 100}>
-                <div className="feature-icon">{f.icon}</div>
-                <h3>{f.title}</h3>
-                <p>{f.text}</p>
-              </div>
-            ))}
+      <SponsorCarousel />
+
+      <section id="about" className="milestones">
+        <div className="section-inner milestones-inner">
+          <div className="milestones-content" data-aos="fade-right">
+            <SectionTitle
+              eyebrow="Our Journey So Far"
+              title="What We've Accomplished Together"
+              subtitle="From a handful of weekend runners to a community that shows up, every single time."
+            />
+            <p className="milestones-text">
+              FahhKit started as a small Sunday run and grew into a full-blown fitness community — one race, one
+              workout, and one &quot;say fk it&quot; moment at a time.
+            </p>
+            <div className="milestones-stats">
+              {MILESTONES.map((m) => (
+                <div className="milestone-stat" key={m.label}>
+                  <span className="milestone-number">{m.number}</span>
+                  <span className="milestone-label">{m.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="milestones-image" data-aos="fade-left">
+            <img src={sundayRundayImage} alt="FahhKit community running together" />
           </div>
         </div>
       </section>
-
-      <SponsorCarousel />
 
       {events.length > 0 && (
         <section id="events" className="landing-events">

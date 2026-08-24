@@ -63,9 +63,10 @@
 }
 
 .footer-bottom {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 56px 20px 64px;
   border-top: 1px solid var(--border);
-  margin: 40px 0 32px;
-  padding: 44px 0;
   font-size: 13px;
 }
 

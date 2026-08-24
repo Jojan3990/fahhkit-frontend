@@ -1,9 +1,16 @@
 .edit-profile-wrap {
   position: relative;
   overflow: hidden;
+  min-height: calc(100vh - var(--header-h));
+  padding: 32px 16px 64px;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--brand-light) 100%);
+}
+
+.edit-profile-inner {
+  position: relative;
+  z-index: 1;
   max-width: 720px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
 }
 
 .edit-profile-wrap .auth-blob-a,
