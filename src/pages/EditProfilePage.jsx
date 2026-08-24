@@ -83,18 +83,18 @@ export default function EditProfilePage() {
 
   if (loading) {
     return (
-      <>
+      <div className="edit-profile-page">
         <Navbar />
         <div className="edit-profile-wrap">
           <p className="edit-profile-loading">Loading your profile…</p>
         </div>
         <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="edit-profile-page">
       <Navbar />
       <div className="edit-profile-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
@@ -247,6 +247,6 @@ export default function EditProfilePage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

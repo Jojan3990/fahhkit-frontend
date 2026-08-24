@@ -1,3 +1,9 @@
+.contact-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .contact-wrap {
   min-height: calc(100vh - var(--header-h));
   padding: 56px 0 0;

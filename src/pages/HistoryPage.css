@@ -1,3 +1,9 @@
+.history-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .history-page-wrap {
   max-width: 800px;
   margin: 0 auto;

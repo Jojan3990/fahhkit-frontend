@@ -44,13 +44,13 @@ export default function CreateEventPage() {
 
   if (userLoading) {
     return (
-      <>
+      <div className="create-event-page">
         <Navbar />
         <div className="create-event-wrap">
           <p>Loading...</p>
         </div>
         <Footer />
-      </>
+      </div>
     );
   }
 
@@ -94,7 +94,7 @@ export default function CreateEventPage() {
   }
 
   return (
-    <>
+    <div className="create-event-page">
       <Navbar />
       <div className="create-event-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
@@ -204,6 +204,6 @@ export default function CreateEventPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

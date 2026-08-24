@@ -1,3 +1,9 @@
+.create-event-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .create-event-wrap {
   position: relative;
   overflow: hidden;

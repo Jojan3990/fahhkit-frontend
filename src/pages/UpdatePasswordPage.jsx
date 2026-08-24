@@ -51,7 +51,7 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <>
+    <div className="update-password-page">
       <Navbar />
       <div className="update-password-wrap">
         <span className="blob auth-blob-a" aria-hidden="true" />
@@ -127,6 +127,6 @@ export default function UpdatePasswordPage() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

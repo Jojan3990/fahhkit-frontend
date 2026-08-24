@@ -1,3 +1,9 @@
+.athlete-profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .athlete-profile-wrap {
   max-width: 900px;
   margin: 0 auto;

@@ -38,10 +38,10 @@ const SLIDES = [
 ];
 
 const MILESTONES = [
-  { number: "500+", label: "Members Joined" },
-  { number: "120+", label: "Events Hosted" },
-  { number: "15K+", label: "KM Logged Together" },
-  { number: "3", label: "Years Running Strong" },
+  { number: "150+", label: "Members Joined" },
+  { number: "2+", label: "Events Hosted" },
+  { number: "1K+", label: "KM Logged Together" },
+  { number: "3", label: "Months Running Strong" },
 ];
 
 export default function LandingPage() {
