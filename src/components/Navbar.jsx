@@ -90,13 +90,8 @@ export default function Navbar() {
               {userMenuOpen && (
                 <div className="navbar-user-dropdown">
                   {canManageEvents(user) && (
-                    <Link to="/events/create" onClick={close}>
-                      Create Event
-                    </Link>
-                  )}
-                  {canManageEvents(user) && (
                     <Link to="/athletes" onClick={close}>
-                      Search Athletes
+                      Athlete
                     </Link>
                   )}
                   {user?.userType === "ATHLETE" && (
