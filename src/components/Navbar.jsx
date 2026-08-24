@@ -77,6 +77,9 @@ export default function Navbar() {
           <Link to="/athletes" onClick={close}>
             Athletes
           </Link>
+          <Link to="/contact" onClick={close}>
+            Contact
+          </Link>
           {isAuthed ? (
             <div className="navbar-user-menu" ref={userMenuRef}>
               <button

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
 import SectionTitle from "../components/SectionTitle";
@@ -36,6 +37,9 @@ const SLIDES = [
     ),
   },
 ];
+
+// TODO: replace with the real WhatsApp community invite link
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/REPLACE_ME";
 
 const FEATURES = [
   { icon: "👟", title: "Group Runs", text: "Weekly runs for every pace, from beginners to seasoned racers." },
@@ -155,6 +159,28 @@ export default function LandingPage() {
               </>
             )}
           </div>
+        </div>
+      </section>
+
+      <section className="whatsapp-band">
+        <span className="blob whatsapp-blob-a" aria-hidden="true" />
+        <span className="blob whatsapp-blob-b" aria-hidden="true" />
+        <div className="section-inner whatsapp-inner" data-aos="zoom-in">
+          <div>
+            <h2>Join Our WhatsApp Community</h2>
+            <p>
+              Connect with like-minded wellness enthusiasts, get exclusive tips and stay updated with our latest
+              events
+            </p>
+          </div>
+          <a
+            href={WHATSAPP_COMMUNITY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary btn-lg"
+          >
+            <FaWhatsapp /> Join Our WhatsApp Community
+          </a>
         </div>
       </section>
 

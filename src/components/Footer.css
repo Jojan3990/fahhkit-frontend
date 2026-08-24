@@ -2,19 +2,29 @@
   margin-top: auto;
   border-top: 1px solid var(--border);
   background: var(--card);
-  padding: 48px 0 0;
+  padding: 64px 0 0;
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 32px;
-  padding-bottom: 32px;
+  padding-bottom: 56px;
 }
 
 .footer-brand .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 800;
   font-size: 18px;
+}
+
+.footer-logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .footer-brand p {
@@ -54,7 +64,8 @@
 
 .footer-bottom {
   border-top: 1px solid var(--border);
-  padding: 18px 0;
+  margin-top: 8px;
+  padding: 28px 0;
   font-size: 13px;
 }
 

@@ -12,6 +12,7 @@ import CreateEventPage from "./pages/CreateEventPage";
 import AthleteSearchPage from "./pages/AthleteSearchPage";
 import AthleteProfilePage from "./pages/AthleteProfilePage";
 import HistoryPage from "./pages/HistoryPage";
+import ContactPage from "./pages/ContactPage";
 
 export default function App() {
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/athletes" element={<AthleteSearchPage />} />
       <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
       <Route path="/history" element={<HistoryPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

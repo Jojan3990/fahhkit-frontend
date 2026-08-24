@@ -7,8 +7,11 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="section-inner footer-grid">
         <div className="footer-brand">
-          <span className="footer-logo">🏃 FahhKit</span>
-          <p>Say fk it and get it done — a run club for every pace.</p>
+          <span className="footer-logo">
+            <img src="/logo.png" alt="FahhKit" className="footer-logo-img" />
+            FahhKit
+          </span>
+          <p>Getting it done is what we live by!</p>
         </div>
 
         <div className="footer-col">
