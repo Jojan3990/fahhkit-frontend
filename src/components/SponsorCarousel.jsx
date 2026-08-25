@@ -1,14 +1,23 @@
 import SectionTitle from "./SectionTitle";
 import "./SponsorCarousel.css";
+import sponsor1 from "../assets/images/sponsors/Image.jfif";
+import sponsor2 from "../assets/images/sponsors/Image (1).jfif";
+import sponsor3 from "../assets/images/sponsors/Image (2).jfif";
+import sponsor4 from "../assets/images/sponsors/Image (3).jfif";
+import sponsor5 from "../assets/images/sponsors/Image (4).jfif";
+import sponsor6 from "../assets/images/sponsors/Image (5).jfif";
+import sponsor7 from "../assets/images/sponsors/Image (6).jfif";
+import sponsor8 from "../assets/images/sponsors/Image (7).jfif";
 
-// Placeholder sponsors — swap these for real partner names/logos.
 const SPONSORS = [
-  "TrailBlazer Gear",
-  "PaceMaker Nutrition",
-  "SwiftSole Running Co.",
-  "Summit Sports",
-  "PureHydrate",
-  "Cafe Bizarre",
+  sponsor1,
+  sponsor2,
+  sponsor3,
+  sponsor4,
+  sponsor5,
+  sponsor6,
+  sponsor7,
+  sponsor8,
 ];
 
 export default function SponsorCarousel() {
@@ -21,9 +30,9 @@ export default function SponsorCarousel() {
       </div>
       <div className="sponsors-track-wrap">
         <div className="sponsors-track">
-          {track.map((name, i) => (
-            <div className="sponsor-card" key={`${name}-${i}`}>
-              {name}
+          {track.map((src, i) => (
+            <div className="sponsor-card" key={i}>
+              <img src={src} alt="Sponsor logo" />
             </div>
           ))}
         </div>

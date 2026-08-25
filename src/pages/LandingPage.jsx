@@ -14,6 +14,9 @@ import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
 import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
 import foundingMembersImage from "../assets/images/founding-members.jfif";
+import manojBasnetPhoto from "../assets/images/team/manojbasnet.jfif";
+import aryanDahalPhoto from "../assets/images/team/aryandahal.jfif";
+import aryanShahPhoto from "../assets/images/team/aryanshah.jfif";
 import "./LandingPage.css";
 import "./EventsPage.css";
 
@@ -47,30 +50,29 @@ const MILESTONES = [
   { number: "3", label: "Months Running Strong" },
 ];
 
-// TODO: swap in each member's real photo, name, role, and bio when available
 const TEAM = [
   {
-    name: "Team Member Name",
+    name: "Manoj Basnet",
     role: "Founder & Head Coach",
-    photo: foundingMembersImage,
+    photo: manojBasnetPhoto,
     bio: "Started FahhKit with a single Sunday run and hasn't missed one since. Believes every workout should feel like showing up for your friends.",
   },
   {
-    name: "Team Member Name",
+    name: "Aryan Dahal",
     role: "Run Coach",
-    photo: foundingMembersImage,
+    photo: aryanDahalPhoto,
     bio: "Plans the routes, sets the pace, and makes sure nobody gets left behind — literally or figuratively.",
   },
   {
-    name: "Team Member Name",
+    name: "Aryan Shah",
     role: "Community Lead",
-    photo: foundingMembersImage,
+    photo: aryanShahPhoto,
     bio: "The friendly face who welcomes every new member and keeps the group chat alive between events.",
   },
   {
-    name: "Team Member Name",
+    name: "Aryan Dahal",
     role: "Events Coordinator",
-    photo: foundingMembersImage,
+    photo: aryanDahalPhoto,
     bio: "Turns \"say fk it\" into an actual race day — venues, logistics, and snacks all sorted.",
   },
 ];
