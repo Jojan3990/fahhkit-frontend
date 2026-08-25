@@ -8,7 +8,6 @@ import "./ContactPage.css";
 
 const INITIAL_FORM = { fullName: "", email: "", mobileNumber: "", subject: "", message: "" };
 
-// TODO: replace with the real WhatsApp community invite link
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
 
 // TODO: replace with real details when available

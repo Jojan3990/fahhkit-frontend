@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import "./Footer.css";
+
+const INSTAGRAM_URL = "https://www.instagram.com/fahhkit/";
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
 
 export default function Footer() {
   return (
@@ -12,6 +15,14 @@ export default function Footer() {
             FahhKit
           </Link>
           <p>Getting it done is what we live by!</p>
+          <div className="footer-social">
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="FahhKit on Instagram">
+              <FaInstagram />
+            </a>
+            <a href={WHATSAPP_COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-label="FahhKit WhatsApp community">
+              <FaWhatsapp />
+            </a>
+          </div>
         </div>
 
         <div className="footer-col">
