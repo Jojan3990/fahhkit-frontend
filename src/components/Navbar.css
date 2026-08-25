@@ -29,13 +29,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 16px;
   color: var(--text);
   text-decoration: none;
   white-space: nowrap;
   transition: transform 0.15s ease;
+}
+
+.navbar-brand-text {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 23px;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--text);
 }
 
 .navbar-brand:hover {

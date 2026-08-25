@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import { ApiError, canManageEvents, getJson } from "../api/client";
+import { ApiError, canManageEvents, isAdmin, getJson } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { formatName } from "../utils/format";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./AthleteSearchPage.css";
@@ -13,8 +14,24 @@ export default function AthleteSearchPage() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
 
   const allowed = isAuthed && canManageEvents(user);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!banner) return;
+    const timer = setTimeout(() => setBanner(null), 5000);
+    return () => clearTimeout(timer);
+  }, [banner]);
 
   useEffect(() => {
     if (userLoading || !allowed) {
@@ -58,9 +75,18 @@ export default function AthleteSearchPage() {
       <Navbar />
       <div className="athlete-search-wrap">
         <header className="athlete-search-header" data-aos="fade-down">
-          <h1>Search Athletes</h1>
-          <p>Find an athlete to view their profile and run history.</p>
+          <div>
+            <h1>Search Athletes</h1>
+            <p>Find an athlete to view their profile and run history.</p>
+          </div>
+          {isAdmin(user) && (
+            <Link to="/admin/create-moderator" className="btn btn-primary">
+              Add Moderator
+            </Link>
+          )}
         </header>
+
+        {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
 
         <div className="athlete-search-box">
           <FaSearch className="athlete-search-icon" />
@@ -78,12 +104,14 @@ export default function AthleteSearchPage() {
 
         <div className="athlete-search-list">
           {results.map((athlete) => (
-            <Link to={`/athletes/${athlete.userId}`} className="athlete-search-card" key={athlete.userId}>
+            <Link
+              to={`/athletes/${athlete.userId}`}
+              className="athlete-search-card"
+              key={athlete.userId}
+              title={athlete.email || athlete.mobileNumber}
+            >
               <span className="athlete-search-avatar">{(athlete.fullName || "?").charAt(0).toUpperCase()}</span>
-              <div>
-                <h3>{athlete.fullName}</h3>
-                <p>{athlete.email || athlete.mobileNumber}</p>
-              </div>
+              <span className="athlete-search-name">{formatName(athlete.fullName)}</span>
             </Link>
           ))}
         </div>

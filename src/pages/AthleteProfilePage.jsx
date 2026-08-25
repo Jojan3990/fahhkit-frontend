@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { COUNTRY_LABELS } from "../constants/countries";
+import { formatName } from "../utils/format";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import HistoryList from "../components/HistoryList";
@@ -74,7 +75,7 @@ export default function AthleteProfilePage() {
                 )}
               </span>
               <div>
-                <h1>{profile.fullName}</h1>
+                <h1>{formatName(profile.fullName)}</h1>
                 <p>{profile.email}</p>
                 <p>{profile.mobileNumber}</p>
               </div>

@@ -22,7 +22,7 @@ export function eventToSlide(event, isNext) {
           {formatDate(event.date)}
           {event.venue ? ` · ${event.venue}` : ""}
         </p>
-        <Link to="/events" className="btn btn-primary btn-lg">
+        <Link to={`/events/${event.id}`} className="btn btn-primary btn-lg">
           View Details
         </Link>
       </div>

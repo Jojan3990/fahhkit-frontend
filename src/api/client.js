@@ -77,6 +77,10 @@ export function canManageEvents(user) {
   return user?.userType === "ADMIN" || user?.userType === "MODERATOR";
 }
 
+export function isAdmin(user) {
+  return user?.userType === "ADMIN";
+}
+
 function authHeaders() {
   const token = getToken();
   return token ? { Authorization: `Bearer ${token}` } : {};

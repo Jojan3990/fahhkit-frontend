@@ -26,7 +26,7 @@ export default function SponsorCarousel() {
   return (
     <section className="sponsors">
       <div className="section-inner">
-        <SectionTitle eyebrow="Our Sponsors" title="Trusted by Leading Companies" />
+        <SectionTitle eyebrow="Our Sponsors" title="Trusted by Leading Brands" />
       </div>
       <div className="sponsors-track-wrap">
         <div className="sponsors-track">

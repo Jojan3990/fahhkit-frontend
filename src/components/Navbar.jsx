@@ -51,7 +51,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand" onClick={close}>
           <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="navbar-logo" />
-          FahhKit
+          <span className="navbar-brand-text">Fahh Kit</span>
         </Link>
 
         <div className="navbar-actions">

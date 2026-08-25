@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useRegisteredEventIds } from "../hooks/useRegisteredEvents";
+import { useEventRegistrationStatuses } from "../hooks/useRegisteredEvents";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
@@ -10,7 +10,7 @@ import "./EventsPage.css";
 
 export default function EventsPage() {
   const { user, isAuthed } = useCurrentUser();
-  const registeredIds = useRegisteredEventIds();
+  const registrationStatuses = useEventRegistrationStatuses();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -82,8 +82,12 @@ export default function EventsPage() {
                   )}
                 </dl>
                 <div className="event-card-actions">
-                  {registeredIds.has(event.id) ? (
+                  {registrationStatuses.get(event.id) === "PAID" ? (
                     <span className="event-card-registered">&#10003; Registered</span>
+                  ) : registrationStatuses.get(event.id) === "PENDING" ? (
+                    <Link to={`/events/${event.id}`} className="btn btn-outline">
+                      Payment Pending
+                    </Link>
                   ) : (
                     <Link to={isAuthed ? `/events/${event.id}` : "/register"} className="btn btn-primary">
                       Register

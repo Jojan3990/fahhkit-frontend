@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ApiError, getJson, postJson, resolveFileUrl } from "../api/client";
+import { ApiError, canManageEvents, getJson, postJson, resolveFileUrl } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useRegisteredEventIds } from "../hooks/useRegisteredEvents";
+import { useEventRegistrationStatuses } from "../hooks/useRegisteredEvents";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Carousel from "../components/Carousel";
 import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import "./EventDetailPage.css";
 
-const PAYMENT_STATUS_LABELS = {
-  PENDING: "Payment Pending",
-  PAID: "Paid",
-  FAILED: "Payment Failed",
-  CANCELLED: "Cancelled",
-};
-
 export default function EventDetailPage() {
   const { id } = useParams();
-  const { isAuthed, loading: userLoading } = useCurrentUser();
-  const registeredIds = useRegisteredEventIds();
+  const { user, isAuthed, loading: userLoading } = useCurrentUser();
+  const registrationStatuses = useEventRegistrationStatuses();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +32,11 @@ export default function EventDetailPage() {
     setRegistering(true);
     try {
       const data = await postJson(`/v1/event/${id}/register`);
+      if (Number(event.entryFee) > 0) {
+        const payment = await postJson(`/v1/event/registration/${data.registrationId}/initiate-payment`);
+        window.location.href = payment.paymentUrl;
+        return;
+      }
       setRegistration(data);
     } catch (err) {
       const message = err instanceof ApiError ? err.message : "Could not complete registration. Please try again.";
@@ -53,15 +51,22 @@ export default function EventDetailPage() {
   const images = event ? [event.eventImageUrl1, event.eventImageUrl2, event.eventImageUrl3].filter(Boolean) : [];
   const closed = event?.status === "CANCELLED" || event?.status === "COMPLETED";
   const deadlinePassed = Boolean(event?.registrationDeadline) && new Date(event.registrationDeadline) < new Date();
-  const alreadyRegistered = Boolean(registration) || registeredIds.has(id);
+  const currentStatus = registration?.paymentStatus || registrationStatuses.get(id);
 
   return (
     <div className="event-detail-page">
       <Navbar />
       <div className="event-detail-top">
-        <p className="event-detail-back">
-          <Link to="/events">&larr; Back to Events</Link>
-        </p>
+        <div className="event-detail-back">
+          <Link to="/events" className="event-detail-back-link">
+            &larr; Back to Events
+          </Link>
+          {canManageEvents(user) && (
+            <Link to={`/events/${id}/edit`} className="btn btn-outline">
+              Edit Event
+            </Link>
+          )}
+        </div>
 
         {error && <div className="banner error">{error}</div>}
         {loading && <p className="event-detail-muted">Loading...</p>}
@@ -120,27 +125,16 @@ export default function EventDetailPage() {
               <aside className="event-detail-register glass-card" data-aos="fade-up" data-aos-delay="100">
                 <h2>Registration</h2>
 
-                {alreadyRegistered ? (
+                {currentStatus === "PAID" ? (
                   <div className="event-detail-registered">
                     <p className="event-detail-registered-title">You&apos;re registered!</p>
-                    {registration && (
+                    {registration?.registrationId && (
                       <dl>
                         <div>
-                          <dt>Status</dt>
-                          <dd>{PAYMENT_STATUS_LABELS[registration.paymentStatus] || registration.paymentStatus}</dd>
+                          <dt>Registration ID</dt>
+                          <dd>{registration.registrationId}</dd>
                         </div>
-                        {registration.registrationId && (
-                          <div>
-                            <dt>Registration ID</dt>
-                            <dd>{registration.registrationId}</dd>
-                          </div>
-                        )}
                       </dl>
-                    )}
-                    {registration?.paymentStatus === "PENDING" && Number(event.entryFee) > 0 && (
-                      <p className="event-detail-registered-note">
-                        Your spot is reserved — payment confirmation is still pending.
-                      </p>
                     )}
                   </div>
                 ) : closed ? (
@@ -153,9 +147,15 @@ export default function EventDetailPage() {
                   <p className="event-detail-muted">Loading...</p>
                 ) : isAuthed ? (
                   <>
+                    {currentStatus === "PENDING" && (
+                      <p className="event-detail-muted">Your last payment attempt didn&apos;t finish — pick up where you left off.</p>
+                    )}
+                    {(currentStatus === "FAILED" || currentStatus === "CANCELLED") && (
+                      <p className="event-detail-muted">Your last payment didn&apos;t go through. You can try again.</p>
+                    )}
                     {registerError && <div className="banner error">{registerError}</div>}
                     <button type="button" className="btn btn-primary btn-block" onClick={handleRegister} disabled={registering}>
-                      {registering ? "Registering..." : "Register for this Event"}
+                      {registering ? "Redirecting..." : currentStatus ? "Complete Payment" : "Register for this Event"}
                     </button>
                   </>
                 ) : (

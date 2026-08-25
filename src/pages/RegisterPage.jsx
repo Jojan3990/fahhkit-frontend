@@ -72,7 +72,6 @@ export default function RegisterPage() {
       <span className="blob auth-blob-b" aria-hidden="true" />
       <div className="register-inner">
       <header className="register-header" data-aos="fade-down">
-        <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="register-logo" />
         <h1>Join FahhKit</h1>
         <p>Fill out the form below to register as an athlete</p>
       </header>
@@ -96,10 +95,8 @@ export default function RegisterPage() {
               <input id="mobileNumber" name="mobileNumber" type="tel" value={form.mobileNumber} onChange={handleChange} required />
             </div>
             <div className="field">
-              <label htmlFor="gender">
-                Gender <span className="opt">(optional)</span>
-              </label>
-              <select id="gender" name="gender" value={form.gender} onChange={handleChange}>
+              <label htmlFor="gender">Gender</label>
+              <select id="gender" name="gender" value={form.gender} onChange={handleChange} required>
                 <option value="">Select gender</option>
                 <option value="MALE">Male</option>
                 <option value="FEMALE">Female</option>
@@ -134,16 +131,12 @@ export default function RegisterPage() {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="city">
-                City <span className="opt">(optional)</span>
-              </label>
-              <input id="city" name="city" type="text" value={form.city} onChange={handleChange} />
+              <label htmlFor="city">City</label>
+              <input id="city" name="city" type="text" value={form.city} onChange={handleChange} required />
             </div>
             <div className="field">
-              <label htmlFor="nationality">
-                Nationality <span className="opt">(optional)</span>
-              </label>
-              <input id="nationality" name="nationality" type="text" value={form.nationality} onChange={handleChange} />
+              <label htmlFor="nationality">Nationality</label>
+              <input id="nationality" name="nationality" type="text" value={form.nationality} onChange={handleChange} required />
             </div>
             <div className="field">
               <label htmlFor="occupation">
@@ -161,33 +154,40 @@ export default function RegisterPage() {
         </fieldset>
 
         <fieldset>
-          <legend>
-            Emergency Contact <span className="opt">(optional)</span>
-          </legend>
+          <legend>Emergency Contact</legend>
           <div className="grid">
             <div className="field">
-              <label htmlFor="emergencyContactName">
-                Contact Name <span className="opt">(optional)</span>
-              </label>
-              <input id="emergencyContactName" name="emergencyContactName" type="text" value={form.emergencyContactName} onChange={handleChange} />
+              <label htmlFor="emergencyContactName">Contact Name</label>
+              <input
+                id="emergencyContactName"
+                name="emergencyContactName"
+                type="text"
+                value={form.emergencyContactName}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className="field">
-              <label htmlFor="emergencyContactRelationship">
-                Relationship <span className="opt">(optional)</span>
-              </label>
+              <label htmlFor="emergencyContactRelationship">Relationship</label>
               <input
                 id="emergencyContactRelationship"
                 name="emergencyContactRelationship"
                 type="text"
                 value={form.emergencyContactRelationship}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="field full">
-              <label htmlFor="emergencyContactPhone">
-                Contact Phone <span className="opt">(optional)</span>
-              </label>
-              <input id="emergencyContactPhone" name="emergencyContactPhone" type="tel" value={form.emergencyContactPhone} onChange={handleChange} />
+              <label htmlFor="emergencyContactPhone">Contact Phone</label>
+              <input
+                id="emergencyContactPhone"
+                name="emergencyContactPhone"
+                type="tel"
+                value={form.emergencyContactPhone}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
         </fieldset>

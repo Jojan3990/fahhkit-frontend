@@ -30,7 +30,7 @@ export default function LoginPage() {
       setToken(data.tokenId);
       const user = await getJson("/v1/user/find/logged-in");
       setUser(user);
-      navigate("/");
+      navigate("/", { state: { message: `Welcome back, ${user?.fullName || "athlete"}! You're signed in.` } });
     } catch (err) {
       const message = err instanceof ApiError ? err.message : "Sign in failed. Please try again.";
       setBanner({ kind: "error", message });

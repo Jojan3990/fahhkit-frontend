@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Carousel from "../components/Carousel";
 import SectionTitle from "../components/SectionTitle";
@@ -7,10 +7,8 @@ import { eventToSlide } from "../components/NextEventBanner";
 import SponsorCarousel from "../components/SponsorCarousel";
 import TeamCarousel from "../components/TeamCarousel";
 import Footer from "../components/Footer";
-import { getJson, resolveFileUrl } from "../api/client";
+import { getJson } from "../api/client";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useRegisteredEventIds } from "../hooks/useRegisteredEvents";
-import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
 import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
 import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
 import foundingMembersImage from "../assets/images/founding-members.jfif";
@@ -18,7 +16,6 @@ import manojBasnetPhoto from "../assets/images/team/manojbasnet.jfif";
 import aryanDahalPhoto from "../assets/images/team/aryandahal.jfif";
 import aryanShahPhoto from "../assets/images/team/aryanshah.jfif";
 import "./LandingPage.css";
-import "./EventsPage.css";
 
 const SLIDES = [
   {
@@ -79,8 +76,10 @@ const TEAM = [
 
 export default function LandingPage() {
   const { isAuthed } = useCurrentUser();
-  const registeredIds = useRegisteredEventIds();
   const [events, setEvents] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
 
   useEffect(() => {
     getJson("/v1/event/upcoming")
@@ -88,11 +87,30 @@ export default function LandingPage() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (location.state?.message) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!banner) return;
+    const timer = setTimeout(() => setBanner(null), 5000);
+    return () => clearTimeout(timer);
+  }, [banner]);
+
   const slides = [...events.map((event, i) => eventToSlide(event, i === 0)), ...SLIDES];
 
   return (
     <div className="landing">
       <Navbar />
+
+      {banner && (
+        <div className="section-inner">
+          <div className={`banner ${banner.kind}`}>{banner.message}</div>
+        </div>
+      )}
 
       <Carousel slides={slides} />
 
@@ -124,62 +142,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {events.length > 0 && (
-        <section id="events" className="landing-events">
-          <div className="section-inner">
-            <SectionTitle
-              eyebrow="Don't Miss Out"
-              title="Upcoming Events"
-              subtitle="Published races and community events on the calendar."
-            />
-            <div className="events-grid">
-              {events.map((event, i) => (
-                <div className="event-card" key={event.id} data-aos="fade-up" data-aos-delay={i * 100}>
-                  {event.eventImageUrl1 && (
-                    <div className="event-card-image-wrap">
-                      <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
-                    </div>
-                  )}
-                  <div className="event-card-body">
-                    <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
-                    <h3>{event.name}</h3>
-                    <dl className="event-card-meta">
-                      <div>
-                        <dt>Date</dt>
-                        <dd>{formatDate(event.date)}</dd>
-                      </div>
-                      {event.venue && (
-                        <div>
-                          <dt>Venue</dt>
-                          <dd>{event.venue}</dd>
-                        </div>
-                      )}
-                    </dl>
-                    <div className="event-card-actions">
-                      {registeredIds.has(event.id) ? (
-                        <span className="event-card-registered">&#10003; Registered</span>
-                      ) : (
-                        <Link to={isAuthed ? `/events/${event.id}` : "/register"} className="btn btn-primary">
-                          Register
-                        </Link>
-                      )}
-                      <Link to={`/events/${event.id}`} className="btn btn-outline">
-                        View More
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="landing-events-more">
-              <Link to="/events" className="btn btn-outline">
-                View All Events
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
 
       <section id="team" className="team-section">
         <div className="section-inner">

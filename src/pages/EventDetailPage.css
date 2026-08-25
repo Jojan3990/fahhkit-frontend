@@ -17,16 +17,21 @@
 }
 
 .event-detail-back {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 0 0 16px;
 }
 
-.event-detail-back a {
+.event-detail-back-link {
   color: var(--muted);
   text-decoration: none;
   font-size: 14px;
 }
 
-.event-detail-back a:hover {
+.event-detail-back-link:hover {
   color: var(--brand);
 }
 

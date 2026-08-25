@@ -5,6 +5,8 @@
 
 .team-carousel-viewport {
   overflow: hidden;
+  padding-top: 14px;
+  margin-top: -14px;
 }
 
 .team-carousel-track {
