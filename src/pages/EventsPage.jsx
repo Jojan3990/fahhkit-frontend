@@ -1,28 +1,37 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ApiError, canManageEvents, getJson, resolveFileUrl } from "../api/client";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useEventRegistrationStatuses } from "../hooks/useRegisteredEvents";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
-import "./EventsPage.css";
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  ApiError,
+  canManageEvents,
+  getJson,
+  resolveFileUrl,
+} from '../api/client'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import { useEventRegistrationStatuses } from '../hooks/useRegisteredEvents'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
+import './EventsPage.css'
 
 export default function EventsPage() {
-  const { user, isAuthed } = useCurrentUser();
-  const registrationStatuses = useEventRegistrationStatuses();
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, isAuthed } = useCurrentUser()
+  const registrationStatuses = useEventRegistrationStatuses()
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    getJson("/v1/event/upcoming")
+    getJson('/v1/event/upcoming')
       .then((data) => setEvents(data || []))
       .catch((err) => {
-        setError(err instanceof ApiError ? err.message : "Could not load events. Please try again.");
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : 'Could not load events. Please try again.'
+        )
       })
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <div className="events-page">
@@ -45,19 +54,32 @@ export default function EventsPage() {
         {loading && <p className="events-muted">Loading events...</p>}
 
         {!loading && !error && events.length === 0 && (
-          <p className="events-muted">No upcoming events yet — check back soon.</p>
+          <p className="events-muted">
+            No upcoming events yet — check back soon.
+          </p>
         )}
 
         <div className="events-grid">
           {events.map((event, i) => (
-            <div className="event-card" key={event.id} data-aos="fade-up" data-aos-delay={(i % 3) * 100}>
+            <div
+              className="event-card"
+              key={event.id}
+              data-aos="fade-up"
+              data-aos-delay={(i % 3) * 100}
+            >
               {event.eventImageUrl1 && (
                 <div className="event-card-image-wrap">
-                  <img src={resolveFileUrl(event.eventImageUrl1)} alt={event.name} className="event-card-image" />
+                  <img
+                    src={resolveFileUrl(event.eventImageUrl1)}
+                    alt={event.name}
+                    className="event-card-image"
+                  />
                 </div>
               )}
               <div className="event-card-body">
-                <span className="event-card-type">{EVENT_TYPE_LABELS[event.type] || event.type}</span>
+                <span className="event-card-type">
+                  {EVENT_TYPE_LABELS[event.type] || event.type}
+                </span>
                 <h3>{event.name}</h3>
                 <dl className="event-card-meta">
                   <div>
@@ -72,7 +94,9 @@ export default function EventsPage() {
                   )}
                   <div>
                     <dt>Entry Fee</dt>
-                    <dd>{Number(event.entryFee) > 0 ? event.entryFee : "Free"}</dd>
+                    <dd>
+                      {Number(event.entryFee) > 0 ? event.entryFee : 'Free'}
+                    </dd>
                   </div>
                   {event.capacity != null && (
                     <div>
@@ -82,14 +106,29 @@ export default function EventsPage() {
                   )}
                 </dl>
                 <div className="event-card-actions">
-                  {registrationStatuses.get(event.id) === "PAID" ? (
-                    <span className="event-card-registered">&#10003; Registered</span>
-                  ) : registrationStatuses.get(event.id) === "PENDING" ? (
-                    <Link to={`/events/${event.id}`} className="btn btn-outline">
+                  {canManageEvents(user) ? (
+                    <Link
+                      to={`/events/${event.id}/registrations`}
+                      className="btn btn-primary"
+                    >
+                      View Applicants
+                    </Link>
+                  ) : registrationStatuses.get(event.id) === 'PAID' ? (
+                    <span className="event-card-registered">
+                      &#10003; Registered
+                    </span>
+                  ) : registrationStatuses.get(event.id) === 'PENDING' ? (
+                    <Link
+                      to={`/events/${event.id}`}
+                      className="btn btn-outline"
+                    >
                       Payment Pending
                     </Link>
                   ) : (
-                    <Link to={isAuthed ? `/events/${event.id}` : "/register"} className="btn btn-primary">
+                    <Link
+                      to={isAuthed ? `/events/${event.id}` : '/register'}
+                      className="btn btn-primary"
+                    >
                       Register
                     </Link>
                   )}
@@ -104,5 +143,5 @@ export default function EventsPage() {
       </div>
       <Footer />
     </div>
-  );
+  )
 }

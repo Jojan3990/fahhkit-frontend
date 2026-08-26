@@ -25,6 +25,12 @@
   margin: 0 0 16px;
 }
 
+.event-detail-manage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .event-detail-back-link {
   color: var(--muted);
   text-decoration: none;

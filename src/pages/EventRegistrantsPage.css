@@ -1,0 +1,116 @@
+.event-registrants-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-registrants-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.event-registrants-back {
+  margin: 0 0 16px;
+}
+
+.event-registrants-back a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.event-registrants-back a:hover {
+  color: var(--brand);
+}
+
+.event-registrants-header {
+  margin-bottom: 24px;
+}
+
+.event-registrants-header h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.event-registrants-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.event-registrants-muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.registrant-table-wrap {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.registrant-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.registrant-table th,
+.registrant-table td {
+  padding: 12px 14px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.registrant-table thead th {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: var(--bg);
+}
+
+.registrant-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.registrant-name-cell {
+  font-weight: 600;
+}
+
+.registrant-meta-cell {
+  color: var(--muted);
+}
+
+.registrant-status {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--brand-light);
+  color: var(--brand-dark);
+}
+
+.registrant-status.status-paid {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.registrant-status.status-failed,
+.registrant-status.status-cancelled {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.registrant-table .btn {
+  padding: 6px 14px;
+  font-size: 12px;
+}

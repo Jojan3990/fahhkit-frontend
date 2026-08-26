@@ -1,27 +1,28 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Carousel from "../components/Carousel";
-import SectionTitle from "../components/SectionTitle";
-import { eventToSlide } from "../components/NextEventBanner";
-import SponsorCarousel from "../components/SponsorCarousel";
-import TeamCarousel from "../components/TeamCarousel";
-import Footer from "../components/Footer";
-import { getJson } from "../api/client";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import bannerImage from "../assets/images/Fahhkit-Banner.jfif";
-import sundayRundayImage from "../assets/images/Sunday-Runday.jfif";
-import foundingMembersImage from "../assets/images/founding-members.jfif";
-import manojBasnetPhoto from "../assets/images/team/manojbasnet.jfif";
-import aryanDahalPhoto from "../assets/images/team/aryandahal.jfif";
-import aryanShahPhoto from "../assets/images/team/aryanshah.jfif";
-import "./LandingPage.css";
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
+import Carousel from '../components/Carousel'
+import SectionTitle from '../components/SectionTitle'
+import { eventToSlide } from '../components/NextEventBanner'
+import SponsorCarousel from '../components/SponsorCarousel'
+import TeamCarousel from '../components/TeamCarousel'
+import Footer from '../components/Footer'
+import { getJson } from '../api/client'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import bannerImage from '../assets/images/Fahhkit-Banner.jfif'
+import sundayRundayImage from '../assets/images/Sunday-Runday.jfif'
+import foundingMembersImage from '../assets/images/founding-members.jfif'
+import manojBasnetPhoto from '../assets/images/team/manojbasnet.jfif'
+import aryanDahalPhoto from '../assets/images/team/aryandahal.jfif'
+import aryanShahPhoto from '../assets/images/team/aryanshah.jfif'
+import rajPhoto from '../assets/images/team/raj.png'
+import './LandingPage.css'
 
 const SLIDES = [
   {
     image: bannerImage,
-    title: "Fahhkit Fitness Club",
-    subtitle: "Say f**k it and get it done!",
+    title: 'Fahhkit Fitness Club',
+    subtitle: 'Say f**k it and get it done!',
     cta: (
       <Link to="/register" className="btn btn-white btn-lg">
         Join the Club
@@ -30,77 +31,84 @@ const SLIDES = [
   },
   {
     image: sundayRundayImage,
-    title: "Sunday Runday",
-    subtitle: "Happens every Sunday at 5pm, Cafe Bizarre",
+    title: 'Sunday Runday',
+    subtitle: 'Happens every Sunday at 5pm, Cafe Bizarre',
     cta: (
       <Link to="/events" className="btn btn-white btn-lg">
         View Events
       </Link>
     ),
   },
-];
+]
 
 const MILESTONES = [
-  { number: "150+", label: "Members Joined" },
-  { number: "2+", label: "Events Hosted" },
-  { number: "1K+", label: "KM Logged Together" },
-  { number: "3", label: "Months Running Strong" },
-];
+  { number: '150+', label: 'Members Joined' },
+  { number: '2+', label: 'Events Hosted' },
+  { number: '1K+', label: 'KM Logged Together' },
+  { number: '3', label: 'Months Running Strong' },
+]
 
 const TEAM = [
   {
-    name: "Manoj Basnet",
-    role: "Founder & Head Coach",
+    name: 'Manoj Basnet',
+    role: 'Founder & Head Coach',
     photo: manojBasnetPhoto,
     bio: "Started FahhKit with a single Sunday run and hasn't missed one since. Believes every workout should feel like showing up for your friends.",
   },
   {
-    name: "Aryan Dahal",
-    role: "Run Coach",
+    name: 'Aryan Dahal',
+    role: 'Run Coach',
     photo: aryanDahalPhoto,
-    bio: "Plans the routes, sets the pace, and makes sure nobody gets left behind — literally or figuratively.",
+    bio: 'Plans the routes, sets the pace, and makes sure nobody gets left behind — literally or figuratively.',
   },
   {
-    name: "Aryan Shah",
-    role: "Community Lead",
+    name: 'Aryan Shah',
+    role: 'Community Lead',
     photo: aryanShahPhoto,
-    bio: "The friendly face who welcomes every new member and keeps the group chat alive between events.",
+    bio: 'The friendly face who welcomes every new member and keeps the group chat alive between events.',
   },
   {
-    name: "Aryan Dahal",
-    role: "Events Coordinator",
-    photo: aryanDahalPhoto,
-    bio: "Turns \"say fk it\" into an actual race day — venues, logistics, and snacks all sorted.",
+    name: 'Raj',
+    role: 'Events Coordinator',
+    photo: rajPhoto,
+    bio: 'Turns "say fk it" into an actual race day — venues, logistics, and snacks all sorted.',
   },
-];
+]
 
 export default function LandingPage() {
-  const { isAuthed } = useCurrentUser();
-  const [events, setEvents] = useState([]);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
+  const { isAuthed } = useCurrentUser()
+  const [events, setEvents] = useState([])
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [banner, setBanner] = useState(
+    location.state?.message
+      ? { kind: 'success', message: location.state.message }
+      : null
+  )
 
   useEffect(() => {
-    getJson("/v1/event/upcoming")
+    getJson('/v1/event/upcoming')
       .then((data) => setEvents((data || []).slice(0, 3)))
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (location.state?.message) {
-      navigate(location.pathname, { replace: true, state: null });
+      navigate(location.pathname, { replace: true, state: null })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (!banner) return;
-    const timer = setTimeout(() => setBanner(null), 5000);
-    return () => clearTimeout(timer);
-  }, [banner]);
+    if (!banner) return
+    const timer = setTimeout(() => setBanner(null), 5000)
+    return () => clearTimeout(timer)
+  }, [banner])
 
-  const slides = [...events.map((event, i) => eventToSlide(event, i === 0)), ...SLIDES];
+  const slides = [
+    ...events.map((event, i) => eventToSlide(event, i === 0)),
+    ...SLIDES,
+  ]
 
   return (
     <div className="landing">
@@ -125,8 +133,9 @@ export default function LandingPage() {
               subtitle="From a handful of weekend runners to a community that shows up, every single time."
             />
             <p className="milestones-text">
-              FahhKit started as a small Sunday run and grew into a full-blown fitness community — one race, one
-              workout, and one &quot;say fk it&quot; moment at a time.
+              FahhKit started as a small Sunday run and grew into a full-blown
+              fitness community — one race, one workout, and one &quot;say fk
+              it&quot; moment at a time.
             </p>
             <div className="milestones-stats">
               {MILESTONES.map((m) => (
@@ -161,8 +170,14 @@ export default function LandingPage() {
         <span className="blob cta-blob-b" aria-hidden="true" />
         <div className="section-inner cta-inner" data-aos="zoom-in">
           <div>
-            <h2>{isAuthed ? "Ready for your next run?" : "Ready to run with us?"}</h2>
-            <p>{isAuthed ? "See what's on the calendar and get signed up." : "Registration takes less than two minutes."}</p>
+            <h2>
+              {isAuthed ? 'Ready for your next run?' : 'Ready to run with us?'}
+            </h2>
+            <p>
+              {isAuthed
+                ? "See what's on the calendar and get signed up."
+                : 'Registration takes less than two minutes.'}
+            </p>
           </div>
           <div className="cta-actions">
             {isAuthed ? (
@@ -185,5 +200,5 @@ export default function LandingPage() {
 
       <Footer />
     </div>
-  );
+  )
 }

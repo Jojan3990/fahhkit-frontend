@@ -1,27 +1,30 @@
-import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import AOS from "aos";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import UpdatePasswordPage from "./pages/UpdatePasswordPage";
-import EditProfilePage from "./pages/EditProfilePage";
-import EventsPage from "./pages/EventsPage";
-import EventDetailPage from "./pages/EventDetailPage";
-import CreateEventPage from "./pages/CreateEventPage";
-import EditEventPage from "./pages/EditEventPage";
-import CreateModeratorPage from "./pages/CreateModeratorPage";
-import AthleteSearchPage from "./pages/AthleteSearchPage";
-import AthleteProfilePage from "./pages/AthleteProfilePage";
-import HistoryPage from "./pages/HistoryPage";
-import ContactPage from "./pages/ContactPage";
-import PaymentStatusPage from "./pages/PaymentStatusPage";
+import { useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import AOS from 'aos'
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import UpdatePasswordPage from './pages/UpdatePasswordPage'
+import EditProfilePage from './pages/EditProfilePage'
+import EventsPage from './pages/EventsPage'
+import EventDetailPage from './pages/EventDetailPage'
+import CreateEventPage from './pages/CreateEventPage'
+import EditEventPage from './pages/EditEventPage'
+import CreateModeratorPage from './pages/CreateModeratorPage'
+import ModeratorsPage from './pages/ModeratorsPage'
+import EditModeratorPage from './pages/EditModeratorPage'
+import AthleteSearchPage from './pages/AthleteSearchPage'
+import AthleteProfilePage from './pages/AthleteProfilePage'
+import HistoryPage from './pages/HistoryPage'
+import ContactPage from './pages/ContactPage'
+import PaymentStatusPage from './pages/PaymentStatusPage'
+import EventRegistrantsPage from './pages/EventRegistrantsPage'
 
 export default function App() {
   useEffect(() => {
-    AOS.init({ duration: 700, once: true, offset: 40 });
-  }, []);
+    AOS.init({ duration: 700, once: true, offset: 40 })
+  }, [])
 
   return (
     <Routes>
@@ -35,7 +38,16 @@ export default function App() {
       <Route path="/events/create" element={<CreateEventPage />} />
       <Route path="/events/:id" element={<EventDetailPage />} />
       <Route path="/events/:id/edit" element={<EditEventPage />} />
+      <Route
+        path="/events/:id/registrations"
+        element={<EventRegistrantsPage />}
+      />
       <Route path="/admin/create-moderator" element={<CreateModeratorPage />} />
+      <Route path="/admin/moderators" element={<ModeratorsPage />} />
+      <Route
+        path="/admin/moderators/:id/edit"
+        element={<EditModeratorPage />}
+      />
       <Route path="/athletes" element={<AthleteSearchPage />} />
       <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
       <Route path="/history" element={<HistoryPage />} />
@@ -43,5 +55,5 @@ export default function App() {
       <Route path="/payment-status" element={<PaymentStatusPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  );
+  )
 }

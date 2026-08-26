@@ -1,26 +1,32 @@
-import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { ApiError, isAdmin, postJson } from "../api/client";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import "./CreateModeratorPage.css";
+import { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { ApiError, isAdmin, postJson } from '../api/client'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import {
+  NAME_PATTERN,
+  NAME_TITLE,
+  PHONE_PATTERN,
+  PHONE_TITLE,
+} from '../constants/validation'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import './CreateModeratorPage.css'
 
 const INITIAL_FORM = {
-  fullName: "",
-  email: "",
-  mobileNumber: "",
-  gender: "",
-  birthDate: "",
-  address: "",
-};
+  fullName: '',
+  email: '',
+  mobileNumber: '',
+  gender: '',
+  birthDate: '',
+  address: '',
+}
 
 export default function CreateModeratorPage() {
-  const { user, loading: userLoading } = useCurrentUser();
-  const [form, setForm] = useState(INITIAL_FORM);
-  const [submitting, setSubmitting] = useState(false);
-  const [banner, setBanner] = useState(null);
-  const navigate = useNavigate();
+  const { user, loading: userLoading } = useCurrentUser()
+  const [form, setForm] = useState(INITIAL_FORM)
+  const [submitting, setSubmitting] = useState(false)
+  const [banner, setBanner] = useState(null)
+  const navigate = useNavigate()
 
   if (userLoading) {
     return (
@@ -31,38 +37,45 @@ export default function CreateModeratorPage() {
         </div>
         <Footer />
       </div>
-    );
+    )
   }
 
   if (!isAdmin(user)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    setBanner(null);
-    if (!e.target.reportValidity()) return;
+    e.preventDefault()
+    setBanner(null)
+    if (!e.target.reportValidity()) return
 
-    const payload = Object.fromEntries(Object.entries(form).filter(([, value]) => value.trim() !== ""));
-    payload.userType = "MODERATOR";
+    const payload = Object.fromEntries(
+      Object.entries(form).filter(([, value]) => value.trim() !== '')
+    )
+    payload.userType = 'MODERATOR'
 
-    setSubmitting(true);
+    setSubmitting(true)
     try {
-      await postJson("/v1/user/create-moderator", payload);
-      setForm(INITIAL_FORM);
-      navigate("/athletes", {
-        state: { message: `${form.fullName} has been added as a moderator — we've emailed them a password to sign in with.` },
-      });
+      await postJson('/v1/user/create-moderator', payload)
+      setForm(INITIAL_FORM)
+      navigate('/admin/moderators', {
+        state: {
+          message: `${form.fullName} has been added as a moderator — we've emailed them a password to sign in with.`,
+        },
+      })
     } catch (err) {
-      const message = err instanceof ApiError ? err.message : "Could not create moderator. Please try again.";
-      setBanner({ kind: "error", message });
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : 'Could not create moderator. Please try again.'
+      setBanner({ kind: 'error', message })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
   }
 
@@ -78,29 +91,68 @@ export default function CreateModeratorPage() {
             <p>Fill out the form below to grant someone moderator access</p>
           </header>
 
-          {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
+          {banner && (
+            <div className={`banner ${banner.kind}`}>{banner.message}</div>
+          )}
 
-          <form className="glass-card" onSubmit={handleSubmit} noValidate data-aos="fade-up">
+          <form
+            className="glass-card"
+            onSubmit={handleSubmit}
+            noValidate
+            data-aos="fade-up"
+          >
             <fieldset>
               <legend>Personal Details</legend>
               <div className="grid">
                 <div className="field full">
                   <label htmlFor="fullName">Full Name</label>
-                  <input id="fullName" name="fullName" type="text" value={form.fullName} onChange={handleChange} required />
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    pattern={NAME_PATTERN}
+                    title={NAME_TITLE}
+                    value={form.fullName}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="field">
                   <label htmlFor="email">Email</label>
-                  <input id="email" name="email" type="email" value={form.email} onChange={handleChange} required />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="field">
                   <label htmlFor="mobileNumber">Mobile Number</label>
-                  <input id="mobileNumber" name="mobileNumber" type="tel" value={form.mobileNumber} onChange={handleChange} required />
+                  <input
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="98XXXXXXXX"
+                    pattern={PHONE_PATTERN}
+                    title={PHONE_TITLE}
+                    value={form.mobileNumber}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="field">
                   <label htmlFor="gender">
                     Gender <span className="opt">(optional)</span>
                   </label>
-                  <select id="gender" name="gender" value={form.gender} onChange={handleChange}>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={form.gender}
+                    onChange={handleChange}
+                  >
                     <option value="">Select gender</option>
                     <option value="MALE">Male</option>
                     <option value="FEMALE">Female</option>
@@ -111,26 +163,45 @@ export default function CreateModeratorPage() {
                   <label htmlFor="birthDate">
                     Date of Birth <span className="opt">(optional)</span>
                   </label>
-                  <input id="birthDate" name="birthDate" type="date" value={form.birthDate} onChange={handleChange} />
+                  <input
+                    id="birthDate"
+                    name="birthDate"
+                    type="date"
+                    value={form.birthDate}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="field full">
                   <label htmlFor="address">
                     Address <span className="opt">(optional)</span>
                   </label>
-                  <input id="address" name="address" type="text" value={form.address} onChange={handleChange} />
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={form.address}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
             </fieldset>
 
-            <p className="hint">A temporary password will be generated and emailed to them automatically.</p>
+            <p className="hint">
+              A temporary password will be generated and emailed to them
+              automatically.
+            </p>
 
-            <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
-              {submitting ? "Adding Moderator..." : "Add Moderator"}
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={submitting}
+            >
+              {submitting ? 'Adding Moderator...' : 'Add Moderator'}
             </button>
           </form>
         </div>
       </div>
       <Footer />
     </div>
-  );
+  )
 }

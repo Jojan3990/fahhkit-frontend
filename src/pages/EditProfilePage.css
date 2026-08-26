@@ -70,6 +70,37 @@
   margin-bottom: 24px;
 }
 
+.edit-profile-photo {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.edit-profile-avatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--brand-light);
+  color: var(--brand-dark);
+  font-weight: 700;
+  font-size: 26px;
+  overflow: hidden;
+}
+
+.edit-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-profile-photo .hint {
+  margin: 8px 0 0;
+}
+
 .edit-profile-account .field {
   margin-bottom: 12px;
 }

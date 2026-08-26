@@ -1,56 +1,68 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaSearch } from "react-icons/fa";
-import { ApiError, canManageEvents, isAdmin, getJson } from "../api/client";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import { formatName } from "../utils/format";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import "./AthleteSearchPage.css";
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { FaSearch } from 'react-icons/fa'
+import { ApiError, canManageEvents, getJson } from '../api/client'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import { formatName } from '../utils/format'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import './AthleteSearchPage.css'
 
 export default function AthleteSearchPage() {
-  const { user, isAuthed, loading: userLoading } = useCurrentUser();
-  const [athletes, setAthletes] = useState([]);
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
+  const { user, isAuthed, loading: userLoading } = useCurrentUser()
+  const [athletes, setAthletes] = useState([])
+  const [query, setQuery] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [banner, setBanner] = useState(
+    location.state?.message
+      ? { kind: 'success', message: location.state.message }
+      : null
+  )
 
-  const allowed = isAuthed && canManageEvents(user);
+  const allowed = isAuthed && canManageEvents(user)
 
   useEffect(() => {
     if (location.state?.message) {
-      navigate(location.pathname, { replace: true, state: null });
+      navigate(location.pathname, { replace: true, state: null })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (!banner) return;
-    const timer = setTimeout(() => setBanner(null), 5000);
-    return () => clearTimeout(timer);
-  }, [banner]);
+    if (!banner) return
+    const timer = setTimeout(() => setBanner(null), 5000)
+    return () => clearTimeout(timer)
+  }, [banner])
 
   useEffect(() => {
     if (userLoading || !allowed) {
-      setLoading(false);
-      return;
+      setLoading(false)
+      return
     }
-    getJson("/v1/athlete/find")
+    getJson('/v1/athlete/find')
       .then((data) => setAthletes(data || []))
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load athletes. Please try again."))
-      .finally(() => setLoading(false));
-  }, [userLoading, allowed]);
+      .catch((err) =>
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : 'Could not load athletes. Please try again.'
+        )
+      )
+      .finally(() => setLoading(false))
+  }, [userLoading, allowed])
 
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return athletes;
+    const q = query.trim().toLowerCase()
+    if (!q) return athletes
     return athletes.filter((a) =>
-      [a.fullName, a.email, a.mobileNumber].some((field) => field?.toLowerCase().includes(q))
-    );
-  }, [athletes, query]);
+      [a.fullName, a.email, a.mobileNumber].some((field) =>
+        field?.toLowerCase().includes(q)
+      )
+    )
+  }, [athletes, query])
 
   if (!userLoading && !allowed) {
     return (
@@ -58,16 +70,19 @@ export default function AthleteSearchPage() {
         <Navbar />
         <div className="athlete-search-wrap">
           <div className="banner error">
-            {isAuthed ? "You don't have permission to view this page." : (
+            {isAuthed ? (
+              "You don't have permission to view this page."
+            ) : (
               <>
-                <Link to="/login">Sign in</Link> as a moderator to search athletes.
+                <Link to="/login">Sign in</Link> as a moderator to search
+                athletes.
               </>
             )}
           </div>
         </div>
         <Footer />
       </div>
-    );
+    )
   }
 
   return (
@@ -79,14 +94,11 @@ export default function AthleteSearchPage() {
             <h1>Search Athletes</h1>
             <p>Find an athlete to view their profile and run history.</p>
           </div>
-          {isAdmin(user) && (
-            <Link to="/admin/create-moderator" className="btn btn-primary">
-              Add Moderator
-            </Link>
-          )}
         </header>
 
-        {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
+        {banner && (
+          <div className={`banner ${banner.kind}`}>{banner.message}</div>
+        )}
 
         <div className="athlete-search-box">
           <FaSearch className="athlete-search-icon" />
@@ -100,7 +112,9 @@ export default function AthleteSearchPage() {
 
         {error && <div className="banner error">{error}</div>}
         {loading && <p className="athlete-search-muted">Loading athletes...</p>}
-        {!loading && !error && results.length === 0 && <p className="athlete-search-muted">No athletes found.</p>}
+        {!loading && !error && results.length === 0 && (
+          <p className="athlete-search-muted">No athletes found.</p>
+        )}
 
         <div className="athlete-search-list">
           {results.map((athlete) => (
@@ -110,13 +124,17 @@ export default function AthleteSearchPage() {
               key={athlete.userId}
               title={athlete.email || athlete.mobileNumber}
             >
-              <span className="athlete-search-avatar">{(athlete.fullName || "?").charAt(0).toUpperCase()}</span>
-              <span className="athlete-search-name">{formatName(athlete.fullName)}</span>
+              <span className="athlete-search-avatar">
+                {(athlete.fullName || '?').charAt(0).toUpperCase()}
+              </span>
+              <span className="athlete-search-name">
+                {formatName(athlete.fullName)}
+              </span>
             </Link>
           ))}
         </div>
       </div>
       <Footer />
     </div>
-  );
+  )
 }

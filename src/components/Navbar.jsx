@@ -1,62 +1,72 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { canManageEvents, clearToken, clearUser } from "../api/client";
-import { useCurrentUser } from "../hooks/useCurrentUser";
-import ThemeToggle from "./ThemeToggle";
-import "./Navbar.css";
+import { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { FaChevronDown, FaUserCircle } from 'react-icons/fa'
+import {
+  canManageEvents,
+  clearToken,
+  clearUser,
+  isAdmin,
+  resolveFileUrl,
+} from '../api/client'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import ThemeToggle from './ThemeToggle'
+import './Navbar.css'
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { user, isAuthed } = useCurrentUser();
-  const navigate = useNavigate();
-  const userMenuRef = useRef(null);
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const { user, isAuthed } = useCurrentUser()
+  const navigate = useNavigate()
+  const userMenuRef = useRef(null)
 
   useEffect(() => {
     function onScroll() {
-      setScrolled(window.scrollY > 8);
+      setScrolled(window.scrollY > 8)
     }
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    onScroll()
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
-    if (!userMenuOpen) return;
+    if (!userMenuOpen) return
     function onClickOutside(e) {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
-        setUserMenuOpen(false);
+        setUserMenuOpen(false)
       }
     }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [userMenuOpen]);
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [userMenuOpen])
 
   function close() {
-    setOpen(false);
-    setUserMenuOpen(false);
+    setOpen(false)
+    setUserMenuOpen(false)
   }
 
   function handleSignOut() {
-    clearToken();
-    clearUser();
-    close();
-    navigate("/");
+    clearToken()
+    clearUser()
+    close()
+    navigate('/')
   }
 
   return (
-    <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
+    <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand" onClick={close}>
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="navbar-logo" />
+          <img
+            src={`${import.meta.env.BASE_URL}logo.png`}
+            alt="FahhKit"
+            className="navbar-logo"
+          />
           <span className="navbar-brand-text">Fahh Kit</span>
         </Link>
 
         <div className="navbar-actions">
           <button
-            className={`navbar-toggle ${open ? "open" : ""}`}
+            className={`navbar-toggle ${open ? 'open' : ''}`}
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -67,13 +77,18 @@ export default function Navbar() {
           </button>
         </div>
 
-        <nav className={`navbar-links ${open ? "open" : ""}`}>
+        <nav className={`navbar-links ${open ? 'open' : ''}`}>
           <Link to="/events" onClick={close}>
             Events
           </Link>
           {canManageEvents(user) && (
             <Link to="/athletes" onClick={close}>
               Athletes
+            </Link>
+          )}
+          {isAdmin(user) && (
+            <Link to="/admin/moderators" onClick={close}>
+              Moderators
             </Link>
           )}
           <Link to="/contact" onClick={close}>
@@ -88,13 +103,21 @@ export default function Navbar() {
                 aria-haspopup="true"
                 aria-expanded={userMenuOpen}
               >
-                <FaUserCircle className="navbar-user-icon" />
+                {user?.profilePictureUrl ? (
+                  <img
+                    src={resolveFileUrl(user.profilePictureUrl)}
+                    alt=""
+                    className="navbar-user-photo"
+                  />
+                ) : (
+                  <FaUserCircle className="navbar-user-icon" />
+                )}
                 {user?.fullName}
                 <FaChevronDown className="navbar-user-caret" />
               </button>
               {userMenuOpen && (
                 <div className="navbar-user-dropdown">
-                  {user?.userType === "ATHLETE" && (
+                  {user?.userType === 'ATHLETE' && (
                     <Link to="/history" onClick={close}>
                       History
                     </Link>
@@ -122,5 +145,5 @@ export default function Navbar() {
         </nav>
       </div>
     </header>
-  );
+  )
 }

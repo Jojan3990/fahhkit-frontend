@@ -87,13 +87,6 @@
   padding: 36px 24px 30px;
   text-align: center;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.team-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-glow);
-  border-color: transparent;
 }
 
 .team-card-photo {
@@ -112,11 +105,6 @@
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid var(--card);
-  transition: transform 0.35s ease;
-}
-
-.team-card:hover .team-card-photo img {
-  transform: scale(1.06);
 }
 
 .team-card-body h3 {

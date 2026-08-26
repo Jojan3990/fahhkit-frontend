@@ -1,48 +1,73 @@
-import { useState } from "react";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock, FaWhatsapp } from "react-icons/fa";
-import { postJson, ApiError } from "../api/client";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import SectionTitle from "../components/SectionTitle";
-import "./ContactPage.css";
+import { useState } from 'react'
+import {
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaClock,
+  FaWhatsapp,
+} from 'react-icons/fa'
+import { postJson, ApiError } from '../api/client'
+import {
+  NAME_PATTERN,
+  NAME_TITLE,
+  PHONE_PATTERN,
+  PHONE_TITLE,
+} from '../constants/validation'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import SectionTitle from '../components/SectionTitle'
+import './ContactPage.css'
 
-const INITIAL_FORM = { fullName: "", email: "", mobileNumber: "", subject: "", message: "" };
+const INITIAL_FORM = {
+  fullName: '',
+  email: '',
+  mobileNumber: '',
+  subject: '',
+  message: '',
+}
 
-const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
+const WHATSAPP_COMMUNITY_URL =
+  'https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t'
 
 // TODO: replace with real details when available
 const CONTACT_DETAILS = [
-  { icon: FaMapMarkerAlt, label: "Address", value: "Naxal, Kathmandu, Nepal" },
-  { icon: FaPhoneAlt, label: "Phone", value: "+977-9813121465" },
-  { icon: FaEnvelope, label: "Email", value: "admin@cafebizarre.com.np" },
-  { icon: FaClock, label: "Hours", value: "Mon - Friday, 9am - 6pm" },
-];
+  { icon: FaMapMarkerAlt, label: 'Address', value: 'Naxal, Kathmandu, Nepal' },
+  { icon: FaPhoneAlt, label: 'Phone', value: '+977-9813121465' },
+  { icon: FaEnvelope, label: 'Email', value: 'admin@cafebizarre.com.np' },
+  { icon: FaClock, label: 'Hours', value: 'Mon - Friday, 9am - 6pm' },
+]
 
 export default function ContactPage() {
-  const [form, setForm] = useState(INITIAL_FORM);
-  const [submitting, setSubmitting] = useState(false);
-  const [banner, setBanner] = useState(null);
+  const [form, setForm] = useState(INITIAL_FORM)
+  const [submitting, setSubmitting] = useState(false)
+  const [banner, setBanner] = useState(null)
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    setBanner(null);
-    if (!e.target.reportValidity()) return;
+    e.preventDefault()
+    setBanner(null)
+    if (!e.target.reportValidity()) return
 
-    setSubmitting(true);
+    setSubmitting(true)
     try {
-      await postJson("/v1/email/send-collaboration-mail", form);
-      setForm(INITIAL_FORM);
-      setBanner({ kind: "success", message: "Thanks for reaching out! We'll get back to you soon." });
+      await postJson('/v1/email/send-collaboration-mail', form)
+      setForm(INITIAL_FORM)
+      setBanner({
+        kind: 'success',
+        message: "Thanks for reaching out! We'll get back to you soon.",
+      })
     } catch (err) {
-      const message = err instanceof ApiError ? err.message : "Could not send your message. Please try again.";
-      setBanner({ kind: "error", message });
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : 'Could not send your message. Please try again.'
+      setBanner({ kind: 'error', message })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
   }
 
@@ -73,10 +98,16 @@ export default function ContactPage() {
               </ul>
             </div>
 
-            <div className="contact-form-card glass-card" data-aos="fade-up" data-aos-delay="100">
+            <div
+              className="contact-form-card glass-card"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
               <h3>Send Us a Message</h3>
 
-              {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
+              {banner && (
+                <div className={`banner ${banner.kind}`}>{banner.message}</div>
+              )}
 
               <form onSubmit={handleSubmit} noValidate>
                 <div className="field">
@@ -86,6 +117,8 @@ export default function ContactPage() {
                     name="fullName"
                     type="text"
                     autoComplete="name"
+                    pattern={NAME_PATTERN}
+                    title={NAME_TITLE}
                     value={form.fullName}
                     onChange={handleChange}
                     required
@@ -113,8 +146,8 @@ export default function ContactPage() {
                       inputMode="numeric"
                       autoComplete="tel"
                       placeholder="98XXXXXXXX"
-                      pattern="^9\d{9}$"
-                      title="Enter a valid 10-digit mobile number starting with 9"
+                      pattern={PHONE_PATTERN}
+                      title={PHONE_TITLE}
                       value={form.mobileNumber}
                       onChange={handleChange}
                       required
@@ -144,8 +177,12 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
-                  {submitting ? "Sending..." : "Get In Touch"}
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                  disabled={submitting}
+                >
+                  {submitting ? 'Sending...' : 'Get In Touch'}
                 </button>
               </form>
             </div>
@@ -159,8 +196,8 @@ export default function ContactPage() {
             <div>
               <h2>Join Our WhatsApp Community</h2>
               <p>
-                Connect with like-minded wellness enthusiasts, get exclusive tips and stay updated with our latest
-                events
+                Connect with like-minded wellness enthusiasts, get exclusive
+                tips and stay updated with our latest events
               </p>
             </div>
             <a
@@ -176,5 +213,5 @@ export default function ContactPage() {
       </div>
       <Footer />
     </div>
-  );
+  )
 }

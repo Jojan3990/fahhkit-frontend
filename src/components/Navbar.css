@@ -6,7 +6,9 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
-  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .navbar.scrolled {
@@ -36,11 +38,10 @@
 }
 
 .navbar-brand-text {
-  font-family: "Playfair Display", Georgia, serif;
-  font-style: italic;
+  font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 23px;
-  letter-spacing: 0;
+  font-size: 18px;
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--text);
 }
@@ -82,7 +83,10 @@
   color: var(--brand);
   cursor: pointer;
   font-size: 15px;
-  transition: transform 0.2s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .theme-toggle:hover {
@@ -106,7 +110,7 @@
 }
 
 .navbar-links a:not(.btn)::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   bottom: 0;
@@ -154,13 +158,21 @@
   color: var(--brand);
 }
 
+.navbar-user-photo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .navbar-user-caret {
   font-size: 10px;
   color: var(--muted);
   transition: transform 0.15s ease;
 }
 
-.navbar-user-trigger[aria-expanded="true"] .navbar-user-caret {
+.navbar-user-trigger[aria-expanded='true'] .navbar-user-caret {
   transform: rotate(180deg);
 }
 
@@ -221,7 +233,9 @@
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .navbar-toggle.open span:nth-child(1) {
