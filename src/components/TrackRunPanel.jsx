@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types -- no prop-types dependency in this project */
 import { useState } from 'react'
+import { FaExclamation, FaTimes } from 'react-icons/fa'
 import { ApiError } from '../api/client'
 import { createRun } from '../api/runs'
 import { useRunTracker } from '../hooks/useRunTracker'
@@ -15,7 +16,17 @@ import './TrackRunPanel.css'
 // The live-tracking widget itself (stats + start/stop), reused by both the
 // dedicated /runs/track page and the full-screen live-event prompt.
 export default function TrackRunPanel({ onSaved }) {
-  const { status, elapsedSeconds, distance, start, stop } = useRunTracker()
+  const {
+    status,
+    elapsedSeconds,
+    distance,
+    start,
+    stop,
+    backgroundGapSeconds,
+    dismissBackgroundGap,
+    pendingRun,
+    clearPendingRun,
+  } = useRunTracker()
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirmingStop, setConfirmingStop] = useState(false)
@@ -23,44 +34,62 @@ export default function TrackRunPanel({ onSaved }) {
   const pace = calculatePaceMinPerKm(distance, elapsedSeconds)
   const tracking = status === 'tracking'
 
+  async function attemptSave(run) {
+    setSaving(true)
+    setSaveError(null)
+    try {
+      const saved = await createRun({
+        points: run.points,
+        distance: run.distance,
+        duration: run.duration,
+        startedAt: toLocalDateTimeString(run.startedAt),
+        endedAt: toLocalDateTimeString(run.endedAt),
+      })
+      clearPendingRun()
+      onSaved(saved)
+    } catch (err) {
+      // Deliberately not clearing the pending run here — it stays in localStorage
+      // (see useRunTracker) so "Retry Save" works even after closing the app,
+      // e.g. if this failed because there was no connection at the time.
+      setSaveError({
+        title: "Couldn't save that",
+        message:
+          err instanceof ApiError
+            ? err.message
+            : 'Could not save this run. Please try again.',
+      })
+      setSaving(false)
+    }
+  }
+
   async function handleConfirmStop() {
     setConfirmingStop(false)
     const result = stop()
     if (result.points.length === 0) {
       if (result.fixCount === 0) {
-        setSaveError(
-          "Couldn't get a GPS fix in time. Make sure location services are on and try again."
-        )
+        setSaveError({
+          title: 'Nice try 👀',
+          message:
+            'We never actually found you out there. Did the run happen, or nah? Check your location is turned on and give it another go.',
+        })
       } else {
         const accuracyText =
           result.lastAccuracy != null
-            ? ` (accuracy was about ${Math.round(result.lastAccuracy)}m)`
+            ? ` Signal was ~${Math.round(result.lastAccuracy)}m off — nowhere close.`
             : ''
-        setSaveError(
-          `Your location signal was too weak to record this run${accuracyText}. GPS works best outdoors on a phone — laptops usually can't get an accurate fix.`
-        )
+        setSaveError({
+          title: "That's sus 😏",
+          message: `${accuracyText} Feels like laptop cardio, not the real thing. Grab your phone, get outside, and try again — GPS needs sky, not WiFi.`,
+        })
       }
       return
     }
-    setSaving(true)
+    await attemptSave(result)
+  }
+
+  function handleDiscardPending() {
+    clearPendingRun()
     setSaveError(null)
-    try {
-      const run = await createRun({
-        points: result.points,
-        distance: result.distance,
-        duration: result.duration,
-        startedAt: toLocalDateTimeString(result.startedAt),
-        endedAt: toLocalDateTimeString(result.endedAt),
-      })
-      onSaved(run)
-    } catch (err) {
-      setSaveError(
-        err instanceof ApiError
-          ? err.message
-          : 'Could not save this run. Please try again.'
-      )
-      setSaving(false)
-    }
   }
 
   return (
@@ -81,7 +110,46 @@ export default function TrackRunPanel({ onSaved }) {
           Could not get your location. Please try again.
         </div>
       )}
-      {saveError && <div className="banner error">{saveError}</div>}
+      {saveError && (
+        <div className="track-run-error">
+          <span className="track-run-error-badge">
+            <FaExclamation />
+          </span>
+          <div>
+            <p className="track-run-error-title">{saveError.title}</p>
+            <p className="track-run-error-message">{saveError.message}</p>
+          </div>
+        </div>
+      )}
+
+      {backgroundGapSeconds != null && (
+        <div className="banner error track-run-gap-banner">
+          <span>
+            Your screen was off for about {formatDuration(backgroundGapSeconds)}{' '}
+            — GPS tracking may have paused, so the route or distance could be
+            missing that section.
+          </span>
+          <button
+            type="button"
+            onClick={dismissBackgroundGap}
+            aria-label="Dismiss"
+          >
+            <FaTimes />
+          </button>
+        </div>
+      )}
+
+      {pendingRun ? (
+        <p className="track-run-hint">
+          This run finished but hasn&apos;t been saved yet — it&apos;s kept on
+          this device until it is.
+        </p>
+      ) : (
+        <p className="track-run-hint">
+          Keep your screen on during the run — locking it may pause GPS
+          tracking.
+        </p>
+      )}
 
       <dl className="track-run-stats glass-card">
         <div>
@@ -133,6 +201,30 @@ export default function TrackRunPanel({ onSaved }) {
               Stop Run
             </button>
           )
+        ) : pendingRun ? (
+          <>
+            <p className="track-run-confirm-text">
+              Your last run couldn&apos;t be saved. Retry now, or discard it?
+            </p>
+            <div className="track-run-confirm-actions">
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleDiscardPending}
+                disabled={saving}
+              >
+                Discard
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => attemptSave(pendingRun)}
+                disabled={saving}
+              >
+                {saving ? 'Saving...' : 'Retry Save'}
+              </button>
+            </div>
+          </>
         ) : (
           <button
             type="button"

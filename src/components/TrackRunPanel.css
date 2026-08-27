@@ -6,29 +6,40 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  padding: 28px 20px;
+  padding: 36px 20px;
   margin: 0 0 28px;
   text-align: center;
 }
 
 .track-run-stats dt {
-  font-size: 11px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--muted);
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 
 .track-run-stats dd {
   margin: 0;
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .track-run-actions .btn {
-  padding: 16px 20px;
-  font-size: 16px;
+  padding: 20px 24px;
+  font-size: 19px;
+}
+
+@media (max-width: 380px) {
+  .track-run-stats {
+    padding: 28px 12px;
+    gap: 10px;
+  }
+
+  .track-run-stats dd {
+    font-size: 24px;
+  }
 }
 
 .track-run-confirm-text {
@@ -45,4 +56,78 @@
 
 .track-run-confirm-actions .btn {
   flex: 1;
+}
+
+.track-run-gap-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.track-run-gap-banner button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.track-run-gap-banner button:hover {
+  opacity: 1;
+}
+
+.track-run-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  margin: 0 0 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.track-run-error-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 13px;
+  box-shadow: var(--shadow-glow);
+}
+
+.track-run-error-title {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.track-run-error-message {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.track-run-hint {
+  margin: 0 0 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
 }

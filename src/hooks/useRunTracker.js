@@ -8,11 +8,19 @@ import {
 } from '../utils/run'
 import { useWakeLock } from './useWakeLock'
 
+// Below this, a brief tab switch or notification check isn't worth warning about.
+const BACKGROUND_GAP_THRESHOLD_MS = 10000
+
 // status: idle | tracking | permission-denied | unsupported | error
 export function useRunTracker() {
   const [status, setStatus] = useState('idle')
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [distance, setDistance] = useState(0)
+  const [backgroundGapSeconds, setBackgroundGapSeconds] = useState(null)
+  // A finished run that hasn't been saved to the server yet (e.g. the POST failed
+  // because there was no connection) — kept in localStorage until it succeeds, so
+  // it survives closing the app rather than being lost.
+  const [pendingRun, setPendingRun] = useState(null)
 
   const pointsRef = useRef([])
   const distanceRef = useRef(0)
@@ -21,7 +29,42 @@ export function useRunTracker() {
   const startedAtRef = useRef(null)
   const fixCountRef = useRef(0)
   const lastAccuracyRef = useRef(null)
+  const hiddenAtRef = useRef(null)
+  const statusRef = useRef(status)
+  statusRef.current = status
   const wakeLock = useWakeLock()
+
+  // Flags when the tab was backgrounded (screen locked, app switched away) for
+  // long enough that GPS tracking likely paused, so the UI can warn the route
+  // may have a gap — see the useRunTracker() writeup for why this can't just
+  // keep tracking through it.
+  useEffect(() => {
+    function onVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        if (statusRef.current === 'tracking') {
+          hiddenAtRef.current = Date.now()
+        }
+        return
+      }
+      if (hiddenAtRef.current == null) return
+      const hiddenMs = Date.now() - hiddenAtRef.current
+      hiddenAtRef.current = null
+      if (
+        statusRef.current === 'tracking' &&
+        hiddenMs > BACKGROUND_GAP_THRESHOLD_MS
+      ) {
+        setBackgroundGapSeconds(Math.round(hiddenMs / 1000))
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () =>
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [])
+
+  const dismissBackgroundGap = useCallback(
+    () => setBackgroundGapSeconds(null),
+    []
+  )
 
   const clearTimers = useCallback(() => {
     if (watchIdRef.current != null) {
@@ -97,6 +140,27 @@ export function useRunTracker() {
     const saved = loadActiveRun()
     if (!saved || !('geolocation' in navigator)) return
 
+    if (saved.stopped) {
+      if (!saved.points || saved.points.length === 0) {
+        clearActiveRun()
+        return
+      }
+      const savedStartedAt = new Date(saved.startedAt)
+      const savedEndedAt = new Date(saved.endedAt)
+      setDistance(saved.distance || 0)
+      setElapsedSeconds(saved.duration ?? 0)
+      setPendingRun({
+        points: saved.points,
+        distance: saved.distance || 0,
+        duration: saved.duration ?? 0,
+        startedAt: savedStartedAt,
+        endedAt: savedEndedAt,
+        fixCount: saved.fixCount ?? saved.points.length,
+        lastAccuracy: saved.lastAccuracy ?? null,
+      })
+      return
+    }
+
     pointsRef.current = saved.points || []
     distanceRef.current = saved.distance || 0
     startedAtRef.current = new Date(saved.startedAt)
@@ -104,6 +168,16 @@ export function useRunTracker() {
     setElapsedSeconds(
       Math.round((Date.now() - startedAtRef.current.getTime()) / 1000)
     )
+
+    const lastPoint = pointsRef.current[pointsRef.current.length - 1]
+    const lastKnownAt = lastPoint
+      ? lastPoint.timestamp
+      : startedAtRef.current.getTime()
+    const goneMs = Date.now() - lastKnownAt
+    if (goneMs > BACKGROUND_GAP_THRESHOLD_MS) {
+      setBackgroundGapSeconds(Math.round(goneMs / 1000))
+    }
+
     beginWatch()
     // Runs once on mount only — beginWatch is stable across the run's lifetime via its own deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,6 +195,8 @@ export function useRunTracker() {
     lastAccuracyRef.current = null
     setDistance(0)
     setElapsedSeconds(0)
+    setBackgroundGapSeconds(null)
+    setPendingRun(null)
     startedAtRef.current = new Date()
 
     saveActiveRun({
@@ -135,11 +211,11 @@ export function useRunTracker() {
     clearTimers()
     wakeLock.release()
     setStatus('idle')
-    clearActiveRun()
+    setBackgroundGapSeconds(null)
 
     const endedAt = new Date()
     const startedAt = startedAtRef.current ?? endedAt
-    return {
+    const result = {
       points: pointsRef.current,
       distance,
       duration: Math.round((endedAt - startedAt) / 1000),
@@ -148,7 +224,44 @@ export function useRunTracker() {
       fixCount: fixCountRef.current,
       lastAccuracy: lastAccuracyRef.current,
     }
+
+    if (result.points.length === 0) {
+      // Nothing worth retrying — clear rather than leaving an empty pending record behind.
+      clearActiveRun()
+      setPendingRun(null)
+    } else {
+      saveActiveRun({
+        startedAt: startedAt.toISOString(),
+        points: result.points,
+        distance: result.distance,
+        stopped: true,
+        endedAt: endedAt.toISOString(),
+        duration: result.duration,
+        fixCount: result.fixCount,
+        lastAccuracy: result.lastAccuracy,
+      })
+      setPendingRun(result)
+    }
+
+    return result
   }, [clearTimers, wakeLock, distance])
 
-  return { status, elapsedSeconds, distance, start, stop }
+  const clearPendingRun = useCallback(() => {
+    clearActiveRun()
+    setPendingRun(null)
+    setDistance(0)
+    setElapsedSeconds(0)
+  }, [])
+
+  return {
+    status,
+    elapsedSeconds,
+    distance,
+    start,
+    stop,
+    backgroundGapSeconds,
+    dismissBackgroundGap,
+    pendingRun,
+    clearPendingRun,
+  }
 }
