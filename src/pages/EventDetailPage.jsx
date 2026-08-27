@@ -201,6 +201,13 @@ export default function EventDetailPage() {
                   </p>
                 ) : userLoading ? (
                   <p className="event-detail-muted">Loading...</p>
+                ) : canManageEvents(user) ? (
+                  <Link
+                    to={`/events/${id}/registrations`}
+                    className="btn btn-primary btn-block"
+                  >
+                    View Applicants
+                  </Link>
                 ) : isAuthed ? (
                   <>
                     {currentStatus === 'PENDING' && (

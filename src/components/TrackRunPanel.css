@@ -1,0 +1,48 @@
+.track-run-panel {
+  width: 100%;
+}
+
+.track-run-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 28px 20px;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+.track-run-stats dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.track-run-stats dd {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.track-run-actions .btn {
+  padding: 16px 20px;
+  font-size: 16px;
+}
+
+.track-run-confirm-text {
+  margin: 0 0 14px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.track-run-confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.track-run-confirm-actions .btn {
+  flex: 1;
+}

@@ -16,10 +16,15 @@ import ModeratorsPage from './pages/ModeratorsPage'
 import EditModeratorPage from './pages/EditModeratorPage'
 import AthleteSearchPage from './pages/AthleteSearchPage'
 import AthleteProfilePage from './pages/AthleteProfilePage'
+import EditAthletePage from './pages/EditAthletePage'
 import HistoryPage from './pages/HistoryPage'
+import TrackRunPage from './pages/TrackRunPage'
+import RunsPage from './pages/RunsPage'
+import RunDetailPage from './pages/RunDetailPage'
 import ContactPage from './pages/ContactPage'
 import PaymentStatusPage from './pages/PaymentStatusPage'
 import EventRegistrantsPage from './pages/EventRegistrantsPage'
+import LiveEventRunPrompt from './components/LiveEventRunPrompt'
 
 export default function App() {
   useEffect(() => {
@@ -27,33 +32,43 @@ export default function App() {
   }, [])
 
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/update-password" element={<UpdatePasswordPage />} />
-      <Route path="/profile/edit" element={<EditProfilePage />} />
-      <Route path="/events" element={<EventsPage />} />
-      <Route path="/events/create" element={<CreateEventPage />} />
-      <Route path="/events/:id" element={<EventDetailPage />} />
-      <Route path="/events/:id/edit" element={<EditEventPage />} />
-      <Route
-        path="/events/:id/registrations"
-        element={<EventRegistrantsPage />}
-      />
-      <Route path="/admin/create-moderator" element={<CreateModeratorPage />} />
-      <Route path="/admin/moderators" element={<ModeratorsPage />} />
-      <Route
-        path="/admin/moderators/:id/edit"
-        element={<EditModeratorPage />}
-      />
-      <Route path="/athletes" element={<AthleteSearchPage />} />
-      <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
-      <Route path="/history" element={<HistoryPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/payment-status" element={<PaymentStatusPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <LiveEventRunPrompt />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/update-password" element={<UpdatePasswordPage />} />
+        <Route path="/profile/edit" element={<EditProfilePage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events/create" element={<CreateEventPage />} />
+        <Route path="/events/:id" element={<EventDetailPage />} />
+        <Route path="/events/:id/edit" element={<EditEventPage />} />
+        <Route
+          path="/events/:id/registrations"
+          element={<EventRegistrantsPage />}
+        />
+        <Route
+          path="/admin/create-moderator"
+          element={<CreateModeratorPage />}
+        />
+        <Route path="/admin/moderators" element={<ModeratorsPage />} />
+        <Route
+          path="/admin/moderators/:id/edit"
+          element={<EditModeratorPage />}
+        />
+        <Route path="/athletes" element={<AthleteSearchPage />} />
+        <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
+        <Route path="/athletes/:userId/edit" element={<EditAthletePage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/runs" element={<RunsPage />} />
+        <Route path="/runs/track" element={<TrackRunPage />} />
+        <Route path="/runs/:id" element={<RunDetailPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/payment-status" element={<PaymentStatusPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   )
 }

@@ -36,14 +36,6 @@
   overflow: hidden;
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.sponsor-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
 }
 
 .sponsor-card img {

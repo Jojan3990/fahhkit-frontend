@@ -1,9 +1,16 @@
-import { Link } from "react-router-dom";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import "./Footer.css";
+import { Link } from 'react-router-dom'
+import {
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaInstagram,
+  FaWhatsapp,
+} from 'react-icons/fa'
+import './Footer.css'
 
-const INSTAGRAM_URL = "https://www.instagram.com/fahhkit/";
-const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t";
+const INSTAGRAM_URL = 'https://www.instagram.com/fahhkit/'
+const WHATSAPP_COMMUNITY_URL =
+  'https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t'
 
 export default function Footer() {
   return (
@@ -11,15 +18,29 @@ export default function Footer() {
       <div className="section-inner footer-grid">
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
-            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FahhKit" className="footer-logo-img" />
-            FahhKit
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="Fahh Kit"
+              className="footer-logo-img"
+            />
+            Fahh Kit
           </Link>
           <p>Getting it done is what we live by!</p>
           <div className="footer-social">
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="FahhKit on Instagram">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Fahh Kit on Instagram"
+            >
               <FaInstagram />
             </a>
-            <a href={WHATSAPP_COMMUNITY_URL} target="_blank" rel="noopener noreferrer" aria-label="FahhKit WhatsApp community">
+            <a
+              href={WHATSAPP_COMMUNITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Fahh Kit WhatsApp community"
+            >
               <FaWhatsapp />
             </a>
           </div>
@@ -47,8 +68,10 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <span className="footer-muted">© {new Date().getFullYear()} FahhKit. All rights reserved.</span>
+        <span className="footer-muted">
+          © {new Date().getFullYear()} Fahh Kit. All rights reserved.
+        </span>
       </div>
     </footer>
-  );
+  )
 }

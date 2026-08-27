@@ -117,6 +117,17 @@ export default function Navbar() {
               </button>
               {userMenuOpen && (
                 <div className="navbar-user-dropdown">
+                  {/* TEMP — staging restriction: My Runs/Track a Run limited to admin/moderator for now, revert to `user?.userType === 'ATHLETE'` when ready to launch to athletes */}
+                  {canManageEvents(user) && (
+                    <>
+                      <Link to="/runs" onClick={close}>
+                        My Runs
+                      </Link>
+                      <Link to="/runs/track" onClick={close}>
+                        Track a Run
+                      </Link>
+                    </>
+                  )}
                   {user?.userType === 'ATHLETE' && (
                     <Link to="/history" onClick={close}>
                       History

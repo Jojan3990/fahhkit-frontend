@@ -1,0 +1,68 @@
+.live-event-prompt {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(20, 17, 15, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.live-event-prompt-panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: 36px 28px 28px;
+  margin: auto;
+}
+
+.live-event-prompt-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.live-event-prompt-close:hover {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+.live-event-prompt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+.live-event-prompt-panel h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.live-event-prompt-subtitle {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 14px;
+}

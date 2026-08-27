@@ -10,8 +10,16 @@
   padding: 24px 20px 64px;
 }
 
-.athlete-profile-back {
+.athlete-profile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 0 0 16px;
+}
+
+.athlete-profile-back {
+  margin: 0;
 }
 
 .athlete-profile-back a {

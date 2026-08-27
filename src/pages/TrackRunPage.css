@@ -1,0 +1,17 @@
+.track-run-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-run-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.track-run-wrap h1 {
+  margin: 0 0 24px;
+  font-size: 26px;
+  text-align: center;
+}

@@ -1,0 +1,15 @@
+/* TEMP — testing only, remove alongside RunThumbnailMap.jsx. */
+.run-thumbnail-map {
+  height: 140px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 12px;
+  /* Decorative only — lets clicks pass through to the card's Link instead of the map. */
+  pointer-events: none;
+}
+
+.run-thumbnail-map .run-map {
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+}

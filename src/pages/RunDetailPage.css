@@ -1,0 +1,104 @@
+.run-detail-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.run-detail-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.run-detail-back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.run-detail-back-link:hover {
+  color: var(--brand);
+}
+
+.run-detail-muted {
+  color: var(--muted);
+}
+
+.run-detail-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.run-detail-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.run-detail-stats dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.run-detail-stats dd {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.run-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.run-detail-confirm-text {
+  color: var(--muted);
+  font-size: 14px;
+  margin-right: auto;
+}
+
+.run-detail-actions .btn-danger-outline {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.run-detail-actions .btn-danger-outline:hover {
+  background: var(--error-bg);
+}
+
+.run-detail-actions .btn-danger {
+  background: var(--error);
+  color: #fff;
+  border-color: var(--error);
+}
+
+.run-detail-actions .btn-danger:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 560px) {
+  .run-detail-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 18px;
+  }
+
+  .run-detail-actions {
+    flex-wrap: wrap;
+  }
+
+  .run-detail-confirm-text {
+    width: 100%;
+    margin-right: 0;
+  }
+}
