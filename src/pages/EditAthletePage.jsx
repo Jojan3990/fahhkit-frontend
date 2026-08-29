@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ApiError, canManageEvents, getJson, postJson } from '../api/client'
+import {
+  ApiError,
+  canManageEvents,
+  getJson,
+  isAdmin,
+  postJson,
+} from '../api/client'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 import { COUNTRIES_SORTED } from '../constants/countries'
 import {
@@ -18,8 +24,10 @@ export default function EditAthletePage() {
   const { user, loading: userLoading } = useCurrentUser()
   const navigate = useNavigate()
   const [form, setForm] = useState(null)
+  const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [locking, setLocking] = useState(false)
   const [banner, setBanner] = useState(null)
 
   const allowed = canManageEvents(user)
@@ -47,6 +55,7 @@ export default function EditAthletePage() {
           emergencyContactRelationship: data.emergencyContactRelationship || '',
           emergencyContactPhone: data.emergencyContactPhone || '',
         })
+        setStatus(data.status || 'ACTIVE')
       })
       .catch((err) =>
         setBanner({
@@ -98,6 +107,32 @@ export default function EditAthletePage() {
       setBanner({ kind: 'error', message })
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleLockToggle() {
+    setBanner(null)
+    setLocking(true)
+    const isLocking = status !== 'LOCKED'
+    try {
+      await postJson(isLocking ? '/v1/user/lock' : '/v1/user/unlock', {
+        userId,
+      })
+      setStatus(isLocking ? 'LOCKED' : 'ACTIVE')
+      setBanner({
+        kind: 'success',
+        message: isLocking
+          ? 'Athlete account disabled.'
+          : 'Athlete account enabled.',
+      })
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : `Could not ${isLocking ? 'disable' : 'enable'} this athlete. Please try again.`
+      setBanner({ kind: 'error', message })
+    } finally {
+      setLocking(false)
     }
   }
 
@@ -168,14 +203,13 @@ export default function EditAthletePage() {
                     />
                   </div>
                   <div className="field">
-                    <label htmlFor="gender">
-                      Gender <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="gender">Gender</label>
                     <select
                       id="gender"
                       name="gender"
                       value={form.gender}
                       onChange={handleChange}
+                      required
                     >
                       <option value="">Select gender</option>
                       <option value="MALE">Male</option>
@@ -184,27 +218,25 @@ export default function EditAthletePage() {
                     </select>
                   </div>
                   <div className="field">
-                    <label htmlFor="birthDate">
-                      Date of Birth <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="birthDate">Date of Birth</label>
                     <input
                       id="birthDate"
                       name="birthDate"
                       type="date"
                       value={form.birthDate}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field full">
-                    <label htmlFor="address">
-                      Address <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="address">Address</label>
                     <input
                       id="address"
                       name="address"
                       type="text"
                       value={form.address}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
@@ -214,14 +246,13 @@ export default function EditAthletePage() {
                 <legend>Location &amp; Background</legend>
                 <div className="grid">
                   <div className="field">
-                    <label htmlFor="country">
-                      Country <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="country">Country</label>
                     <select
                       id="country"
                       name="country"
                       value={form.country}
                       onChange={handleChange}
+                      required
                     >
                       <option value="">Select country</option>
                       {COUNTRIES_SORTED.map(([code, label]) => (
@@ -232,27 +263,25 @@ export default function EditAthletePage() {
                     </select>
                   </div>
                   <div className="field">
-                    <label htmlFor="city">
-                      City <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="city">City</label>
                     <input
                       id="city"
                       name="city"
                       type="text"
                       value={form.city}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field">
-                    <label htmlFor="nationality">
-                      Nationality <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="nationality">Nationality</label>
                     <input
                       id="nationality"
                       name="nationality"
                       type="text"
                       value={form.nationality}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field">
@@ -284,9 +313,7 @@ export default function EditAthletePage() {
               </fieldset>
 
               <fieldset>
-                <legend>
-                  Emergency Contact <span className="opt">(optional)</span>
-                </legend>
+                <legend>Emergency Contact</legend>
                 <div className="grid">
                   <div className="field">
                     <label htmlFor="emergencyContactName">Contact Name</label>
@@ -298,6 +325,7 @@ export default function EditAthletePage() {
                       title={NAME_TITLE}
                       value={form.emergencyContactName}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field">
@@ -310,6 +338,7 @@ export default function EditAthletePage() {
                       type="text"
                       value={form.emergencyContactRelationship}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field full">
@@ -324,6 +353,7 @@ export default function EditAthletePage() {
                       title={PHONE_TITLE}
                       value={form.emergencyContactPhone}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
@@ -336,6 +366,24 @@ export default function EditAthletePage() {
               >
                 {submitting ? 'Saving...' : 'Save Changes'}
               </button>
+
+              {isAdmin(user) && (
+                <button
+                  type="button"
+                  className="btn btn-outline btn-block"
+                  style={{ marginTop: 12 }}
+                  onClick={handleLockToggle}
+                  disabled={locking}
+                >
+                  {status === 'LOCKED'
+                    ? locking
+                      ? 'Enabling...'
+                      : 'Enable Athlete'
+                    : locking
+                      ? 'Disabling...'
+                      : 'Disable Athlete'}
+                </button>
+              )}
             </form>
           )}
         </div>

@@ -1,25 +1,47 @@
 /* eslint-disable react/prop-types -- no prop-types dependency in this project */
-import { EVENT_TYPE_LABELS, formatDate } from "../utils/events";
-import "./HistoryList.css";
+import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
+import './HistoryList.css'
 
 const STATUS_LABELS = {
-  DRAFT: "Draft",
-  PUBLISHED: "Published",
-  CANCELLED: "Cancelled",
-  COMPLETED: "Completed",
-};
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+  CANCELLED: 'Cancelled',
+  COMPLETED: 'Completed',
+}
 
-export default function HistoryList({ history, emptyMessage = "No run history yet." }) {
-  if (!history || history.length === 0) {
-    return <p className="history-empty">{emptyMessage}</p>;
+const PAYMENT_STATUS_LABELS = {
+  PAID: 'Payment Paid',
+  PENDING: 'Payment Pending',
+}
+
+// Free/no-fee events never get a payment record, so a missing paymentStatus
+// is treated as visible too — only a failed/cancelled payment hides an entry.
+function isVisible(item) {
+  return (
+    !item.paymentStatus ||
+    item.paymentStatus === 'PAID' ||
+    item.paymentStatus === 'PENDING'
+  )
+}
+
+export default function HistoryList({
+  history,
+  emptyMessage = 'No run history yet.',
+}) {
+  const visibleHistory = (history || []).filter(isVisible)
+
+  if (visibleHistory.length === 0) {
+    return <p className="history-empty">{emptyMessage}</p>
   }
 
   return (
     <div className="history-list">
-      {history.map((item) => (
+      {visibleHistory.map((item) => (
         <div className="history-item" key={item.registrationId}>
           <div className="history-item-main">
-            <span className="history-item-type">{EVENT_TYPE_LABELS[item.eventType] || item.eventType}</span>
+            <span className="history-item-type">
+              {EVENT_TYPE_LABELS[item.eventType] || item.eventType}
+            </span>
             <h3>{item.eventName}</h3>
             <dl className="history-item-meta">
               <div>
@@ -38,11 +60,23 @@ export default function HistoryList({ history, emptyMessage = "No run history ye
               </div>
             </dl>
           </div>
-          <span className={`history-item-status status-${(item.eventStatus || "").toLowerCase()}`}>
-            {STATUS_LABELS[item.eventStatus] || item.eventStatus}
-          </span>
+          <div className="history-item-badges">
+            <span
+              className={`history-item-status status-${(item.eventStatus || '').toLowerCase()}`}
+            >
+              {STATUS_LABELS[item.eventStatus] || item.eventStatus}
+            </span>
+            {item.paymentStatus && (
+              <span
+                className={`history-item-payment payment-${item.paymentStatus.toLowerCase()}`}
+              >
+                {PAYMENT_STATUS_LABELS[item.paymentStatus] ||
+                  item.paymentStatus}
+              </span>
+            )}
+          </div>
         </div>
       ))}
     </div>
-  );
+  )
 }

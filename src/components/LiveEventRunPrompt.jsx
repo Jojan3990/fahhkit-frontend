@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaTimes } from 'react-icons/fa'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 import { useLiveRegisteredEvent } from '../hooks/useLiveRegisteredEvent'
+import { loadTrackedEventIds, saveTrackedEventIds } from '../utils/run'
 import TrackRunPanel from './TrackRunPanel'
 import './LiveEventRunPrompt.css'
 
@@ -10,10 +12,19 @@ import './LiveEventRunPrompt.css'
 // the run tracker so they don't have to go find /runs/track themselves.
 export default function LiveEventRunPrompt() {
   const liveEvent = useLiveRegisteredEvent()
+  const { user } = useCurrentUser()
   const [dismissed, setDismissed] = useState(false)
   const [trackedEventIds, setTrackedEventIds] = useState(() => new Set())
   const location = useLocation()
   const navigate = useNavigate()
+
+  // Persists which events this athlete already tracked, so a refresh within
+  // the same 1-hour window doesn't re-show the prompt. Same-device-only
+  // stopgap — see loadTrackedEventIds in utils/run.js for why.
+  useEffect(() => {
+    if (!user?.id) return
+    setTrackedEventIds(new Set(loadTrackedEventIds(user.id)))
+  }, [user?.id])
 
   // A close click only skips the prompt for the page the user is currently
   // on — navigating anywhere else brings it back for the rest of the hour.
@@ -33,7 +44,11 @@ export default function LiveEventRunPrompt() {
   }
 
   function handleSaved(run) {
-    setTrackedEventIds((prev) => new Set(prev).add(liveEvent.eventId))
+    setTrackedEventIds((prev) => {
+      const next = new Set(prev).add(liveEvent.eventId)
+      if (user?.id) saveTrackedEventIds(user.id, next)
+      return next
+    })
     navigate(`/runs/${run.id}`)
   }
 

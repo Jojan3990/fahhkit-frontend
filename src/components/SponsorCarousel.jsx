@@ -25,7 +25,7 @@ export default function SponsorCarousel() {
     <section className="sponsors">
       <div className="section-inner">
         <SectionTitle
-          eyebrow="Our Sponsors"
+          eyebrow="Our Partners"
           title="Trusted by Leading Brands"
         />
       </div>
@@ -33,7 +33,7 @@ export default function SponsorCarousel() {
         <div className="sponsors-track">
           {track.map((src, i) => (
             <div className="sponsor-card" key={i}>
-              <img src={src} alt="Sponsor logo" />
+              <img src={src} alt="Partner logo" />
             </div>
           ))}
         </div>

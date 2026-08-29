@@ -11,9 +11,8 @@
 
 .history-item {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  gap: 14px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -65,8 +64,17 @@
   font-weight: 600;
 }
 
-.history-item-status {
-  flex-shrink: 0;
+.history-item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.history-item-status,
+.history-item-payment {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -77,7 +85,8 @@
   color: var(--brand-dark);
 }
 
-.history-item-status.status-completed {
+.history-item-status.status-completed,
+.history-item-payment.payment-paid {
   background: var(--success-bg);
   color: var(--success);
 }
@@ -88,9 +97,6 @@
 }
 
 @media (max-width: 560px) {
-  .history-item {
-    flex-direction: column;
-  }
   .history-item-meta {
     grid-template-columns: 1fr 1fr;
   }

@@ -89,19 +89,24 @@ export default function EditModeratorPage() {
     }
   }
 
-  async function handleDisable() {
+  async function handleLockToggle() {
     setBanner(null)
     setDisabling(true)
+    const locking = status !== 'LOCKED'
     try {
-      await postJson('/v1/user/moderator/disable', { userId: id })
+      await postJson(locking ? '/v1/user/lock' : '/v1/user/unlock', {
+        userId: id,
+      })
       navigate('/admin/moderators', {
-        state: { message: 'Moderator disabled.' },
+        state: {
+          message: locking ? 'Moderator disabled.' : 'Moderator enabled.',
+        },
       })
     } catch (err) {
       const message =
         err instanceof ApiError
           ? err.message
-          : 'Could not disable this moderator. Please try again.'
+          : `Could not ${locking ? 'disable' : 'enable'} this moderator. Please try again.`
       setBanner({ kind: 'error', message })
     } finally {
       setDisabling(false)
@@ -160,14 +165,13 @@ export default function EditModeratorPage() {
                     />
                   </div>
                   <div className="field">
-                    <label htmlFor="gender">
-                      Gender <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="gender">Gender</label>
                     <select
                       id="gender"
                       name="gender"
                       value={form.gender}
                       onChange={handleChange}
+                      required
                     >
                       <option value="">Select gender</option>
                       <option value="MALE">Male</option>
@@ -176,27 +180,25 @@ export default function EditModeratorPage() {
                     </select>
                   </div>
                   <div className="field">
-                    <label htmlFor="birthDate">
-                      Date of Birth <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="birthDate">Date of Birth</label>
                     <input
                       id="birthDate"
                       name="birthDate"
                       type="date"
                       value={form.birthDate}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                   <div className="field full">
-                    <label htmlFor="address">
-                      Address <span className="opt">(optional)</span>
-                    </label>
+                    <label htmlFor="address">Address</label>
                     <input
                       id="address"
                       name="address"
                       type="text"
                       value={form.address}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
@@ -210,17 +212,21 @@ export default function EditModeratorPage() {
                 {submitting ? 'Saving...' : 'Save Changes'}
               </button>
 
-              {status !== 'INACTIVE' && (
-                <button
-                  type="button"
-                  className="btn btn-outline btn-block"
-                  style={{ marginTop: 12 }}
-                  onClick={handleDisable}
-                  disabled={disabling}
-                >
-                  {disabling ? 'Disabling...' : 'Disable Moderator'}
-                </button>
-              )}
+              <button
+                type="button"
+                className="btn btn-outline btn-block"
+                style={{ marginTop: 12 }}
+                onClick={handleLockToggle}
+                disabled={disabling}
+              >
+                {status === 'LOCKED'
+                  ? disabling
+                    ? 'Enabling...'
+                    : 'Enable Moderator'
+                  : disabling
+                    ? 'Disabling...'
+                    : 'Disable Moderator'}
+              </button>
             </form>
           )}
         </div>

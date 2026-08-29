@@ -164,15 +164,14 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="field full">
-                  <label htmlFor="address">
-                    Address <span className="opt">(optional)</span>
-                  </label>
+                  <label htmlFor="address">Address</label>
                   <input
                     id="address"
                     name="address"
                     type="text"
                     value={form.address}
                     onChange={handleChange}
+                    required
                   />
                 </div>
               </div>

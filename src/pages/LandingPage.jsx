@@ -16,6 +16,8 @@ import manojBasnetPhoto from '../assets/images/team/manojbasnet.jfif'
 import aryanDahalPhoto from '../assets/images/team/aryandahal.jfif'
 import aryanShahPhoto from '../assets/images/team/aryanshah.jfif'
 import rajPhoto from '../assets/images/team/raj.png'
+import riteshChandPhoto from '../assets/images/team/riteshchand.jpeg'
+import jojanRaiPhoto from '../assets/images/team/jojanrai.jpeg'
 import './LandingPage.css'
 
 const SLIDES = [
@@ -41,12 +43,28 @@ const SLIDES = [
   },
 ]
 
-const MILESTONES = [
-  { number: '150+', label: 'Members Joined' },
-  { number: '2+', label: 'Events Hosted' },
-  { number: '1K+', label: 'KM Logged Together' },
-  { number: '3', label: 'Months Running Strong' },
+// Fallback shown only if /v1/event/accomplishment fails to load — keeps the
+// section from looking broken, not meant to reflect real numbers.
+const FALLBACK_MILESTONES = [
+  { number: '—', label: 'Members Joined' },
+  { number: '—', label: 'Events Hosted' },
+  { number: '—', label: 'KM Logged Together' },
+  { number: '—', label: 'Months Running Strong' },
 ]
+
+function formatKm(km) {
+  if (km >= 1000) return `${(km / 1000).toFixed(1)}K+`
+  return `${Math.round(km)}+`
+}
+
+function accomplishmentToMilestones(data) {
+  return [
+    { number: `${data.joinedMembers}+`, label: 'Members Joined' },
+    { number: `${data.hostedEvents}+`, label: 'Events Hosted' },
+    { number: formatKm(data.kmLogged || 0), label: 'KM Logged Together' },
+    { number: `${data.runningMonths}`, label: 'Months Running Strong' },
+  ]
+}
 
 const TEAM = [
   {
@@ -73,11 +91,24 @@ const TEAM = [
     photo: rajPhoto,
     bio: 'Turns "say fk it" into an actual race day — venues, logistics, and snacks all sorted.',
   },
+  {
+    name: 'Ritesh Chand',
+    role: 'Team Member',
+    photo: riteshChandPhoto,
+    bio: 'Shows up rain or shine and brings the energy that keeps the crew moving.',
+  },
+  {
+    name: 'Jojan Rai',
+    role: 'Founder & Developer',
+    photo: jojanRaiPhoto,
+    bio: 'Builds the app that powers the "say fk it" moment — from the run tracker to the sign-up flow.',
+  },
 ]
 
 export default function LandingPage() {
   const { isAuthed } = useCurrentUser()
   const [events, setEvents] = useState([])
+  const [milestones, setMilestones] = useState(FALLBACK_MILESTONES)
   const location = useLocation()
   const navigate = useNavigate()
   const [banner, setBanner] = useState(
@@ -89,6 +120,12 @@ export default function LandingPage() {
   useEffect(() => {
     getJson('/v1/event/upcoming')
       .then((data) => setEvents((data || []).slice(0, 3)))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    getJson('/v1/event/accomplishment')
+      .then((data) => setMilestones(accomplishmentToMilestones(data)))
       .catch(() => {})
   }, [])
 
@@ -138,7 +175,7 @@ export default function LandingPage() {
               it&quot; moment at a time.
             </p>
             <div className="milestones-stats">
-              {MILESTONES.map((m) => (
+              {milestones.map((m) => (
                 <div className="milestone-stat" key={m.label}>
                   <span className="milestone-number">{m.number}</span>
                   <span className="milestone-label">{m.label}</span>

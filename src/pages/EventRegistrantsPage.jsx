@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ApiError, canManageEvents, getJson } from '../api/client'
 import { useCurrentUser } from '../hooks/useCurrentUser'
@@ -24,6 +24,24 @@ export default function EventRegistrantsPage() {
   const [error, setError] = useState(null)
 
   const allowed = canManageEvents(user)
+
+  const report = useMemo(() => {
+    const paid = registrants.filter((r) => r.paymentStatus === 'PAID').length
+    const pending = registrants.filter(
+      (r) => r.paymentStatus === 'PENDING'
+    ).length
+    const failedOrCancelled = registrants.filter(
+      (r) => r.paymentStatus === 'FAILED' || r.paymentStatus === 'CANCELLED'
+    ).length
+    const entryFee = Number(event?.entryFee) || 0
+    return {
+      total: registrants.length,
+      paid,
+      pending,
+      failedOrCancelled,
+      revenue: paid * entryFee,
+    }
+  }, [registrants, event])
 
   useEffect(() => {
     if (userLoading || !allowed) {
@@ -85,8 +103,10 @@ export default function EventRegistrantsPage() {
         </p>
 
         <header className="event-registrants-header" data-aos="fade-down">
-          <h1>Applicants{event ? ` — ${event.name}` : ''}</h1>
-          <p>Everyone who&apos;s registered for this event.</p>
+          <div>
+            <h1>Applicants{event ? ` — ${event.name}` : ''}</h1>
+            <p>Everyone who&apos;s registered for this event.</p>
+          </div>
         </header>
 
         {error && <div className="banner error">{error}</div>}
@@ -98,47 +118,87 @@ export default function EventRegistrantsPage() {
         )}
 
         {!loading && !error && registrants.length > 0 && (
-          <div className="registrant-table-wrap">
-            <table className="registrant-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Mobile Number</th>
-                  <th>Payment Status</th>
-                  <th>Registered</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {registrants.map((registrant) => (
-                  <tr key={registrant.registrationId}>
-                    <td className="registrant-name-cell">
-                      {formatName(registrant.fullName)}
-                    </td>
-                    <td>{registrant.mobileNumber || '—'}</td>
-                    <td>
-                      <span
-                        className={`registrant-status status-${(registrant.paymentStatus || '').toLowerCase()}`}
-                      >
-                        {STATUS_LABELS[registrant.paymentStatus] ||
-                          registrant.paymentStatus}
-                      </span>
-                    </td>
-                    <td className="registrant-meta-cell">
-                      {formatDate(registrant.registeredDate)}
-                    </td>
-                    <td>
-                      <Link
-                        to={`/athletes/${registrant.userId}`}
-                        className="btn btn-outline"
-                      >
-                        View Profile
-                      </Link>
-                    </td>
+          <div className="event-registrants-body">
+            <div className="registrant-table-wrap">
+              <table className="registrant-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Mobile Number</th>
+                    <th>Payment Status</th>
+                    <th>Registered</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {registrants.map((registrant) => (
+                    <tr key={registrant.registrationId}>
+                      <td className="registrant-name-cell">
+                        {formatName(registrant.fullName)}
+                      </td>
+                      <td>{registrant.mobileNumber || '—'}</td>
+                      <td>
+                        <span
+                          className={`registrant-status status-${(registrant.paymentStatus || '').toLowerCase()}`}
+                        >
+                          {STATUS_LABELS[registrant.paymentStatus] ||
+                            registrant.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="registrant-meta-cell">
+                        {formatDate(registrant.registeredDate)}
+                      </td>
+                      <td>
+                        <Link
+                          to={`/athletes/${registrant.userId}`}
+                          className="btn btn-outline"
+                        >
+                          View Profile
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <aside
+              className="registrant-report glass-card"
+              data-aos="fade-left"
+            >
+              <Link
+                to={`/events/${id}/report`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-block"
+              >
+                View Detailed Report
+              </Link>
+              <dl className="registrant-report-list">
+                <div>
+                  <dt>Total Registrants</dt>
+                  <dd>{report.total}</dd>
+                </div>
+                <div>
+                  <dt>Paid</dt>
+                  <dd>{report.paid}</dd>
+                </div>
+                <div>
+                  <dt>Pending Payment</dt>
+                  <dd>{report.pending}</dd>
+                </div>
+                <div>
+                  <dt>Failed / Cancelled</dt>
+                  <dd>{report.failedOrCancelled}</dd>
+                </div>
+                {Number(event?.entryFee) > 0 && (
+                  <div>
+                    <dt>Revenue Collected</dt>
+                    <dd>{report.revenue}</dd>
+                  </div>
+                )}
+              </dl>
+            </aside>
           </div>
         )}
       </div>

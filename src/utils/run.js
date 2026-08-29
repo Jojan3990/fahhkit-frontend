@@ -3,6 +3,12 @@
 // run matches what actually gets stored.
 export const MAX_ACCEPTABLE_ACCURACY_METERS = 20
 
+// A sanity floor, not fraud-proofing — only rejects a run that's both this
+// short AND this quick (e.g. tapped Start then Stop). A fast short sprint or
+// a longer stationary stretch are each fine on their own.
+export const MIN_VALID_RUN_DISTANCE_METERS = 200
+export const MIN_VALID_RUN_DURATION_SECONDS = 90
+
 const EARTH_RADIUS_METERS = 6371000
 
 export function haversineDistance(a, b) {
@@ -83,6 +89,38 @@ export function clearActiveRun() {
     localStorage.removeItem(ACTIVE_RUN_STORAGE_KEY)
   } catch {
     // no-op
+  }
+}
+
+const TRACKED_EVENT_IDS_KEY_PREFIX = 'fahhkit_tracked_events_'
+
+// Per-user record of event ids already tracked via the live-event prompt, so
+// a refresh within the same 1-hour window doesn't re-show the full-screen
+// tracker for an event the athlete already ran. This is a same-device
+// stopgap, not a durable fact — the backend Run entity has no eventId link,
+// so there's nothing server-side to check instead. No pruning needed: the
+// 1-hour live window already makes stale ids irrelevant, and the list stays
+// tiny (a handful of ids per athlete).
+export function loadTrackedEventIds(userId) {
+  if (!userId) return []
+  try {
+    const raw = localStorage.getItem(`${TRACKED_EVENT_IDS_KEY_PREFIX}${userId}`)
+    const parsed = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+export function saveTrackedEventIds(userId, ids) {
+  if (!userId) return
+  try {
+    localStorage.setItem(
+      `${TRACKED_EVENT_IDS_KEY_PREFIX}${userId}`,
+      JSON.stringify(Array.from(ids))
+    )
+  } catch {
+    // Storage full/unavailable — the prompt may reappear after a refresh, not fatal.
   }
 }
 

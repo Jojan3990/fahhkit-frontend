@@ -113,6 +113,17 @@
   color: var(--muted);
 }
 
+.edit-event-image-preview {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
 .create-event-wrap input,
 .create-event-wrap select,
 .create-event-wrap textarea {
@@ -138,7 +149,7 @@
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-.create-event-wrap input[type="file"] {
+.create-event-wrap input[type='file'] {
   padding: 8px;
 }
 

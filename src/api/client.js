@@ -87,6 +87,21 @@ function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+// Navbar and LiveEventRunPrompt both call useCurrentUser() on every page
+// (LiveEventRunPrompt is mounted globally in App.jsx, outside <Routes>), so a
+// stale/expired token sitting in localStorage can make one of those
+// background find/logged-in calls 401 on ANY page — including one the user
+// was just client-side-navigated to mid-flow (e.g. LoginPage sending a
+// first-time moderator to /update-password). A hard redirect here must never
+// fire on the auth pages themselves, or it stomps that navigation (and the
+// router state it carried) with a full reload back to /login.
+const AUTH_FLOW_PATHS = [
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/update-password',
+]
+
 // A 401/403 on a request that carried a token means the session itself is
 // dead (expired/revoked), not just "this action is forbidden". Clear the
 // stale session and send the user to sign in again, rather than leaving the
@@ -95,7 +110,9 @@ function handleAuthFailure(status, hadToken) {
   if (hadToken && (status === 401 || status === 403)) {
     clearToken()
     clearUser()
-    if (!window.location.pathname.startsWith('/login')) {
+    if (
+      !AUTH_FLOW_PATHS.some((path) => window.location.pathname.startsWith(path))
+    ) {
       window.location.href = '/login'
     }
   }

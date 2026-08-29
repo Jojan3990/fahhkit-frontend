@@ -130,9 +130,9 @@ export default function ModeratorsPage() {
                 <span className="moderator-meta">{moderator.mobileNumber}</span>
               </div>
               <span
-                className={`moderator-status ${moderator.status === 'INACTIVE' ? 'inactive' : 'active'}`}
+                className={`moderator-status ${moderator.status === 'LOCKED' ? 'inactive' : 'active'}`}
               >
-                {moderator.status === 'INACTIVE' ? 'Disabled' : 'Active'}
+                {moderator.status === 'LOCKED' ? 'Disabled' : 'Active'}
               </span>
             </Link>
           ))}

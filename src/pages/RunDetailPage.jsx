@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import { deleteRun, getRun } from '../api/runs'
 import RunMap from '../components/RunMap'
+import ShareRunCarousel from '../components/ShareRunCarousel'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import {
@@ -73,6 +74,8 @@ export default function RunDetailPage() {
             </header>
 
             <RunMap points={run.points} />
+
+            <ShareRunCarousel run={run} />
 
             <dl className="run-detail-stats glass-card">
               <div>

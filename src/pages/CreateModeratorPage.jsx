@@ -144,14 +144,13 @@ export default function CreateModeratorPage() {
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor="gender">
-                    Gender <span className="opt">(optional)</span>
-                  </label>
+                  <label htmlFor="gender">Gender</label>
                   <select
                     id="gender"
                     name="gender"
                     value={form.gender}
                     onChange={handleChange}
+                    required
                   >
                     <option value="">Select gender</option>
                     <option value="MALE">Male</option>
@@ -160,27 +159,25 @@ export default function CreateModeratorPage() {
                   </select>
                 </div>
                 <div className="field">
-                  <label htmlFor="birthDate">
-                    Date of Birth <span className="opt">(optional)</span>
-                  </label>
+                  <label htmlFor="birthDate">Date of Birth</label>
                   <input
                     id="birthDate"
                     name="birthDate"
                     type="date"
                     value={form.birthDate}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="field full">
-                  <label htmlFor="address">
-                    Address <span className="opt">(optional)</span>
-                  </label>
+                  <label htmlFor="address">Address</label>
                   <input
                     id="address"
                     name="address"
                     type="text"
                     value={form.address}
                     onChange={handleChange}
+                    required
                   />
                 </div>
               </div>

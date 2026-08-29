@@ -25,6 +25,11 @@
 }
 
 .event-registrants-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   margin-bottom: 24px;
 }
 
@@ -44,12 +49,62 @@
   font-size: 14px;
 }
 
+.event-registrants-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
 .registrant-table-wrap {
+  flex: 1;
+  min-width: 0;
   overflow-x: auto;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
+}
+
+.registrant-report {
+  flex-shrink: 0;
+  width: 260px;
+  padding: 20px;
+}
+
+.registrant-report-list {
+  margin: 16px 0 0;
+}
+
+.registrant-report-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.registrant-report-list div:last-child {
+  border-bottom: none;
+}
+
+.registrant-report-list dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.registrant-report-list dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .event-registrants-body {
+    flex-direction: column;
+  }
+
+  .registrant-report {
+    width: 100%;
+  }
 }
 
 .registrant-table {

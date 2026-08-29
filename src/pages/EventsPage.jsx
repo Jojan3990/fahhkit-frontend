@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   ApiError,
   canManageEvents,
   getJson,
+  postJson,
   resolveFileUrl,
 } from '../api/client'
 import { useCurrentUser } from '../hooks/useCurrentUser'
@@ -13,15 +14,31 @@ import Footer from '../components/Footer'
 import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
 import './EventsPage.css'
 
+const EVENT_STATUS_LABELS = {
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+  CANCELLED: 'Cancelled',
+  COMPLETED: 'Completed',
+}
+
 export default function EventsPage() {
-  const { user, isAuthed } = useCurrentUser()
+  const { user, isAuthed, loading: userLoading } = useCurrentUser()
   const registrationStatuses = useEventRegistrationStatuses()
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [registeringId, setRegisteringId] = useState(null)
+  const [registerError, setRegisterError] = useState(null)
+  const [confirmingCancelId, setConfirmingCancelId] = useState(null)
+  const [cancellingId, setCancellingId] = useState(null)
+  const [cancelError, setCancelError] = useState(null)
+  const navigate = useNavigate()
+
+  const showAllEvents = canManageEvents(user)
 
   useEffect(() => {
-    getJson('/v1/event/upcoming')
+    if (userLoading) return
+    getJson(showAllEvents ? '/v1/event/moderator/all' : '/v1/event/upcoming')
       .then((data) => setEvents(data || []))
       .catch((err) => {
         setError(
@@ -31,7 +48,58 @@ export default function EventsPage() {
         )
       })
       .finally(() => setLoading(false))
-  }, [])
+  }, [userLoading, showAllEvents])
+
+  // Registers straight from the card — for a paid event this must hand off to
+  // Khalti immediately, not just land the user on the detail page (that used
+  // to be a plain <Link to detail>, which looked like nothing happened).
+  async function handleRegister(event) {
+    setRegisterError(null)
+    setRegisteringId(event.id)
+    try {
+      const data = await postJson(`/v1/event/${event.id}/register`)
+      if (Number(event.entryFee) > 0) {
+        const payment = await postJson(
+          `/v1/event/registration/${data.registrationId}/initiate-payment`
+        )
+        window.location.href = payment.paymentUrl
+        return
+      }
+      navigate(`/events/${event.id}`)
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : 'Could not complete registration. Please try again.'
+      setRegisterError({ eventId: event.id, message })
+      setRegisteringId(null)
+    }
+  }
+
+  // A draft is unpublished, so "cancelling" it here is really the delete
+  // flow (POST /v1/event/delete) — the backend just soft-deletes by flipping
+  // status to CANCELLED rather than removing the row.
+  async function handleCancelEvent(event) {
+    setCancelError(null)
+    setCancellingId(event.id)
+    try {
+      await postJson('/v1/event/delete', { eventId: event.id })
+      setEvents((prev) =>
+        prev.map((e) => (e.id === event.id ? { ...e, status: 'CANCELLED' } : e))
+      )
+      setConfirmingCancelId(null)
+    } catch (err) {
+      setCancelError({
+        eventId: event.id,
+        message:
+          err instanceof ApiError
+            ? err.message
+            : 'Could not cancel the event. Please try again.',
+      })
+    } finally {
+      setCancellingId(null)
+    }
+  }
 
   return (
     <div className="events-page">
@@ -39,10 +107,10 @@ export default function EventsPage() {
       <div className="events-wrap">
         <header className="events-header" data-aos="fade-down">
           <div>
-            <h1>Upcoming Events</h1>
+            <h1>{showAllEvents ? 'All Events' : 'Upcoming Events'}</h1>
             <p>Club races and community events on the calendar.</p>
           </div>
-          {canManageEvents(user) && (
+          {showAllEvents && (
             <Link to="/events/create" className="btn btn-primary">
               Create Event
             </Link>
@@ -55,7 +123,9 @@ export default function EventsPage() {
 
         {!loading && !error && events.length === 0 && (
           <p className="events-muted">
-            No upcoming events yet — check back soon.
+            {showAllEvents
+              ? 'No events yet — create one to get started.'
+              : 'No upcoming events yet — check back soon.'}
           </p>
         )}
 
@@ -80,6 +150,13 @@ export default function EventsPage() {
                 <span className="event-card-type">
                   {EVENT_TYPE_LABELS[event.type] || event.type}
                 </span>
+                {showAllEvents && (
+                  <span
+                    className={`event-card-status status-${(event.status || '').toLowerCase()}`}
+                  >
+                    {EVENT_STATUS_LABELS[event.status] || event.status}
+                  </span>
+                )}
                 <h3>{event.name}</h3>
                 <dl className="event-card-meta">
                   <div>
@@ -105,37 +182,104 @@ export default function EventsPage() {
                     </div>
                   )}
                 </dl>
-                <div className="event-card-actions">
-                  {canManageEvents(user) ? (
-                    <Link
-                      to={`/events/${event.id}/registrations`}
-                      className="btn btn-primary"
-                    >
-                      View Applicants
-                    </Link>
-                  ) : registrationStatuses.get(event.id) === 'PAID' ? (
-                    <span className="event-card-registered">
-                      &#10003; Registered
-                    </span>
-                  ) : registrationStatuses.get(event.id) === 'PENDING' ? (
+                {canManageEvents(user) && event.status === 'DRAFT' ? (
+                  confirmingCancelId === event.id ? (
+                    <>
+                      <p className="event-card-confirm-text">
+                        Cancel this event? This can&apos;t be undone.
+                      </p>
+                      <div className="event-card-actions">
+                        <button
+                          type="button"
+                          className="btn btn-outline"
+                          onClick={() => setConfirmingCancelId(null)}
+                          disabled={cancellingId === event.id}
+                        >
+                          Keep Event
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => handleCancelEvent(event)}
+                          disabled={cancellingId === event.id}
+                        >
+                          {cancellingId === event.id
+                            ? 'Cancelling...'
+                            : 'Confirm Cancel'}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="event-card-actions">
+                      <Link
+                        to={`/events/${event.id}/edit`}
+                        className="btn btn-primary"
+                      >
+                        Edit Event
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-danger-outline"
+                        onClick={() => setConfirmingCancelId(event.id)}
+                      >
+                        Cancel Event
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <div className="event-card-actions">
+                    {canManageEvents(user) ? (
+                      <Link
+                        to={`/events/${event.id}/registrations`}
+                        className="btn btn-primary"
+                      >
+                        View Applicants
+                      </Link>
+                    ) : registrationStatuses.get(event.id) === 'PAID' ? (
+                      <span className="event-card-registered">
+                        &#10003; Registered
+                      </span>
+                    ) : registrationStatuses.get(event.id) === 'PENDING' ? (
+                      <Link
+                        to={`/events/${event.id}`}
+                        className="btn btn-outline"
+                      >
+                        Payment Pending
+                      </Link>
+                    ) : isAuthed ? (
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => handleRegister(event)}
+                        disabled={registeringId === event.id}
+                      >
+                        {registeringId === event.id
+                          ? 'Redirecting...'
+                          : 'Register'}
+                      </button>
+                    ) : (
+                      <Link to="/register" className="btn btn-primary">
+                        Register
+                      </Link>
+                    )}
                     <Link
                       to={`/events/${event.id}`}
                       className="btn btn-outline"
                     >
-                      Payment Pending
+                      View More
                     </Link>
-                  ) : (
-                    <Link
-                      to={isAuthed ? `/events/${event.id}` : '/register'}
-                      className="btn btn-primary"
-                    >
-                      Register
-                    </Link>
-                  )}
-                  <Link to={`/events/${event.id}`} className="btn btn-outline">
-                    View More
-                  </Link>
-                </div>
+                  </div>
+                )}
+                {registerError?.eventId === event.id && (
+                  <div className="banner error event-card-register-error">
+                    {registerError.message}
+                  </div>
+                )}
+                {cancelError?.eventId === event.id && (
+                  <div className="banner error event-card-register-error">
+                    {cancelError.message}
+                  </div>
+                )}
               </div>
             </div>
           ))}

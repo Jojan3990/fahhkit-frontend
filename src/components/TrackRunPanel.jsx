@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types -- no prop-types dependency in this project */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaExclamation, FaTimes } from 'react-icons/fa'
 import { ApiError } from '../api/client'
 import { createRun } from '../api/runs'
 import { useRunTracker } from '../hooks/useRunTracker'
 import {
+  MIN_VALID_RUN_DISTANCE_METERS,
+  MIN_VALID_RUN_DURATION_SECONDS,
   calculatePaceMinPerKm,
   formatDistance,
   formatDuration,
@@ -34,7 +36,40 @@ export default function TrackRunPanel({ onSaved }) {
   const pace = calculatePaceMinPerKm(distance, elapsedSeconds)
   const tracking = status === 'tracking'
 
+  // Pace over just a few seconds of GPS noise is meaningless, so it holds at
+  // "--" for the first 30s, then only re-snapshots every 30s after that
+  // instead of jittering on every GPS fix.
+  const [displayPace, setDisplayPace] = useState(null)
+  useEffect(() => {
+    if (!tracking) {
+      setDisplayPace(pace)
+      return
+    }
+    if (elapsedSeconds < 30) {
+      setDisplayPace(null)
+      return
+    }
+    if (elapsedSeconds % 30 === 0) {
+      setDisplayPace(pace)
+    }
+    // pace is read for its current-render value at each elapsedSeconds tick;
+    // it isn't a dependency on purpose, so a GPS fix alone can't retrigger this.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracking, elapsedSeconds])
+
   async function attemptSave(run) {
+    if (
+      run.distance < MIN_VALID_RUN_DISTANCE_METERS &&
+      run.duration < MIN_VALID_RUN_DURATION_SECONDS
+    ) {
+      setSaveError({
+        title: "That's a warm-up, not a run 😅",
+        message: `${formatDistance(run.distance)} in ${formatDuration(
+          run.duration
+        )}? Say fk it and go again — come back once you've actually broken a sweat.`,
+      })
+      return
+    }
     setSaving(true)
     setSaveError(null)
     try {
@@ -162,7 +197,7 @@ export default function TrackRunPanel({ onSaved }) {
         </div>
         <div>
           <dt>Pace</dt>
-          <dd>{formatPace(pace)}</dd>
+          <dd>{formatPace(displayPace)}</dd>
         </div>
       </dl>
 

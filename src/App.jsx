@@ -24,6 +24,8 @@ import RunDetailPage from './pages/RunDetailPage'
 import ContactPage from './pages/ContactPage'
 import PaymentStatusPage from './pages/PaymentStatusPage'
 import EventRegistrantsPage from './pages/EventRegistrantsPage'
+import EventReportPage from './pages/EventReportPage'
+import DashboardPage from './pages/DashboardPage'
 import LiveEventRunPrompt from './components/LiveEventRunPrompt'
 
 export default function App() {
@@ -49,10 +51,12 @@ export default function App() {
           path="/events/:id/registrations"
           element={<EventRegistrantsPage />}
         />
+        <Route path="/events/:id/report" element={<EventReportPage />} />
         <Route
           path="/admin/create-moderator"
           element={<CreateModeratorPage />}
         />
+        <Route path="/admin/dashboard" element={<DashboardPage />} />
         <Route path="/admin/moderators" element={<ModeratorsPage />} />
         <Route
           path="/admin/moderators/:id/edit"

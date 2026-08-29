@@ -239,14 +239,13 @@ export default function EditProfilePage() {
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor="gender">
-                    Gender <span className="opt">(optional)</span>
-                  </label>
+                  <label htmlFor="gender">Gender</label>
                   <select
                     id="gender"
                     name="gender"
                     value={form.gender}
                     onChange={handleChange}
+                    required
                   >
                     <option value="">Select gender</option>
                     <option value="MALE">Male</option>
