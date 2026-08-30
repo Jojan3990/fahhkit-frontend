@@ -78,17 +78,17 @@ export default function Navbar() {
         </div>
 
         <nav className={`navbar-links ${open ? 'open' : ''}`}>
+          {isAdmin(user) && (
+            <Link to="/admin/dashboard" onClick={close}>
+              Dashboard
+            </Link>
+          )}
           <Link to="/events" onClick={close}>
             Events
           </Link>
           {canManageEvents(user) && (
             <Link to="/athletes" onClick={close}>
               Athletes
-            </Link>
-          )}
-          {isAdmin(user) && (
-            <Link to="/admin/dashboard" onClick={close}>
-              Dashboard
             </Link>
           )}
           {isAdmin(user) && (

@@ -25,6 +25,9 @@ export default function EventDetailPage() {
   const [registration, setRegistration] = useState(null)
   const [registering, setRegistering] = useState(false)
   const [registerError, setRegisterError] = useState(null)
+  const [confirmingCancel, setConfirmingCancel] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+  const [cancelError, setCancelError] = useState(null)
 
   useEffect(() => {
     getJson(`/v1/event/${id}`)
@@ -65,6 +68,28 @@ export default function EventDetailPage() {
     }
   }
 
+  // Only a PENDING registration can be cancelled here (see EventService.cancelRegistration
+  // on the backend) - a PAID one is a real registration, not an abandoned payment attempt.
+  async function handleCancelRegistration() {
+    setCancelError(null)
+    setCancelling(true)
+    try {
+      const data = await postJson(
+        `/v1/event/registration/${currentRegistrationId}/cancel`
+      )
+      setRegistration(data)
+      setConfirmingCancel(false)
+    } catch (err) {
+      setCancelError(
+        err instanceof ApiError
+          ? err.message
+          : 'Could not cancel your registration. Please try again.'
+      )
+    } finally {
+      setCancelling(false)
+    }
+  }
+
   const images = event
     ? [event.eventImageUrl1, event.eventImageUrl2, event.eventImageUrl3].filter(
         Boolean
@@ -74,8 +99,11 @@ export default function EventDetailPage() {
   const deadlinePassed =
     Boolean(event?.registrationDeadline) &&
     new Date(event.registrationDeadline) < new Date()
+  const historyEntry = registrationStatuses.get(id)
   const currentStatus =
-    registration?.paymentStatus || registrationStatuses.get(id)
+    registration?.paymentStatus || historyEntry?.paymentStatus
+  const currentRegistrationId =
+    registration?.registrationId || historyEntry?.registrationId
 
   return (
     <div className="event-detail-page">
@@ -238,6 +266,48 @@ export default function EventDetailPage() {
                           ? 'Complete Payment'
                           : 'Register for this Event'}
                     </button>
+                    {currentStatus === 'PENDING' && currentRegistrationId && (
+                      <div className="event-detail-cancel-registration">
+                        {cancelError && (
+                          <div className="banner error">{cancelError}</div>
+                        )}
+                        {confirmingCancel ? (
+                          <>
+                            <p className="event-detail-muted">
+                              Cancel this pending registration?
+                            </p>
+                            <div className="event-detail-cancel-actions">
+                              <button
+                                type="button"
+                                className="btn btn-outline btn-block"
+                                onClick={() => setConfirmingCancel(false)}
+                                disabled={cancelling}
+                              >
+                                Keep It
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-danger btn-block"
+                                onClick={handleCancelRegistration}
+                                disabled={cancelling}
+                              >
+                                {cancelling
+                                  ? 'Cancelling...'
+                                  : 'Confirm Cancel'}
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-outline btn-danger-outline btn-block"
+                            onClick={() => setConfirmingCancel(true)}
+                          >
+                            Cancel Registration
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>

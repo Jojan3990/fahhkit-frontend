@@ -6,6 +6,7 @@
 
 .event-report-wrap {
   max-width: 1120px;
+  width: 100%;
   margin: 0 auto;
   padding: 32px 20px 64px;
 }
@@ -241,5 +242,24 @@
   .event-report-chart-card {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  /* The auto-fit min-width lets the browser squeeze all 6 cards into one
+     illegible row on a narrow phone screen — pin it to 2 per row instead. */
+  .event-report-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .event-report-stat-card {
+    padding: 14px;
+  }
+
+  .event-report-stat-number {
+    font-size: 22px;
+  }
+
+  .event-report-meta {
+    gap: 14px 20px;
   }
 }

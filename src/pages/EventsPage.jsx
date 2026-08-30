@@ -32,9 +32,14 @@ export default function EventsPage() {
   const [confirmingCancelId, setConfirmingCancelId] = useState(null)
   const [cancellingId, setCancellingId] = useState(null)
   const [cancelError, setCancelError] = useState(null)
+  const [statusFilter, setStatusFilter] = useState('ALL')
   const navigate = useNavigate()
 
   const showAllEvents = canManageEvents(user)
+  const visibleEvents =
+    statusFilter === 'ALL'
+      ? events
+      : events.filter((event) => event.status === statusFilter)
 
   useEffect(() => {
     if (userLoading) return
@@ -110,11 +115,28 @@ export default function EventsPage() {
             <h1>{showAllEvents ? 'All Events' : 'Upcoming Events'}</h1>
             <p>Club races and community events on the calendar.</p>
           </div>
-          {showAllEvents && (
-            <Link to="/events/create" className="btn btn-primary">
-              Create Event
-            </Link>
-          )}
+          <div className="events-header-actions">
+            {showAllEvents && (
+              <select
+                className="events-status-filter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                aria-label="Filter by status"
+              >
+                <option value="ALL">All Statuses</option>
+                {Object.entries(EVENT_STATUS_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            )}
+            {showAllEvents && (
+              <Link to="/events/create" className="btn btn-primary">
+                Create Event
+              </Link>
+            )}
+          </div>
         </header>
 
         {error && <div className="banner error">{error}</div>}
@@ -129,8 +151,15 @@ export default function EventsPage() {
           </p>
         )}
 
+        {!loading &&
+          !error &&
+          events.length > 0 &&
+          visibleEvents.length === 0 && (
+            <p className="events-muted">No events match this filter.</p>
+          )}
+
         <div className="events-grid">
-          {events.map((event, i) => (
+          {visibleEvents.map((event, i) => (
             <div
               className="event-card"
               key={event.id}
@@ -235,11 +264,13 @@ export default function EventsPage() {
                       >
                         View Applicants
                       </Link>
-                    ) : registrationStatuses.get(event.id) === 'PAID' ? (
+                    ) : registrationStatuses.get(event.id)?.paymentStatus ===
+                      'PAID' ? (
                       <span className="event-card-registered">
                         &#10003; Registered
                       </span>
-                    ) : registrationStatuses.get(event.id) === 'PENDING' ? (
+                    ) : registrationStatuses.get(event.id)?.paymentStatus ===
+                      'PENDING' ? (
                       <Link
                         to={`/events/${event.id}`}
                         className="btn btn-outline"

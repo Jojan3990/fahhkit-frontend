@@ -62,7 +62,7 @@ function accomplishmentToMilestones(data) {
     { number: `${data.joinedMembers}+`, label: 'Members Joined' },
     { number: `${data.hostedEvents}+`, label: 'Events Hosted' },
     { number: formatKm(data.kmLogged || 0), label: 'KM Logged Together' },
-    { number: `${data.runningMonths}`, label: 'Months Running Strong' },
+    { number: `${data.runningMonths}+`, label: 'Months Running Strong' },
   ]
 }
 

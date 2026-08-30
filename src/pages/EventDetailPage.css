@@ -160,6 +160,38 @@
   font-size: 13px;
 }
 
+.event-detail-cancel-registration {
+  margin-top: 12px;
+}
+
+.event-detail-cancel-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.event-detail-cancel-actions .btn {
+  flex: 1;
+}
+
+.event-detail-cancel-registration .btn-danger-outline {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.event-detail-cancel-registration .btn-danger-outline:hover {
+  background: var(--error-bg);
+}
+
+.event-detail-cancel-registration .btn-danger {
+  background: var(--error);
+  color: #fff;
+  border-color: var(--error);
+}
+
+.event-detail-cancel-registration .btn-danger:hover {
+  filter: brightness(1.08);
+}
+
 @media (max-width: 800px) {
   .event-detail-body {
     grid-template-columns: 1fr;
