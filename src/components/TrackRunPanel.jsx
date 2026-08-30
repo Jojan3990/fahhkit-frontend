@@ -16,8 +16,12 @@ import {
 import './TrackRunPanel.css'
 
 // The live-tracking widget itself (stats + start/stop), reused by both the
-// dedicated /runs/track page and the full-screen live-event prompt.
-export default function TrackRunPanel({ onSaved }) {
+// dedicated /runs/track page and the full-screen live-event prompt. eventId
+// is required by the backend to link the run to a paid endurance
+// registration (see RunCreateRequest) - the caller is responsible for
+// resolving it (the live prompt already knows it; the standalone page has
+// the athlete pick from their paid endurance registrations).
+export default function TrackRunPanel({ eventId, onSaved }) {
   const {
     status,
     elapsedSeconds,
@@ -74,6 +78,7 @@ export default function TrackRunPanel({ onSaved }) {
     setSaveError(null)
     try {
       const saved = await createRun({
+        eventId: run.eventId,
         points: run.points,
         distance: run.distance,
         duration: run.duration,
@@ -264,8 +269,8 @@ export default function TrackRunPanel({ onSaved }) {
           <button
             type="button"
             className="btn btn-primary btn-block"
-            onClick={start}
-            disabled={saving}
+            onClick={() => start(eventId)}
+            disabled={saving || !eventId}
           >
             Start Run
           </button>

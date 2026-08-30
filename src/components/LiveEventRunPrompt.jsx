@@ -68,7 +68,7 @@ export default function LiveEventRunPrompt() {
         <p className="live-event-prompt-subtitle">
           This event just started — track your run.
         </p>
-        <TrackRunPanel onSaved={handleSaved} />
+        <TrackRunPanel eventId={liveEvent.eventId} onSaved={handleSaved} />
       </div>
     </div>
   )

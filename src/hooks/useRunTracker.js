@@ -27,6 +27,7 @@ export function useRunTracker() {
   const watchIdRef = useRef(null)
   const timerRef = useRef(null)
   const startedAtRef = useRef(null)
+  const eventIdRef = useRef(null)
   const fixCountRef = useRef(0)
   const lastAccuracyRef = useRef(null)
   const hiddenAtRef = useRef(null)
@@ -119,6 +120,7 @@ export function useRunTracker() {
 
         saveActiveRun({
           startedAt: startedAtRef.current.toISOString(),
+          eventId: eventIdRef.current,
           points: pointsRef.current,
           distance: distanceRef.current,
         })
@@ -150,6 +152,7 @@ export function useRunTracker() {
       setDistance(saved.distance || 0)
       setElapsedSeconds(saved.duration ?? 0)
       setPendingRun({
+        eventId: saved.eventId ?? null,
         points: saved.points,
         distance: saved.distance || 0,
         duration: saved.duration ?? 0,
@@ -164,6 +167,7 @@ export function useRunTracker() {
     pointsRef.current = saved.points || []
     distanceRef.current = saved.distance || 0
     startedAtRef.current = new Date(saved.startedAt)
+    eventIdRef.current = saved.eventId ?? null
     setDistance(distanceRef.current)
     setElapsedSeconds(
       Math.round((Date.now() - startedAtRef.current.getTime()) / 1000)
@@ -183,29 +187,34 @@ export function useRunTracker() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const start = useCallback(() => {
-    if (!('geolocation' in navigator)) {
-      setStatus('unsupported')
-      return
-    }
+  const start = useCallback(
+    (eventId) => {
+      if (!('geolocation' in navigator)) {
+        setStatus('unsupported')
+        return
+      }
 
-    pointsRef.current = []
-    distanceRef.current = 0
-    fixCountRef.current = 0
-    lastAccuracyRef.current = null
-    setDistance(0)
-    setElapsedSeconds(0)
-    setBackgroundGapSeconds(null)
-    setPendingRun(null)
-    startedAtRef.current = new Date()
+      pointsRef.current = []
+      distanceRef.current = 0
+      fixCountRef.current = 0
+      lastAccuracyRef.current = null
+      setDistance(0)
+      setElapsedSeconds(0)
+      setBackgroundGapSeconds(null)
+      setPendingRun(null)
+      startedAtRef.current = new Date()
+      eventIdRef.current = eventId ?? null
 
-    saveActiveRun({
-      startedAt: startedAtRef.current.toISOString(),
-      points: [],
-      distance: 0,
-    })
-    beginWatch()
-  }, [beginWatch])
+      saveActiveRun({
+        startedAt: startedAtRef.current.toISOString(),
+        eventId: eventIdRef.current,
+        points: [],
+        distance: 0,
+      })
+      beginWatch()
+    },
+    [beginWatch]
+  )
 
   const stop = useCallback(() => {
     clearTimers()
@@ -216,6 +225,7 @@ export function useRunTracker() {
     const endedAt = new Date()
     const startedAt = startedAtRef.current ?? endedAt
     const result = {
+      eventId: eventIdRef.current,
       points: pointsRef.current,
       distance,
       duration: Math.round((endedAt - startedAt) / 1000),
@@ -232,6 +242,7 @@ export function useRunTracker() {
     } else {
       saveActiveRun({
         startedAt: startedAt.toISOString(),
+        eventId: result.eventId,
         points: result.points,
         distance: result.distance,
         stopped: true,
