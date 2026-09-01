@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types -- no prop-types dependency in this project */
-// TEMP — testing only, remove when told to (see RunsPage.jsx usage too).
+// TEMP — testing only, remove when told to (see HistoryList.jsx usage too).
 // The runs list endpoint only returns summary fields, so this fetches each
 // run's own detail just to get its points for a small map preview.
 import { useEffect, useState } from 'react'

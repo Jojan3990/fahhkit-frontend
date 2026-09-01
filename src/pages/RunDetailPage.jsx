@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { FaMapMarkerAlt } from 'react-icons/fa'
 import { ApiError } from '../api/client'
-import { deleteRun, getRun } from '../api/runs'
+import { getRun } from '../api/runs'
 import RunMap from '../components/RunMap'
 import ShareRunCarousel from '../components/ShareRunCarousel'
 import Navbar from '../components/Navbar'
@@ -16,13 +17,10 @@ import './RunDetailPage.css'
 
 export default function RunDetailPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const [run, setRun] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [confirmingDelete, setConfirmingDelete] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [deleteError, setDeleteError] = useState(null)
+  const [showMap, setShowMap] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -39,29 +37,12 @@ export default function RunDetailPage() {
       .finally(() => setLoading(false))
   }, [id])
 
-  async function handleDelete() {
-    setDeleting(true)
-    setDeleteError(null)
-    try {
-      await deleteRun(id)
-      navigate('/runs')
-    } catch (err) {
-      setDeleteError(
-        err instanceof ApiError
-          ? err.message
-          : 'Could not delete this run. Please try again.'
-      )
-      setDeleting(false)
-      setConfirmingDelete(false)
-    }
-  }
-
   return (
     <div className="run-detail-page">
       <Navbar />
       <div className="run-detail-wrap">
-        <Link to="/runs" className="run-detail-back-link">
-          &larr; Back to My Runs
+        <Link to="/history" className="run-detail-back-link">
+          &larr; Back to History
         </Link>
 
         {error && <div className="banner error">{error}</div>}
@@ -72,8 +53,6 @@ export default function RunDetailPage() {
             <header className="run-detail-header">
               <h1>{formatRunDate(run.startedAt)}</h1>
             </header>
-
-            <RunMap points={run.points} />
 
             <ShareRunCarousel run={run} />
 
@@ -92,41 +71,17 @@ export default function RunDetailPage() {
               </div>
             </dl>
 
-            {deleteError && <div className="banner error">{deleteError}</div>}
-
             <div className="run-detail-actions">
-              {confirmingDelete ? (
-                <>
-                  <span className="run-detail-confirm-text">
-                    Delete this run? This can&apos;t be undone.
-                  </span>
-                  <button
-                    type="button"
-                    className="btn btn-outline"
-                    onClick={() => setConfirmingDelete(false)}
-                    disabled={deleting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={handleDelete}
-                    disabled={deleting}
-                  >
-                    {deleting ? 'Deleting...' : 'Confirm Delete'}
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-outline btn-danger-outline"
-                  onClick={() => setConfirmingDelete(true)}
-                >
-                  Delete Run
-                </button>
-              )}
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setShowMap((v) => !v)}
+              >
+                <FaMapMarkerAlt /> {showMap ? 'Hide Map' : 'View Map'}
+              </button>
             </div>
+
+            {showMap && <RunMap points={run.points} />}
           </>
         )}
       </div>

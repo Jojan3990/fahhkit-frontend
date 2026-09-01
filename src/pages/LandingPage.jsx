@@ -20,28 +20,36 @@ import riteshChandPhoto from '../assets/images/team/riteshchand.jpeg'
 import jojanRaiPhoto from '../assets/images/team/jojanrai.jpeg'
 import './LandingPage.css'
 
-const SLIDES = [
-  {
-    image: bannerImage,
-    title: 'Fahhkit Fitness Club',
-    subtitle: 'Say f**k it and get it done!',
-    cta: (
-      <Link to="/register" className="btn btn-white btn-lg">
-        Join the Club
-      </Link>
-    ),
-  },
-  {
-    image: sundayRundayImage,
-    title: 'Sunday Runday',
-    subtitle: 'Happens every Sunday at 5pm, Cafe Bizarre',
-    cta: (
-      <Link to="/events" className="btn btn-white btn-lg">
-        View Events
-      </Link>
-    ),
-  },
-]
+// A signed-in visitor is already a member - sending them to /register from
+// this slide would just dump them on a signup form for an account they have.
+function getSlides(isAuthed) {
+  return [
+    {
+      image: bannerImage,
+      title: 'Fahhkit Fitness Club',
+      subtitle: 'Say f**k it and get it done!',
+      cta: isAuthed ? (
+        <Link to="/events" className="btn btn-white btn-lg">
+          View Events
+        </Link>
+      ) : (
+        <Link to="/register" className="btn btn-white btn-lg">
+          Join the Club
+        </Link>
+      ),
+    },
+    {
+      image: sundayRundayImage,
+      title: 'Sunday Runday',
+      subtitle: 'Happens every Sunday at 5pm, Cafe Bizarre',
+      cta: (
+        <Link to="/events" className="btn btn-white btn-lg">
+          View Events
+        </Link>
+      ),
+    },
+  ]
+}
 
 // Fallback shown only if /v1/event/accomplishment fails to load — keeps the
 // section from looking broken, not meant to reflect real numbers.
@@ -69,39 +77,39 @@ function accomplishmentToMilestones(data) {
 const TEAM = [
   {
     name: 'Manoj Basnet',
-    role: 'Founder & Head Coach',
+    role: 'Co-Founder & Head Coach',
     photo: manojBasnetPhoto,
     bio: "Started FahhKit with a single Sunday run and hasn't missed one since. Believes every workout should feel like showing up for your friends.",
   },
   {
     name: 'Aryan Dahal',
-    role: 'Run Coach',
+    role: 'Co-Founder & Marketing Head',
     photo: aryanDahalPhoto,
     bio: 'Plans the routes, sets the pace, and makes sure nobody gets left behind — literally or figuratively.',
   },
   {
-    name: 'Aryan Shah',
-    role: 'Community Lead',
-    photo: aryanShahPhoto,
-    bio: 'The friendly face who welcomes every new member and keeps the group chat alive between events.',
-  },
-  {
-    name: 'Raj',
-    role: 'Events Coordinator',
+    name: 'Raj Karki',
+    role: 'Co-Founder & Events Coordinator',
     photo: rajPhoto,
     bio: 'Turns "say fk it" into an actual race day — venues, logistics, and snacks all sorted.',
   },
   {
-    name: 'Ritesh Chand',
-    role: 'Team Member',
-    photo: riteshChandPhoto,
-    bio: 'Shows up rain or shine and brings the energy that keeps the crew moving.',
-  },
-  {
     name: 'Jojan Rai',
-    role: 'Founder & Developer',
+    role: 'Co-Founder & Developer',
     photo: jojanRaiPhoto,
     bio: 'Builds the app that powers the "say fk it" moment — from the run tracker to the sign-up flow.',
+  },
+  {
+    name: 'Aryan Shah',
+    role: 'Co-Founder & Community Lead',
+    photo: aryanShahPhoto,
+    bio: 'The friendly face who welcomes every new member and keeps the group chat alive between events.',
+  },
+  {
+    name: 'Ritesh Chand',
+    role: 'Co-Founder & Team Member',
+    photo: riteshChandPhoto,
+    bio: 'Shows up rain or shine and brings the energy that keeps the crew moving.',
   },
 ]
 
@@ -144,7 +152,7 @@ export default function LandingPage() {
 
   const slides = [
     ...events.map((event, i) => eventToSlide(event, i === 0)),
-    ...SLIDES,
+    ...getSlides(isAuthed),
   ]
 
   return (

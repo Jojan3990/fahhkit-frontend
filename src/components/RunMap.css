@@ -1,9 +1,15 @@
 .run-map {
   width: 100%;
-  height: 420px;
+  height: 260px;
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 560px) {
+  .run-map {
+    height: 200px;
+  }
 }
 
 .run-map .leaflet-container {

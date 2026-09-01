@@ -6,6 +6,7 @@ import {
   FaInstagram,
   FaWhatsapp,
 } from 'react-icons/fa'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 import './Footer.css'
 
 const INSTAGRAM_URL = 'https://www.instagram.com/fahhkit/'
@@ -13,6 +14,8 @@ const WHATSAPP_COMMUNITY_URL =
   'https://chat.whatsapp.com/HZWIDpw5yJk70mxWej5M6q?mode=gi_t'
 
 export default function Footer() {
+  const { isAuthed } = useCurrentUser()
+
   return (
     <footer className="site-footer">
       <div className="section-inner footer-grid">
@@ -50,7 +53,7 @@ export default function Footer() {
           <h4>Quick Links</h4>
           <a href="/#about">About</a>
           <Link to="/events">Events</Link>
-          <Link to="/register">Join the Club</Link>
+          {!isAuthed && <Link to="/register">Join the Club</Link>}
         </div>
 
         <div className="footer-col footer-contact">

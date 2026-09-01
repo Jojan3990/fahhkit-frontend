@@ -1,5 +1,8 @@
 /* eslint-disable react/prop-types -- no prop-types dependency in this project */
+import { Link } from 'react-router-dom'
 import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
+import { formatDistance, formatDuration, formatPace } from '../utils/run'
+import RunThumbnailMap from './RunThumbnailMap' // TEMP — testing only, remove when told to
 import './HistoryList.css'
 
 const STATUS_LABELS = {
@@ -60,6 +63,30 @@ export default function HistoryList({
               </div>
             </dl>
           </div>
+
+          {item.run && (
+            <div className="history-item-run">
+              <RunThumbnailMap runId={item.run.id} />
+              <dl className="history-item-run-stats">
+                <div>
+                  <dt>Distance</dt>
+                  <dd>{formatDistance(item.run.distance)}</dd>
+                </div>
+                <div>
+                  <dt>Duration</dt>
+                  <dd>{formatDuration(item.run.duration)}</dd>
+                </div>
+                <div>
+                  <dt>Pace</dt>
+                  <dd>{formatPace(item.run.avgPace)}</dd>
+                </div>
+              </dl>
+              <Link to={`/runs/${item.run.id}`} className="btn btn-outline">
+                View Run
+              </Link>
+            </div>
+          )}
+
           <div className="history-item-badges">
             <span
               className={`history-item-status status-${(item.eventStatus || '').toLowerCase()}`}

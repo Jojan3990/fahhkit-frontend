@@ -1,12 +1,13 @@
 import { formatDistance, formatDuration, formatPace } from './run'
 
-// Fixed logical card size (4:5, matches the approved share-card mockup).
+// Fixed logical card size (9:16, matches an Instagram Story frame so the
+// download drops straight into a story with no cropping/letterboxing).
 // The same drawShareCard() call renders both the on-screen <canvas> preview
 // (scaled by devicePixelRatio) and the offscreen export canvas (scaled by
 // EXPORT_SCALE) — same drawing code, so preview and download always match.
 export const CARD_W = 432
-export const CARD_H = 540
-export const EXPORT_SCALE = 2.5 // -> 1080x1350 export resolution
+export const CARD_H = 768
+export const EXPORT_SCALE = 2.5 // -> 1080x1920 export resolution
 
 export const SHARE_VARIANTS = {
   TRANSPARENT: 'transparent',
@@ -94,7 +95,19 @@ export function drawWordmark(
 
 export function drawStatsRow(
   ctx,
-  { distance, duration, pace, x, y, width, color, chipBg }
+  {
+    distance,
+    duration,
+    pace,
+    x,
+    y,
+    width,
+    color,
+    chipBg,
+    labelFirst = false,
+    valueFontSize = 17,
+    labelFontSize = 10,
+  }
 ) {
   const stats = [
     { value: formatDistance(distance), label: 'Distance' },
@@ -111,18 +124,66 @@ export function drawStatsRow(
     ctx.restore()
   }
 
+  // labelFirst mirrors the Strava-style share card: a small caption sits
+  // above the bold value, rather than below it.
+  const valueDy = labelFirst ? 12 : -6
+  const labelDy = labelFirst ? -11 : 13
+
   stats.forEach((stat, i) => {
     const cx = x + colWidth * i + colWidth / 2
     ctx.save()
     ctx.textAlign = 'center'
     ctx.fillStyle = color
-    ctx.font = "700 17px 'Poppins', sans-serif"
-    ctx.fillText(stat.value, cx, y - 6)
+    ctx.font = `700 ${valueFontSize}px 'Poppins', sans-serif`
+    ctx.fillText(stat.value, cx, y + valueDy)
     ctx.globalAlpha = 0.75
-    ctx.font = '600 10px -apple-system, sans-serif'
-    ctx.fillText(stat.label.toUpperCase(), cx, y + 13)
+    ctx.font = `600 ${labelFontSize}px -apple-system, sans-serif`
+    ctx.fillText(stat.label.toUpperCase(), cx, y + labelDy)
     ctx.restore()
   })
+}
+
+// Centered label+value pairs stacked one per line (as opposed to
+// drawStatsRow's side-by-side columns) - used by the transparent card so
+// each stat gets its own full-width line under the wordmark.
+function drawStatsStack(
+  ctx,
+  { distance, duration, pace, x, y, color, rowGap = 56 }
+) {
+  const stats = [
+    { value: formatDistance(distance), label: 'Distance' },
+    { value: formatPace(pace), label: 'Pace' },
+    { value: formatDuration(duration), label: 'Time' },
+  ]
+
+  stats.forEach((stat, i) => {
+    const cy = y + rowGap * i
+    ctx.save()
+    ctx.textAlign = 'center'
+    ctx.fillStyle = color
+    ctx.globalAlpha = 0.75
+    ctx.font = '600 11px -apple-system, sans-serif'
+    ctx.fillText(stat.label.toUpperCase(), x, cy - 13)
+    ctx.globalAlpha = 1
+    ctx.font = "700 20px 'Poppins', sans-serif"
+    ctx.fillText(stat.value, x, cy + 10)
+    ctx.restore()
+  })
+}
+
+// Left-aligned label-over-value pair, for the Strava-style asymmetric stat
+// grid (as opposed to drawStatsRow's centered equal-width columns).
+function drawStatLabelValue(ctx, { label, value, x, y }) {
+  ctx.save()
+  ctx.textAlign = 'left'
+  ctx.fillStyle = '#ffffff'
+  ctx.globalAlpha = 0.75
+  ctx.font = '600 11px -apple-system, sans-serif'
+  ctx.fillText(label.toUpperCase(), x, y - 22)
+  ctx.globalAlpha = 1
+  ctx.font = "700 22px 'Poppins', sans-serif"
+  ctx.fillText(value, x, y)
+  ctx.restore()
 }
 
 export function drawRoutePath(
@@ -206,43 +267,64 @@ export async function drawShareCard(
   const padding = 40
 
   if (variant === SHARE_VARIANTS.TRANSPARENT) {
+    // Strava-style stacked layout: route up top, wordmark centered below
+    // it, then a plain (no chip) stats row - rather than the route filling
+    // the card with the wordmark pinned in a corner.
+    const routeTop = 36
+    const routeHeight = height * 0.56
     const projected = projectRoute(points, {
       width,
-      height: height - 96,
-      padding,
-    })
+      height: routeHeight,
+      padding: 70,
+    }).map((p) => ({ ...p, y: p.y + routeTop }))
     drawRoutePath(ctx, projected, { strokeStyle: '#e8590c' })
+
+    const wordmarkY = routeTop + routeHeight + 46
     drawWordmark(ctx, {
-      x: padding,
-      y: 44,
-      fillStyle: makeBrandGradient(ctx, padding, 0, padding + 160, 0),
+      x: width / 2,
+      y: wordmarkY,
+      fontSize: 26,
+      fillStyle: '#ffffff',
+      align: 'center',
     })
-    drawStatsRow(ctx, {
+
+    drawStatsStack(ctx, {
       distance,
       duration,
       pace,
-      x: padding,
-      y: height - 56,
-      width: width - padding * 2,
-      color: '#23201d',
-      chipBg: 'rgba(255,255,255,0.85)',
+      x: width / 2,
+      y: wordmarkY + 54,
+      color: '#ffffff',
     })
   } else if (variant === SHARE_VARIANTS.GRADIENT) {
-    const projected = projectRoute(points, {
-      width,
-      height: height - 96,
-      padding,
-    })
     ctx.fillStyle = makeBrandGradient(ctx, 0, 0, width, height)
     ctx.fillRect(0, 0, width, height)
+
+    // Route up top, wordmark below it (not pinned above the route) - shrunk
+    // a little from full-bleed so there's room underneath, but not as
+    // compact as the transparent card's route.
+    const routeTop = 36
+    const routeHeight = height * 0.65
+    const projected = projectRoute(points, {
+      width,
+      height: routeHeight,
+      padding,
+    }).map((p) => ({ ...p, y: p.y + routeTop }))
     drawRoutePath(ctx, projected, { strokeStyle: '#ffffff' })
-    drawWordmark(ctx, { x: padding, y: 44, fillStyle: '#ffffff' })
+
+    const wordmarkY = routeTop + routeHeight + 46
+    drawWordmark(ctx, {
+      x: width / 2,
+      y: wordmarkY,
+      fillStyle: '#ffffff',
+      align: 'center',
+    })
     drawStatsRow(ctx, {
       distance,
       duration,
       pace,
       x: padding,
-      y: height - 56,
+      y: wordmarkY + 56,
       width: width - padding * 2,
       color: '#ffffff',
       chipBg: 'rgba(255,255,255,0.18)',
@@ -253,26 +335,49 @@ export async function drawShareCard(
     drawRoutePath(ctx, projected, { strokeStyle: '#e8590c', lineWidth: 5 })
     drawStartEndMarkers(ctx, projected)
 
-    const bar = ctx.createLinearGradient(0, height - 140, 0, height)
+    // Strava-style info panel: wordmark, a title, then a Distance/Time row
+    // with Pace on its own row below - anchored over a dark gradient so it
+    // stays legible over any part of the route.
+    const barHeight = 220
+    const bar = ctx.createLinearGradient(0, height - barHeight, 0, height)
     bar.addColorStop(0, 'rgba(20,18,16,0)')
-    bar.addColorStop(1, 'rgba(20,18,16,0.72)')
+    bar.addColorStop(1, 'rgba(20,18,16,0.78)')
     ctx.fillStyle = bar
-    ctx.fillRect(0, height - 140, width, 140)
+    ctx.fillRect(0, height - barHeight, width, barHeight)
 
     drawWordmark(ctx, {
-      x: padding,
-      y: height - 96,
-      fontSize: 15,
+      x: width - padding,
+      y: height - 165,
+      fontSize: 16,
       fillStyle: 'rgba(255,255,255,0.9)',
+      align: 'right',
     })
-    drawStatsRow(ctx, {
-      distance,
-      duration,
-      pace,
+
+    ctx.save()
+    ctx.textAlign = 'left'
+    ctx.fillStyle = '#ffffff'
+    ctx.font = "700 24px 'Poppins', sans-serif"
+    ctx.fillText('Run', padding, height - 124)
+    ctx.restore()
+
+    const rightColX = width / 2 + 10
+    drawStatLabelValue(ctx, {
+      label: 'Distance',
+      value: formatDistance(distance),
       x: padding,
-      y: height - 40,
-      width: width - padding * 2,
-      color: '#ffffff',
+      y: height - 84,
+    })
+    drawStatLabelValue(ctx, {
+      label: 'Time',
+      value: formatDuration(duration),
+      x: rightColX,
+      y: height - 84,
+    })
+    drawStatLabelValue(ctx, {
+      label: 'Pace',
+      value: formatPace(pace),
+      x: padding,
+      y: height - 32,
     })
   }
 }

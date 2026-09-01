@@ -224,3 +224,16 @@
   color: var(--success);
   background: var(--success-bg);
 }
+
+.event-card-closed {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg);
+}

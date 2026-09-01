@@ -136,7 +136,7 @@
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-.register-wrap input[type="file"] {
+.register-wrap input[type='file'] {
   padding: 8px;
 }
 
@@ -168,4 +168,39 @@
 
 .register-footer a:hover {
   text-decoration: underline;
+}
+
+.register-success {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.register-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 30px;
+  margin-bottom: 16px;
+}
+
+.register-success h1 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.register-success p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.register-success .btn {
+  min-width: 180px;
 }

@@ -6,6 +6,7 @@
 
 .run-detail-wrap {
   max-width: 780px;
+  width: 100%;
   margin: 0 auto;
   padding: 24px 20px 64px;
   display: flex;
@@ -61,31 +62,6 @@
   gap: 12px;
 }
 
-.run-detail-confirm-text {
-  color: var(--muted);
-  font-size: 14px;
-  margin-right: auto;
-}
-
-.run-detail-actions .btn-danger-outline {
-  border-color: var(--error);
-  color: var(--error);
-}
-
-.run-detail-actions .btn-danger-outline:hover {
-  background: var(--error-bg);
-}
-
-.run-detail-actions .btn-danger {
-  background: var(--error);
-  color: #fff;
-  border-color: var(--error);
-}
-
-.run-detail-actions .btn-danger:hover {
-  filter: brightness(1.08);
-}
-
 @media (max-width: 560px) {
   .run-detail-stats {
     grid-template-columns: repeat(3, 1fr);
@@ -95,10 +71,5 @@
 
   .run-detail-actions {
     flex-wrap: wrap;
-  }
-
-  .run-detail-confirm-text {
-    width: 100%;
-    margin-right: 0;
   }
 }

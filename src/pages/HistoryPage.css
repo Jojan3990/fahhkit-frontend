@@ -6,12 +6,22 @@
 
 .history-page-wrap {
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 32px 20px 64px;
 }
 
-.history-page-wrap h1 {
-  margin: 0 0 24px;
+.history-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.history-page-header h1 {
+  margin: 0;
   font-size: 26px;
 }
 

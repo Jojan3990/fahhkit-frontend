@@ -11,7 +11,11 @@ import { useCurrentUser } from '../hooks/useCurrentUser'
 import { useEventRegistrationStatuses } from '../hooks/useRegisteredEvents'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
+import {
+  EVENT_TYPE_LABELS,
+  formatDate,
+  isRegistrationClosed,
+} from '../utils/events'
 import './EventsPage.css'
 
 const EVENT_STATUS_LABELS = {
@@ -277,6 +281,10 @@ export default function EventsPage() {
                       >
                         Payment Pending
                       </Link>
+                    ) : isRegistrationClosed(event) ? (
+                      <span className="event-card-closed">
+                        Registration Closed
+                      </span>
                     ) : isAuthed ? (
                       <button
                         type="button"

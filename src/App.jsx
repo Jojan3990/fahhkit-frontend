@@ -19,7 +19,6 @@ import AthleteProfilePage from './pages/AthleteProfilePage'
 import EditAthletePage from './pages/EditAthletePage'
 import HistoryPage from './pages/HistoryPage'
 import TrackRunPage from './pages/TrackRunPage'
-import RunsPage from './pages/RunsPage'
 import RunDetailPage from './pages/RunDetailPage'
 import ContactPage from './pages/ContactPage'
 import PaymentStatusPage from './pages/PaymentStatusPage'
@@ -66,7 +65,7 @@ export default function App() {
         <Route path="/athletes/:userId" element={<AthleteProfilePage />} />
         <Route path="/athletes/:userId/edit" element={<EditAthletePage />} />
         <Route path="/history" element={<HistoryPage />} />
-        <Route path="/runs" element={<RunsPage />} />
+        <Route path="/runs" element={<Navigate to="/history" replace />} />
         <Route path="/runs/track" element={<TrackRunPage />} />
         <Route path="/runs/:id" element={<RunDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />

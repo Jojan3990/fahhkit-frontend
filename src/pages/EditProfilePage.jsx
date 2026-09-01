@@ -49,6 +49,14 @@ export default function EditProfilePage() {
   const [banner, setBanner] = useState(null)
   const fileInputRef = useRef(null)
 
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+  })
+  const [changingPassword, setChangingPassword] = useState(false)
+  const [passwordBanner, setPasswordBanner] = useState(null)
+
   useEffect(() => {
     getJson('/v1/user/find/logged-in')
       .then((data) => {
@@ -115,6 +123,52 @@ export default function EditProfilePage() {
       setBanner({ kind: 'error', message })
     } finally {
       setUploadingPhoto(false)
+    }
+  }
+
+  function handlePasswordFieldChange(e) {
+    const { name, value } = e.target
+    setPasswordForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  async function handlePasswordSubmit(e) {
+    e.preventDefault()
+    setPasswordBanner(null)
+    if (!e.target.reportValidity()) return
+
+    if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
+      setPasswordBanner({
+        kind: 'error',
+        message: 'New password and confirmation do not match.',
+      })
+      return
+    }
+
+    setChangingPassword(true)
+    try {
+      await postJson('/v1/user/change-password', {
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword,
+      })
+      setPasswordForm({
+        oldPassword: '',
+        newPassword: '',
+        confirmNewPassword: '',
+      })
+      setPasswordBanner({
+        kind: 'success',
+        message: 'Password updated successfully.',
+      })
+    } catch (err) {
+      setPasswordBanner({
+        kind: 'error',
+        message:
+          err instanceof ApiError
+            ? err.message
+            : 'Could not update your password. Please try again.',
+      })
+    } finally {
+      setChangingPassword(false)
     }
   }
 
@@ -215,6 +269,72 @@ export default function EditProfilePage() {
               Email and mobile number can&apos;t be changed here.
             </div>
           </div>
+
+          <form
+            className="glass-card"
+            onSubmit={handlePasswordSubmit}
+            noValidate
+            data-aos="fade-up"
+          >
+            <fieldset>
+              <legend>Change Password</legend>
+
+              {passwordBanner && (
+                <div className={`banner ${passwordBanner.kind}`}>
+                  {passwordBanner.message}
+                </div>
+              )}
+
+              <div className="grid">
+                <div className="field full">
+                  <label htmlFor="oldPassword">Current Password</label>
+                  <input
+                    id="oldPassword"
+                    name="oldPassword"
+                    type="password"
+                    autoComplete="current-password"
+                    value={passwordForm.oldPassword}
+                    onChange={handlePasswordFieldChange}
+                    required
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="newPassword">New Password</label>
+                  <input
+                    id="newPassword"
+                    name="newPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    value={passwordForm.newPassword}
+                    onChange={handlePasswordFieldChange}
+                    required
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="confirmNewPassword">
+                    Confirm New Password
+                  </label>
+                  <input
+                    id="confirmNewPassword"
+                    name="confirmNewPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    value={passwordForm.confirmNewPassword}
+                    onChange={handlePasswordFieldChange}
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={changingPassword}
+            >
+              {changingPassword ? 'Updating...' : 'Update Password'}
+            </button>
+          </form>
 
           <form
             className="glass-card"

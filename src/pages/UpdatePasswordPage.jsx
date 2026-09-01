@@ -1,52 +1,84 @@
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { postJson, setToken, clearToken, ApiError } from "../api/client";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import "./UpdatePasswordPage.css";
+import { useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { postJson, setToken, clearToken, ApiError } from '../api/client'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import './UpdatePasswordPage.css'
 
 export default function UpdatePasswordPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // The backend emails a direct link (?phone=...&password=...) for both
+  // first-time account setup and forgot-password resets, so the athlete
+  // never has to see or type the generated password - it rides along
+  // silently from the link straight into the request. The moderator
+  // first-login redirect from LoginPage only carries the mobile number
+  // (router state), so that path still asks for the emailed password
+  // manually.
+  const params = new URLSearchParams(location.search)
+  const phoneFromLink = params.get('phone')
+  const passwordFromLink = params.get('password')
+  const oldPasswordKnown = Boolean(passwordFromLink)
+
   const [form, setForm] = useState({
-    mobileNumber: location.state?.mobileNumber || "",
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [banner, setBanner] = useState(location.state?.message ? { kind: "success", message: location.state.message } : null);
+    mobileNumber: phoneFromLink || location.state?.mobileNumber || '',
+    oldPassword: passwordFromLink || '',
+    newPassword: '',
+    confirmNewPassword: '',
+  })
+  const [submitting, setSubmitting] = useState(false)
+  const [banner, setBanner] = useState(
+    location.state?.message
+      ? { kind: 'success', message: location.state.message }
+      : null
+  )
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    setBanner(null);
-    if (!e.target.reportValidity()) return;
+    e.preventDefault()
+    setBanner(null)
+    if (!e.target.reportValidity()) return
 
     if (form.newPassword !== form.confirmNewPassword) {
-      setBanner({ kind: "error", message: "New password and confirmation do not match." });
-      return;
+      setBanner({
+        kind: 'error',
+        message: 'New password and confirmation do not match.',
+      })
+      return
     }
 
-    setSubmitting(true);
+    setSubmitting(true)
     try {
-      const auth = await postJson("/v1/authenticate", { mobileNumber: form.mobileNumber, password: form.oldPassword });
-      setToken(auth.tokenId);
-      await postJson("/v1/user/change-password", { oldPassword: form.oldPassword, newPassword: form.newPassword });
-      clearToken();
-      navigate("/login", {
-        state: { message: "Password updated successfully! Please sign in with your new password." },
-      });
+      const auth = await postJson('/v1/authenticate', {
+        mobileNumber: form.mobileNumber,
+        password: form.oldPassword,
+      })
+      setToken(auth.tokenId)
+      await postJson('/v1/user/change-password', {
+        oldPassword: form.oldPassword,
+        newPassword: form.newPassword,
+      })
+      clearToken()
+      navigate('/login', {
+        state: {
+          message:
+            'Password updated successfully! Please sign in with your new password.',
+        },
+      })
     } catch (err) {
-      clearToken();
-      const message = err instanceof ApiError ? err.message : "Could not update password. Please try again.";
-      setBanner({ kind: "error", message });
+      clearToken()
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : 'Could not update password. Please try again.'
+      setBanner({ kind: 'error', message })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
   }
 
@@ -60,10 +92,16 @@ export default function UpdatePasswordPage() {
           <header className="update-password-header">
             <div className="update-password-logo">🔒</div>
             <h1>Set Your Password</h1>
-            <p>Enter the password we emailed you, then choose a new one</p>
+            <p>
+              {oldPasswordKnown
+                ? "Confirm it's you, then choose a new password"
+                : 'Enter the password we emailed you, then choose a new one'}
+            </p>
           </header>
 
-          {banner && <div className={`banner ${banner.kind}`}>{banner.message}</div>}
+          {banner && (
+            <div className={`banner ${banner.kind}`}>{banner.message}</div>
+          )}
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="field">
@@ -76,21 +114,24 @@ export default function UpdatePasswordPage() {
                 placeholder="98XXXXXXXX or you@example.com"
                 value={form.mobileNumber}
                 onChange={handleChange}
+                readOnly={oldPasswordKnown}
                 required
               />
             </div>
-            <div className="field">
-              <label htmlFor="oldPassword">Emailed Password</label>
-              <input
-                id="oldPassword"
-                name="oldPassword"
-                type="password"
-                autoComplete="current-password"
-                value={form.oldPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            {!oldPasswordKnown && (
+              <div className="field">
+                <label htmlFor="oldPassword">Emailed Password</label>
+                <input
+                  id="oldPassword"
+                  name="oldPassword"
+                  type="password"
+                  autoComplete="current-password"
+                  value={form.oldPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            )}
             <div className="field">
               <label htmlFor="newPassword">New Password</label>
               <input
@@ -116,8 +157,12 @@ export default function UpdatePasswordPage() {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
-              {submitting ? "Updating..." : "Update Password"}
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={submitting}
+            >
+              {submitting ? 'Updating...' : 'Update Password'}
             </button>
           </form>
 
@@ -128,5 +173,5 @@ export default function UpdatePasswordPage() {
       </div>
       <Footer />
     </div>
-  );
+  )
 }

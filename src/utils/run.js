@@ -3,11 +3,14 @@
 // run matches what actually gets stored.
 export const MAX_ACCEPTABLE_ACCURACY_METERS = 20
 
-// A sanity floor, not fraud-proofing — only rejects a run that's both this
-// short AND this quick (e.g. tapped Start then Stop). A fast short sprint or
-// a longer stationary stretch are each fine on their own.
-export const MIN_VALID_RUN_DISTANCE_METERS = 200
-export const MIN_VALID_RUN_DURATION_SECONDS = 90
+// A sanity floor, not fraud-proofing - both minimums are enforced
+// independently, so a run must clear each one on its own to save.
+export const MIN_VALID_RUN_DISTANCE_METERS = 100
+export const MIN_VALID_RUN_DURATION_SECONDS = 30
+
+// Pace (time/distance) over a few GPS fixes is meaningless noise — hold off
+// showing a live pace until the runner has actually covered some ground.
+export const MIN_DISTANCE_FOR_PACE_METERS = 100
 
 const EARTH_RADIUS_METERS = 6371000
 

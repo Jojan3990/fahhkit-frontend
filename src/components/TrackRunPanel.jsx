@@ -5,6 +5,7 @@ import { ApiError } from '../api/client'
 import { createRun } from '../api/runs'
 import { useRunTracker } from '../hooks/useRunTracker'
 import {
+  MIN_DISTANCE_FOR_PACE_METERS,
   MIN_VALID_RUN_DISTANCE_METERS,
   MIN_VALID_RUN_DURATION_SECONDS,
   calculatePaceMinPerKm,
@@ -40,16 +41,17 @@ export default function TrackRunPanel({ eventId, onSaved }) {
   const pace = calculatePaceMinPerKm(distance, elapsedSeconds)
   const tracking = status === 'tracking'
 
-  // Pace over just a few seconds of GPS noise is meaningless, so it holds at
-  // "--" for the first 30s, then only re-snapshots every 30s after that
-  // instead of jittering on every GPS fix.
+  // Pace over just a few seconds/meters of GPS noise is meaningless, so it
+  // holds at "--" until both a minimum time AND a minimum distance have
+  // passed, then only re-snapshots every 30s after that instead of jittering
+  // on every GPS fix.
   const [displayPace, setDisplayPace] = useState(null)
   useEffect(() => {
     if (!tracking) {
       setDisplayPace(pace)
       return
     }
-    if (elapsedSeconds < 30) {
+    if (elapsedSeconds < 30 || distance < MIN_DISTANCE_FOR_PACE_METERS) {
       setDisplayPace(null)
       return
     }
@@ -57,20 +59,25 @@ export default function TrackRunPanel({ eventId, onSaved }) {
       setDisplayPace(pace)
     }
     // pace is read for its current-render value at each elapsedSeconds tick;
-    // it isn't a dependency on purpose, so a GPS fix alone can't retrigger this.
+    // it isn't a dependency on purpose, so a GPS fix alone can't retrigger this
+    // beyond the distance check above.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tracking, elapsedSeconds])
+  }, [tracking, elapsedSeconds, distance])
 
   async function attemptSave(run) {
-    if (
-      run.distance < MIN_VALID_RUN_DISTANCE_METERS &&
-      run.duration < MIN_VALID_RUN_DURATION_SECONDS
-    ) {
+    // Both minimums are enforced independently - a run has to clear each on
+    // its own, not just one or the other.
+    if (run.distance < MIN_VALID_RUN_DISTANCE_METERS) {
       setSaveError({
         title: "That's a warm-up, not a run 😅",
-        message: `${formatDistance(run.distance)} in ${formatDuration(
-          run.duration
-        )}? Say fk it and go again — come back once you've actually broken a sweat.`,
+        message: `Only ${formatDistance(run.distance)} covered — runs need at least ${MIN_VALID_RUN_DISTANCE_METERS}m to count. Say fk it and go again.`,
+      })
+      return
+    }
+    if (run.duration < MIN_VALID_RUN_DURATION_SECONDS) {
+      setSaveError({
+        title: "That's a warm-up, not a run 😅",
+        message: `Only ${formatDuration(run.duration)} on the clock — runs need at least ${MIN_VALID_RUN_DURATION_SECONDS}s to count. Say fk it and go again.`,
       })
       return
     }

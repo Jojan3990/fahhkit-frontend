@@ -2,10 +2,15 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* The report panel's fade-left AOS animation sits translated ~100px
+     off-screen until scrolled into view, which opens up horizontal scroll
+     on a narrow viewport before the user ever reaches it. */
+  overflow-x: hidden;
 }
 
 .event-registrants-wrap {
   max-width: 1120px;
+  width: 100%;
   margin: 0 auto;
   padding: 32px 20px 64px;
 }
@@ -103,6 +108,14 @@
   }
 
   .registrant-report {
+    width: 100%;
+  }
+
+  /* In row layout, flex:1 + min-width:0 keeps this from overflowing. Once the
+     body switches to column, this becomes the cross-axis dimension instead,
+     and its own overflow-x:auto content (the table) sizes it to content
+     rather than stretching to the container - pin it explicitly. */
+  .registrant-table-wrap {
     width: 100%;
   }
 }

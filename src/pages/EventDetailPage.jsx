@@ -12,7 +12,11 @@ import { useEventRegistrationStatuses } from '../hooks/useRegisteredEvents'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Carousel from '../components/Carousel'
-import { EVENT_TYPE_LABELS, formatDate } from '../utils/events'
+import {
+  EVENT_TYPE_LABELS,
+  formatDate,
+  isRegistrationClosed,
+} from '../utils/events'
 import './EventDetailPage.css'
 
 export default function EventDetailPage() {
@@ -96,9 +100,7 @@ export default function EventDetailPage() {
       )
     : []
   const closed = event?.status === 'CANCELLED' || event?.status === 'COMPLETED'
-  const deadlinePassed =
-    Boolean(event?.registrationDeadline) &&
-    new Date(event.registrationDeadline) < new Date()
+  const deadlinePassed = isRegistrationClosed(event)
   const historyEntry = registrationStatuses.get(id)
   const currentStatus =
     registration?.paymentStatus || historyEntry?.paymentStatus

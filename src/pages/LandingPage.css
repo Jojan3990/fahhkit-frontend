@@ -2,6 +2,10 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* AOS's fade-left/fade-right animations sit translated ~100px off-screen
+     until scrolled into view - on a narrow viewport that translation alone
+     is enough to open up horizontal scroll before the user ever reaches it. */
+  overflow-x: hidden;
 }
 
 .section-inner {
@@ -63,6 +67,13 @@
   font-size: 13px;
   color: var(--muted);
   margin-top: 4px;
+}
+
+.milestones-image {
+  /* A grid item's automatic min-width defaults to its content's min-content
+     size - for an <img>, that's its natural pixel width, which can force
+     this cell (and the page) wider than the single-column mobile track. */
+  min-width: 0;
 }
 
 .milestones-image img {
