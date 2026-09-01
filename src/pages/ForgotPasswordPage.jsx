@@ -49,8 +49,18 @@ export default function ForgotPasswordPage() {
         <span className="blob auth-blob-b" aria-hidden="true" />
         <div className="forgot-card glass-card" data-aos="fade-up">
           {sent ? (
-            <div className="banner success forgot-sent-banner">
-              Check your email — we&apos;ve sent you a new password.
+            <div className="forgot-sent">
+              <div className="forgot-sent-icon" aria-hidden="true">
+                📧
+              </div>
+              <h1>Check your inbox!</h1>
+              <p>
+                We&apos;ve emailed you a new password — open it and sign in
+                below.
+              </p>
+              <Link to="/login" className="btn btn-primary">
+                Back to sign in
+              </Link>
             </div>
           ) : (
             <>
