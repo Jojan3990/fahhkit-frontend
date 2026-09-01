@@ -41,6 +41,10 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/update-password" element={<UpdatePasswordPage />} />
+        <Route
+          path="/update-password/:phone/:password"
+          element={<UpdatePasswordPage />}
+        />
         <Route path="/profile/edit" element={<EditProfilePage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/create" element={<CreateEventPage />} />

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { postJson, setToken, clearToken, ApiError } from '../api/client'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -8,17 +8,19 @@ import './UpdatePasswordPage.css'
 export default function UpdatePasswordPage() {
   const location = useLocation()
   const navigate = useNavigate()
+  const routeParams = useParams()
 
-  // The backend emails a direct link (?phone=...&password=...) for both
-  // first-time account setup and forgot-password resets, so the athlete
+  // The backend emails a direct link (/update-password/:phone/:password) for
+  // both first-time account setup and forgot-password resets, so the athlete
   // never has to see or type the generated password - it rides along
-  // silently from the link straight into the request. The moderator
-  // first-login redirect from LoginPage only carries the mobile number
-  // (router state), so that path still asks for the emailed password
-  // manually.
-  const params = new URLSearchParams(location.search)
-  const phoneFromLink = params.get('phone')
-  const passwordFromLink = params.get('password')
+  // silently from the link straight into the request. The old ?phone=&password=
+  // query-string form is still read as a fallback for links already sent
+  // before the backend switched to path segments. The moderator first-login
+  // redirect from LoginPage only carries the mobile number (router state), so
+  // that path still asks for the emailed password manually.
+  const queryParams = new URLSearchParams(location.search)
+  const phoneFromLink = routeParams.phone || queryParams.get('phone')
+  const passwordFromLink = routeParams.password || queryParams.get('password')
   const oldPasswordKnown = Boolean(passwordFromLink)
 
   const [form, setForm] = useState({
